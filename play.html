@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#6750A4">
+<title>Tap&Tap — Gold Edition</title>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#6750A4;
+  --primary-container:#EADDFF;
+  --on-primary:#FFFFFF;
+  --on-primary-container:#21005D;
+  --surface:#FEF7FF;
+  --surface-2:#F3EDF7;
+  --surface-3:#ECE6F0;
+  --on-surface:#1D1B20;
+  --on-surface-var:#49454F;
+  --outline-var:#CAC4D0;
+  --success:#2E7D32;
+  --gold:#FFB300;
+  --danger:#B3261E;
+  --radius:20px;
+  --radius-lg:28px;
+  --shadow-1:0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-2:0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-3:0 10px 28px rgba(0,0,0,.16), 0 4px 8px rgba(0,0,0,.08);
+  --btn-grad:linear-gradient(135deg,#2196F3,#2196F3);
+  --tap-size:200px;
+}
+[data-ui="dark"]{
+  --primary:#D0BCFF;
+  --primary-container:#4F378B;
+  --on-primary:#381E72;
+  --on-primary-container:#EADDFF;
+  --surface:#141218;
+  --surface-2:#1D1B20;
+  --surface-3:#25232A;
+  --on-surface:#E6E0E9;
+  --on-surface-var:#CAC4D0;
+  --outline-var:#49454F;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;margin:0;padding:0;}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--surface);color:var(--on-surface);
+  overflow:hidden;user-select:none;
+  transition:background .35s ease,color .35s ease;
+}
+#loader{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(135deg,
+    var(--primary) 0%,
+    var(--btn-color, #2196F3) 55%,
+    var(--primary) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#fff;gap:24px;
+  transition:opacity .6s, visibility .6s, background .35s ease;
+}
+#loader.hide{opacity:0;visibility:hidden;}
+.loader-logo{
+  font-size:60px;font-weight:800;letter-spacing:-2px;
+  text-shadow:0 8px 30px rgba(0,0,0,.3);
+  animation:pop 2.4s ease-in-out infinite;
+}
+.loader-logo i{margin-right:10px;}
+@keyframes pop{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+.loader-bar{
+  width:min(320px,70vw);height:8px;border-radius:99px;
+  background:rgba(255,255,255,.25);overflow:hidden;
+}
+.loader-bar>div{
+  height:100%;width:0%;
+  background:#fff;border-radius:99px;
+  transition:width .25s ease;
+}
+.loader-hint{font-size:13px;opacity:.85;letter-spacing:.4px;}
+
+/* APP */
+#app{display:none;height:100dvh;grid-template-rows:auto 1fr auto;max-width:520px;margin:0 auto;background:var(--surface);position:relative;}
+#app.ready{display:grid;}
+
+.top-tabs{display:flex;gap:6px;padding:12px 12px 6px;background:var(--surface);position:sticky;top:0;z-index:20;}
+.top-tab{
+  flex:1;padding:10px 8px;border-radius:999px;
+  background:var(--surface-2);color:var(--on-surface-var);
+  font-weight:600;font-size:13px;cursor:pointer;border:none;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;
+  font-family:inherit;
+}
+.top-tab.active{background:var(--primary-container);color:var(--on-primary-container);box-shadow:var(--shadow-1);}
+
+.screen{display:none;overflow-y:auto;overflow-x:hidden;padding:8px 16px 24px;-webkit-overflow-scrolling:touch;}
+.screen.active{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.bottom-nav{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  background:var(--surface-2);border-top:1px solid var(--outline-var);
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 4px;border-radius:16px;background:transparent;border:none;
+  color:var(--on-surface-var);font-size:11px;font-weight:600;
+  cursor:pointer;transition:all .2s;font-family:inherit;
+}
+.nav-item i{font-size:18px;}
+.nav-item.active{color:var(--on-primary-container);background:var(--primary-container);}
+
+/* CLICKER */
+.score-card{background:var(--surface-2);border-radius:var(--radius-lg);padding:20px 16px;text-align:center;margin-bottom:20px;box-shadow:var(--shadow-1);}
+.score-label{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--on-surface-var);font-weight:600;}
+.score-value{
+  font-size:42px;font-weight:800;letter-spacing:-1px;margin:4px 0;
+  background:linear-gradient(135deg,var(--primary),#2196F3);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  transition:transform .15s;word-break:break-all;line-height:1.1;
+}
+.score-value.pulse{transform:scale(1.06);}
+.score-sub{font-size:13px;color:var(--on-surface-var);font-weight:500;}
+
+.tap-wrap{position:relative;display:flex;justify-content:center;align-items:center;margin:16px 0 24px;min-height:260px;}
+#tapBtn{
+  width:var(--tap-size);height:var(--tap-size);border-radius:50%;
+  border:none;background:var(--btn-grad);color:#fff;
+  cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 32px rgba(0,0,0,.20),inset 0 -6px 20px rgba(0,0,0,.15),inset 0 6px 20px rgba(255,255,255,.25);
+  transition:transform .08s ease;overflow:hidden;font-weight:800;letter-spacing:1px;
+  touch-action:manipulation;
+}
+#tapBtn:active{transform:scale(.94);}
+#tapBtn .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);opacity:.9;animation:ripple .6s ease-out forwards;pointer-events:none;}
+@keyframes ripple{to{transform:scale(4);opacity:0;}}
+#tapBtn .icon-fa{font-size:80px;}
+#tapBtn .tap-text{font-size:48px;font-weight:800;letter-spacing:2px;}
+
+.float-plus{
+  position:absolute;pointer-events:none;font-weight:800;font-size:22px;
+  color:var(--primary);animation:floatUp .9s ease-out forwards;
+  text-shadow:0 2px 8px rgba(0,0,0,.15);z-index:5;
+}
+@keyframes floatUp{
+  0%{transform:translate(0,0) scale(.7);opacity:0;}
+  20%{opacity:1;transform:translate(0,-10px) scale(1.1);}
+  100%{transform:translate(var(--dx),-90px) scale(1);opacity:0;}
+}
+
+.boost-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.mini-boost{background:var(--surface-2);border-radius:16px;padding:10px 6px;text-align:center;border:1px solid var(--outline-var);}
+.mini-boost .mv{font-weight:800;font-size:16px;color:var(--primary);}
+.mini-boost .ml{font-size:10px;color:var(--on-surface-var);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+/* SECTION / CARDS */
+.section-title{font-size:18px;font-weight:700;margin:20px 0 12px;display:flex;align-items:center;gap:8px;}
+.section-title i{color:var(--primary);}
+.hint{font-size:12px;color:var(--on-surface-var);margin-bottom:12px;line-height:1.4;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.card{
+  background:var(--surface-2);border-radius:var(--radius);padding:14px;
+  border:1px solid var(--outline-var);box-shadow:var(--shadow-1);
+  display:flex;flex-direction:column;gap:8px;
+  transition:transform .15s,box-shadow .2s;position:relative;overflow:hidden;
+}
+.card:active{transform:scale(.98);}
+.card.owned{border-color:var(--primary);background:var(--primary-container);}
+.card .lock{
+  position:absolute;top:8px;right:8px;
+  background:var(--surface);color:var(--on-surface-var);
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;box-shadow:var(--shadow-1);
+}
+.card .preview{
+  width:52px;height:52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;color:#fff;font-weight:800;margin:0 auto;
+  box-shadow:inset 0 -4px 12px rgba(0,0,0,.15),inset 0 4px 12px rgba(255,255,255,.2);
+}
+.card .name{font-size:13px;font-weight:700;text-align:center;}
+.card .price{font-size:12px;font-weight:700;text-align:center;color:var(--on-surface-var);display:flex;align-items:center;justify-content:center;gap:4px;}
+.card .buy-btn{
+  border:none;border-radius:12px;padding:8px;font-weight:700;font-size:12px;
+  cursor:pointer;transition:all .2s;background:var(--primary);color:var(--on-primary);font-family:inherit;
+}
+.card .buy-btn:disabled{opacity:.5;cursor:not-allowed;}
+.card .buy-btn.owned-btn{background:var(--success);}
+.card .buy-btn.equipped-btn{background:var(--gold);color:#000;}
+
+/* BOOSTS */
+.boost-card{background:var(--surface-2);border-radius:var(--radius);padding:16px;border:1px solid var(--outline-var);box-shadow:var(--shadow-1);margin-bottom:12px;}
+.boost-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.boost-title{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;}
+.boost-title i{color:var(--primary);font-size:18px;}
+.boost-lvl{background:var(--primary);color:var(--on-primary);font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;}
+.boost-desc{font-size:13px;color:var(--on-surface-var);margin-bottom:12px;line-height:1.4;}
+.boost-progress{height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden;margin-bottom:12px;}
+.boost-progress>div{height:100%;background:linear-gradient(90deg,var(--primary),#2196F3);border-radius:99px;transition:width .4s ease;}
+.boost-action{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.boost-cost{font-weight:800;font-size:15px;display:flex;align-items:center;gap:6px;}
+.boost-cost i{color:var(--gold);}
+
+.btn{
+  border:none;border-radius:14px;padding:10px 18px;font-weight:700;font-size:14px;
+  cursor:pointer;transition:all .2s;background:var(--primary);color:var(--on-primary);
+  display:inline-flex;align-items:center;gap:6px;font-family:inherit;
+}
+.btn:active{transform:scale(.96);}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn.secondary{background:var(--surface-3);color:var(--on-surface);}
+.btn.success{background:var(--success);color:#fff;}
+
+/* TASKS */
+.task-card{display:flex;gap:12px;align-items:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;border:1px solid var(--outline-var);margin-bottom:10px;box-shadow:var(--shadow-1);}
+.task-icon{width:48px;height:48px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:linear-gradient(135deg,var(--primary),#2196F3);}
+.task-body{flex:1;min-width:0;}
+.task-name{font-weight:700;font-size:14px;margin-bottom:3px;}
+.task-reward{font-size:12px;color:var(--on-surface-var);font-weight:600;}
+.task-reward b{color:var(--gold);}
+
+/* DAILY */
+.daily-card{background:linear-gradient(135deg,var(--primary),#7C4DFF);color:#fff;border-radius:var(--radius-lg);padding:20px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow-2);}
+.daily-card .dc-title{font-size:14px;opacity:.9;font-weight:600;margin-bottom:6px;}
+.daily-card .dc-streak{font-size:34px;font-weight:800;margin-bottom:4px;}
+.daily-card .dc-desc{font-size:13px;opacity:.9;margin-bottom:14px;}
+.daily-card .btn{background:#fff;color:var(--primary);}
+.daily-dots{display:flex;gap:4px;justify-content:center;margin-bottom:14px;flex-wrap:wrap;}
+.dd{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.3);font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.dd.on{background:#fff;color:var(--primary);}
+
+/* ACH */
+.ach-card{display:flex;gap:12px;align-items:center;background:var(--surface-2);border-radius:var(--radius);padding:12px 14px;border:1px solid var(--outline-var);margin-bottom:8px;box-shadow:var(--shadow-1);transition:all .3s;}
+.ach-card.unlocked{border-color:var(--gold);background:linear-gradient(135deg,rgba(255,179,0,.12),transparent);}
+.ach-emoji{font-size:30px;flex-shrink:0;width:44px;text-align:center;}
+.ach-body{flex:1;}
+.ach-name{font-weight:700;font-size:14px;}
+.ach-req{font-size:12px;color:var(--on-surface-var);font-weight:600;}
+.ach-status{font-size:20px;color:var(--outline-var);}
+.ach-card.unlocked .ach-status{color:var(--gold);}
+.profile-box{background:linear-gradient(135deg,var(--primary),#2196F3);color:#fff;border-radius:var(--radius-lg);padding:20px;margin-bottom:16px;box-shadow:var(--shadow-2);}
+.profile-box .pb-name{font-size:22px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.profile-box .pb-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pb-stat{background:rgba(255,255,255,.18);border-radius:14px;padding:10px;}
+.pb-stat .pv{font-size:18px;font-weight:800;}
+.pb-stat .pl{font-size:11px;opacity:.9;font-weight:600;letter-spacing:.5px;}
+
+/* HISTORY */
+.sort-tabs{display:flex;gap:6px;margin-bottom:12px;}
+.sort-tab{flex:1;padding:8px;border-radius:999px;border:none;background:var(--surface-2);color:var(--on-surface-var);font-weight:600;font-size:12px;cursor:pointer;font-family:inherit;}
+.sort-tab.active{background:var(--primary);color:var(--on-primary);}
+.hist-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--surface-2);border-radius:14px;margin-bottom:6px;border:1px solid var(--outline-var);}
+.hist-day{font-weight:700;font-size:14px;}
+.hist-val{font-weight:800;font-size:15px;color:var(--primary);}
+.hist-val.pos{color:var(--success);}
+
+/* SETTINGS */
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--on-surface-var);margin-bottom:6px;}
+.field input{width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid var(--outline-var);background:var(--surface-2);color:var(--on-surface);font-size:15px;font-family:inherit;font-weight:600;outline:none;transition:all .2s;}
+.field input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-container);}
+.row-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.row-btns .btn{flex:1;justify-content:center;}
+.danger{background:var(--danger)!important;color:#fff!important;}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.show{display:flex;animation:fadeUp .25s ease;}
+.modal{background:var(--surface);border-radius:28px;padding:24px;max-width:420px;width:100%;box-shadow:var(--shadow-3);text-align:center;animation:pop .35s cubic-bezier(.2,1.4,.5,1);max-height:85vh;overflow-y:auto;}
+.modal h2{margin:0 0 8px;font-size:22px;font-weight:800;}
+.modal p{margin:0 0 16px;color:var(--on-surface-var);font-size:14px;line-height:1.5;}
+.modal .big-emoji{font-size:56px;margin-bottom:8px;display:block;}
+.modal .btn{width:100%;justify-content:center;margin-top:8px;}
+
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(30px);background:var(--on-surface);color:var(--surface);padding:12px 20px;border-radius:14px;font-weight:600;font-size:14px;box-shadow:var(--shadow-3);opacity:0;pointer-events:none;transition:all .3s;z-index:2000;max-width:90vw;text-align:center;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.thanks-grad{background:linear-gradient(135deg,#FFB300,#FF6F00,#7C4DFF,#2196F3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+#thanksName{cursor:pointer;}
+.cyber-veg{background:linear-gradient(135deg,#00E676,#00B0FF,#AA00FF)!important;animation:cyberShift 3s linear infinite;}
+@keyframes cyberShift{0%{filter:hue-rotate(0deg);}100%{filter:hue-rotate(360deg);}}
+::-webkit-scrollbar{width:0;height:0;}
+@media (max-width:400px){
+  :root{--tap-size:170px;}
+  .score-value{font-size:36px;}
+  #tapBtn .icon-fa{font-size:64px;}
+  #tapBtn .tap-text{font-size:38px;}
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-logo"><i class="fa-solid fa-hand-pointer"></i>Tap&amp;Tap</div>
+  <div class="loader-bar"><div id="loadBar"></div></div>
+  <div class="loader-hint" id="loadHint">Загрузка Gold Edition…</div>
+</div>
+
+<div id="app">
+  <div class="top-tabs">
+    <button class="top-tab" data-screen="shop"><i class="fa-solid fa-store"></i>Магазин</button>
+    <button class="top-tab" data-screen="tasks"><i class="fa-solid fa-list-check"></i>Задания</button>
+    <button class="top-tab" data-screen="boosts"><i class="fa-solid fa-rocket"></i>Бусты</button>
+  </div>
+
+  <div class="screen" id="screen-shop"></div>
+  <div class="screen" id="screen-tasks"></div>
+  <div class="screen" id="screen-boosts"></div>
+  <div class="screen active" id="screen-clicker"></div>
+  <div class="screen" id="screen-ach"></div>
+  <div class="screen" id="screen-settings"></div>
+
+  <div class="bottom-nav">
+    <button class="nav-item active" data-screen="clicker"><i class="fa-solid fa-hand-pointer"></i>Кликер</button>
+    <button class="nav-item" data-screen="ach"><i class="fa-solid fa-trophy"></i>Достижения</button>
+    <button class="nav-item" data-screen="settings"><i class="fa-solid fa-gear"></i>Настройки</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+/* ============================================================
+   TAP&TAP — GOLD EDITION  v1.3 (магазин работает, анти-чит)
+   ============================================================ */
+
+const THEMES = [
+  {id:'blue', name:'Голубой', price:0,
+    grad:'linear-gradient(135deg,#2196F3,#2196F3)',
+    primary:'#1565C0', primaryContainer:'#BBDEFB', onPrimary:'#FFFFFF', onPrimaryContainer:'#0D47A1'},
+
+  {id:'purple', name:'Фиолетовый', price:1000,
+    grad:'linear-gradient(135deg,#9C27B0,#9C27B0)',
+    primary:'#7B1FA2', primaryContainer:'#E1BEE7', onPrimary:'#FFFFFF', onPrimaryContainer:'#4A148C'},
+
+  {id:'orange', name:'Оранжевый', price:3000,
+    grad:'linear-gradient(135deg,#FF9800,#FF9800)',
+    primary:'#E65100', primaryContainer:'#FFE0B2', onPrimary:'#FFFFFF', onPrimaryContainer:'#BF360C'},
+
+  {id:'red', name:'Красный', price:7000,
+    grad:'linear-gradient(135deg,#F44336,#F44336)',
+    primary:'#C62828', primaryContainer:'#FFCDD2', onPrimary:'#FFFFFF', onPrimaryContainer:'#8E0000'},
+
+  {id:'green', name:'Зелёный', price:11000,
+    grad:'linear-gradient(135deg,#4CAF50,#4CAF50)',
+    primary:'#2E7D32', primaryContainer:'#C8E6C9', onPrimary:'#FFFFFF', onPrimaryContainer:'#1B5E20'},
+
+  {id:'blueviolet', name:'Сине-фиолетовый', price:20000,
+    grad:'linear-gradient(135deg,#3F51B5,#9C27B0)',
+    primary:'#4A148C', primaryContainer:'#D1C4E9', onPrimary:'#FFFFFF', onPrimaryContainer:'#311B92'},
+
+  {id:'redorange', name:'Красно-оранжевый', price:32000,
+    grad:'linear-gradient(135deg,#F44336,#FF9800)',
+    primary:'#D84315', primaryContainer:'#FFCCBC', onPrimary:'#FFFFFF', onPrimaryContainer:'#BF360C'},
+
+  {id:'greenblue', name:'Зелено-синий', price:48000,
+    grad:'linear-gradient(135deg,#4CAF50,#2196F3)',
+    primary:'#00695C', primaryContainer:'#B2DFDB', onPrimary:'#FFFFFF', onPrimaryContainer:'#004D40'},
+
+  {id:'rainbow', name:'Разноцветный ✨', price:75000,
+    grad:'linear-gradient(135deg,#F44336,#FF9800,#FFEB3B,#4CAF50,#2196F3,#9C27B0)',
+    primary:'#E91E63', primaryContainer:'#F8BBD0', onPrimary:'#FFFFFF', onPrimaryContainer:'#880E4F'},
+
+  {id:'dark', name:'Тёмная тема (UI)', price:15,
+    grad:'linear-gradient(135deg,#141218,#3A3A3A)',
+    primary:'#D0BCFF', primaryContainer:'#4F378B', onPrimary:'#381E72', onPrimaryContainer:'#EADDFF'}
+];
+
+const ICONS = [
+  {id:'tap',      name:'TAP',            fa:null,                                price:0,      emoji:'TAP'},
+  {id:'bear',     name:'Мишка',          fa:'fa-solid fa-paw',                   price:250,    emoji:'🧸'},
+  {id:'panda',    name:'Панда',          fa:'fa-solid fa-paw',                   price:700,    emoji:'🐼'},
+  {id:'croc',     name:'Крокодил',       fa:'fa-solid fa-dragon',                price:1400,   emoji:'🐊'},
+  {id:'goose',    name:'Гусь',           fa:'fa-solid fa-dove',                  price:2300,   emoji:'🦆'},
+  {id:'carrot',   name:'Морковь',        fa:'fa-solid fa-carrot',                price:3200,   emoji:'🥕'},
+  {id:'bee',      name:'Пчела',          fa:'fa-solid fa-bug',                   price:4000,   emoji:'🐝'},
+  {id:'picture',  name:'Картина',        fa:'fa-solid fa-image',                 price:5000,   emoji:'🖼️'},
+  {id:'think',    name:'Думающий',       fa:'fa-solid fa-face-thinking',         price:7400,   emoji:'🤔'},
+  {id:'starface', name:'Звёздный смайл', fa:'fa-solid fa-face-grin-stars',       price:8600,   emoji:'🤩'},
+  {id:'star',     name:'Звезда',         fa:'fa-solid fa-star',                  price:10000,  emoji:'⭐'},
+  {id:'heart',    name:'Сердце',         fa:'fa-solid fa-heart',                 price:13000,  emoji:'❤️'},
+  {id:'diamond',  name:'Бриллиант',      fa:'fa-solid fa-gem',                   price:20000,  emoji:'💎'},
+  {id:'crown',    name:'Корона',         fa:'fa-solid fa-crown',                 price:36000,  emoji:'👑'},
+  {id:'fire',     name:'Огонь',          fa:'fa-solid fa-fire',                  price:42000,  emoji:'🔥'},
+  {id:'gift',     name:'Подарок',        fa:'fa-solid fa-gift',                  price:50000,  emoji:'🎁'},
+  {id:'crazy',    name:'Смайл',          fa:'fa-solid fa-face-grin-tongue-wink', price:67000,  emoji:'🤪'},
+  {id:'skull',    name:'Череп',          fa:'fa-solid fa-skull',                 price:90000,  emoji:'💀'},
+  {id:'facepalm', name:'Рукалицо',       fa:'fa-solid fa-hand',                  price:100000, emoji:'🤞'}
+];
+
+const ACHIEVEMENTS = [
+  {id:'novice',   emoji:'🌑', name:'Новичок',     req:1000},
+  {id:'amateur',  emoji:'🌒', name:'Любитель',    req:10000},
+  {id:'tapper',   emoji:'🌓', name:'Таппер',      req:50000},
+  {id:'master',   emoji:'🌔', name:'Мастер',      req:100000},
+  {id:'gigatap',  emoji:'🎖', name:'ГигаТап',     req:512000},
+  {id:'legend',   emoji:'🌕', name:'Легенда',     req:500000},
+  {id:'immortal', emoji:'🌟', name:'Бессмертный', req:1000000}
+];
+
+const DEFAULT_STATE = {
+  name:'Таппер',
+  score:0,
+  honestClicks:0,
+  totalEarned:0,
+  clickBoostLvl:0,
+  autoBoostLvl:0,
+  clickPowerLvl:0,
+  currentTheme:'blue',
+  currentIcon:'tap',
+  ownedThemes:['blue'],
+  ownedIcons:['tap'],
+  unlockedAch:[],
+  achNotified:[],
+  dailyStreak:0,
+  lastDailyClaim:0,
+  tasksDone:{channel:false,share:false,review:false},
+  history:[],
+  lastDayKey:null,
+  lastScoreSnapshot:0,
+  cyberVegUnlocked:false,
+  thanksSeen:false
+};
+
+let S = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem('taptap_gold_v1');
+    if(!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+    const parsed = JSON.parse(raw);
+    const merged = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
+    // гарантируем массивы
+    merged.ownedThemes = Array.isArray(merged.ownedThemes) ? merged.ownedThemes : ['blue'];
+    merged.ownedIcons  = Array.isArray(merged.ownedIcons)  ? merged.ownedIcons  : ['tap'];
+    merged.unlockedAch = Array.isArray(merged.unlockedAch) ? merged.unlockedAch : [];
+    merged.achNotified = Array.isArray(merged.achNotified) ? merged.achNotified : [];
+    merged.history     = Array.isArray(merged.history)     ? merged.history     : [];
+    if(!merged.ownedThemes.includes('blue')) merged.ownedThemes.push('blue');
+    if(!merged.ownedIcons.includes('tap'))   merged.ownedIcons.push('tap');
+    return merged;
+  }catch(e){
+    return JSON.parse(JSON.stringify(DEFAULT_STATE));
+  }
+}
+function save(){
+  try{ localStorage.setItem('taptap_gold_v1', JSON.stringify(S)); }catch(e){}
+}
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+function fmt(n){
+  n = Math.floor(n);
+  if(n < 1000) return n.toString();
+  return n.toLocaleString('ru-RU');
+}
+function fmtShort(n){
+  n = Math.floor(n);
+  if(n < 1000) return n.toString();
+  if(n < 1e6) return (n/1000).toFixed(n<10000?1:0)+'K';
+  if(n < 1e9) return (n/1e6).toFixed(1)+'M';
+  return (n/1e9).toFixed(1)+'B';
+}
+function toast(msg, ms=1800){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.classList.remove('show'), ms);
+}
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* BOOSTS */
+const MAX_LVL = 25;
+function upgradeCost(base, lvl, mult1, threshold, mult2){
+  let cost = base;
+  for(let i=0;i<lvl;i++) cost = Math.floor(cost * (i < threshold ? mult1 : mult2));
+  return cost;
+}
+function clickBoostCost(){ return upgradeCost(100, S.clickBoostLvl, 5, 5, 8); }
+function autoBoostCost(){  return upgradeCost(400, S.autoBoostLvl,  4, 3, 5); }
+function clickPowerCost(){ return upgradeCost(500, S.clickPowerLvl, 3, 25, 3); }
+
+function clickBoostMult(){ return Math.pow(2, S.clickBoostLvl); }
+function autoBoostMult(){  return Math.pow(2, S.autoBoostLvl);  }
+function clickPowerMult(){ return Math.pow(2, S.clickPowerLvl); }
+
+function pointsPerClick(){ return 1 * clickPowerMult() * clickBoostMult(); }
+function pointsPerSecond(){ return autoBoostMult() * clickPowerMult(); }
+
+/* THEME / ICON */
+function getTheme(){ return THEMES.find(t=>t.id===S.currentTheme) || THEMES[0]; }
+function getIcon(){  return ICONS.find(i=>i.id===S.currentIcon)  || ICONS[0];  }
+
+function applyTheme(){
+  const th = getTheme();
+  const root = document.documentElement;
+
+  // градиент кнопки
+  root.style.setProperty('--btn-grad', th.grad);
+  root.style.setProperty('--btn-color', th.primary);
+
+  // акценты MD3
+  root.style.setProperty('--primary', th.primary);
+  root.style.setProperty('--primary-container', th.primaryContainer);
+  root.style.setProperty('--on-primary', th.onPrimary);
+  root.style.setProperty('--on-primary-container', th.onPrimaryContainer);
+
+  // тёмная UI-тема — только когда выбрана именно она
+  if(S.currentTheme === 'dark' && S.ownedThemes.includes('dark')){
+    root.setAttribute('data-ui','dark');
+    // переустановим акценты — их перебивает [data-ui="dark"] в CSS
+    root.style.setProperty('--primary', th.primary);
+    root.style.setProperty('--primary-container', th.primaryContainer);
+    root.style.setProperty('--on-primary', th.onPrimary);
+    root.style.setProperty('--on-primary-container', th.onPrimaryContainer);
+  } else {
+    root.removeAttribute('data-ui');
+  }
+
+  // обновим градиент счётчика очков
+  const scoreEl = document.querySelector('.score-value');
+  if(scoreEl){
+    scoreEl.style.background = `linear-gradient(135deg, ${th.primary}, ${th.primary === '#D0BCFF' ? '#7C4DFF' : th.primary})`;
+    scoreEl.style.webkitBackgroundClip = 'text';
+    scoreEl.style.backgroundClip = 'text';
+  }
+
+  const btn = $('#tapBtn');
+  if(btn){
+    btn.style.background = th.grad;
+    btn.classList.toggle('cyber-veg',
+      S.cyberVegUnlocked && S.currentTheme === 'rainbow' && S.currentIcon === 'carrot');
+  }
+}
+
+function renderIconInto(el){
+  const ic = getIcon();
+  if(ic.fa) el.innerHTML = `<i class="${ic.fa} icon-fa"></i>`;
+  else      el.innerHTML = `<span class="tap-text">TAP</span>`;
+}
+
+/* ============================================================
+   CLICKER
+   ============================================================ */
+function renderClicker(){
+  const s = $('#screen-clicker');
+  s.innerHTML = `
+    <div class="score-card">
+      <div class="score-label">Очки</div>
+      <div class="score-value" id="scoreVal">${fmt(S.score)}</div>
+      <div class="score-sub" id="scoreSub">+${fmt(pointsPerClick())} за клик · +${fmt(pointsPerSecond())}/сек</div>
+    </div>
+    <div class="tap-wrap" id="tapWrap">
+      <button id="tapBtn" aria-label="Клик"></button>
+    </div>
+    <div class="boost-strip">
+      <div class="mini-boost"><div class="mv" id="mv1">x${clickBoostMult()}</div><div class="ml">Клик</div></div>
+      <div class="mini-boost"><div class="mv" id="mv2">x${clickPowerMult()}</div><div class="ml">Прокачка</div></div>
+      <div class="mini-boost"><div class="mv" id="mv3">x${autoBoostMult()}</div><div class="ml">В сек</div></div>
+    </div>
+  `;
+  renderIconInto($('#tapBtn'));
+  applyTheme();
+  bindTap();
+}
+
+let _blockedUntil = 0;   // античит: зажатие игнорируется
+
+function bindTap(){
+  const btn = $('#tapBtn');
+  const wrap = $('#tapWrap');
+  if(!btn) return;
+
+  // pointerdown — считаем клик и блокируем повторные срабатывания,
+  // пока палец не отпущен (защита от автоповтора и удержания)
+  btn.addEventListener('pointerdown', (e)=>{
+    e.preventDefault();
+    if(Date.now() < _blockedUntil) return;
+    _blockedUntil = Date.now() + 40; // антиспам: 40мс между зачётами (до 25 кликов/сек) 
+
+    const gain = pointsPerClick();
+    S.score += gain;
+    S.totalEarned += gain;
+    S.honestClicks++;
+
+    // ripple
+    const rect = btn.getBoundingClientRect();
+    const rip = document.createElement('span');
+    rip.className = 'ripple';
+    const size = Math.max(rect.width, rect.height);
+    rip.style.width = rip.style.height = size+'px';
+    rip.style.left = (e.clientX - rect.left - size/2)+'px';
+    rip.style.top  = (e.clientY - rect.top  - size/2)+'px';
+    btn.appendChild(rip);
+    setTimeout(()=>rip.remove(), 650);
+
+    // +N
+    const fp = document.createElement('div');
+    fp.className = 'float-plus';
+    fp.textContent = '+'+fmtShort(gain);
+    const wr = wrap.getBoundingClientRect();
+    fp.style.left = (e.clientX - wr.left - 20)+'px';
+    fp.style.top  = (e.clientY - wr.top  - 20)+'px';
+    fp.style.setProperty('--dx', (Math.random()*60-30)+'px');
+    wrap.appendChild(fp);
+    setTimeout(()=>fp.remove(), 950);
+
+    updateScoreUI();
+    checkAchievements();
+    checkEasterEggs();
+    save();
+  });
+
+  // отключаем context menu на долгое нажатие
+  btn.addEventListener('contextmenu', e=>e.preventDefault());
+}
+
+function updateScoreUI(){
+  const el = $('#scoreVal');
+  if(el){
+    el.textContent = fmt(S.score);
+    el.classList.add('pulse');
+    setTimeout(()=>el.classList.remove('pulse'), 150);
+  }
+  const sub = $('#scoreSub');
+  if(sub) sub.textContent = `+${fmt(pointsPerClick())} за клик · +${fmt(pointsPerSecond())}/сек`;
+  const mv1 = $('#mv1'); if(mv1) mv1.textContent = 'x'+clickBoostMult();
+  const mv2 = $('#mv2'); if(mv2) mv2.textContent = 'x'+clickPowerMult();
+  const mv3 = $('#mv3'); if(mv3) mv3.textContent = 'x'+autoBoostMult();
+
+  // Перерисовываем открытые вкладки, чтобы кнопки/цены обновились
+  if($('#screen-shop')?.classList.contains('active')){
+    renderThemes();
+    renderIcons();
+  }
+  if($('#screen-boosts')?.classList.contains('active')){
+    renderBoosts();
+  }
+  if($('#screen-settings')?.classList.contains('active')){
+    renderSettingsThemes();
+    renderSettingsIcons();
+  }
+}
+
+setInterval(()=>{
+  const pps = pointsPerSecond();
+  if(pps > 0){
+    S.score += pps;
+    S.totalEarned += pps;
+    updateScoreUI();
+    checkAchievements();
+    checkEasterEggs();
+    save();
+  }
+}, 1000);
+
+/* ============================================================
+   SHOP
+   ============================================================ */
+function renderShop(){
+  const s = $('#screen-shop');
+  s.innerHTML = `
+    <div class="section-title"><i class="fa-solid fa-palette"></i>Темы кнопки</div>
+    <div class="hint">Меняй цвет и стиль кнопки. Некоторые темы открываются за очки.</div>
+    <div class="grid-2" id="themesGrid"></div>
+    <div class="section-title"><i class="fa-solid fa-icons"></i>Иконки</div>
+    <div class="hint">Иконка, которая отображается на кнопке кликера.</div>
+    <div class="grid-2" id="iconsGrid"></div>
+  `;
+  renderThemes();
+  renderIcons();
+}
+
+function renderThemes(){
+  const g = $('#themesGrid');
+  if(!g) return;
+  g.innerHTML = THEMES.map(t=>{
+    const owned    = S.ownedThemes.includes(t.id);
+    const equipped = S.currentTheme === t.id;
+    const canBuy   = S.score >= t.price;
+    return `
+      <div class="card ${owned?'owned':''}">
+        ${!owned?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
+        <div class="preview" style="background:${t.grad};${t.id==='dark'?'color:#fff;':''}">
+          ${t.id==='dark'?'🌙':'Aa'}
+        </div>
+        <div class="name">${t.name}</div>
+        ${owned
+          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-theme="${t.id}">
+               ${equipped?'Надето':'Надеть'}
+             </button>`
+          : `<div class="price" style="color:${canBuy?'':'var(--danger)'}">
+               <i class="fa-solid fa-star" style="color:var(--gold)"></i> ${fmt(t.price)}
+             </div>
+             <button class="buy-btn" data-buy-theme="${t.id}">Купить</button>`
+        }
+      </div>`;
+  }).join('');
+
+  g.querySelectorAll('[data-buy-theme]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = b.dataset.buyTheme;
+      const t = THEMES.find(x=>x.id===id);
+      if(!t) return;
+      if(S.score < t.price){ toast('Недостаточно очков'); return; }
+      S.score -= t.price;
+      if(!S.ownedThemes.includes(id)) S.ownedThemes.push(id);
+      S.currentTheme = id;
+      applyTheme();
+      save();
+      renderThemes(); renderIcons();
+      updateScoreUI();
+      toast(`Тема «${t.name}» куплена!`);
+    });
+  });
+  g.querySelectorAll('[data-theme]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      S.currentTheme = b.dataset.theme;
+      applyTheme();
+      save();
+      renderThemes();
+      toast('Тема применена');
+    });
+  });
+}
+
+function renderIcons(){
+  const g = $('#iconsGrid');
+  if(!g) return;
+  g.innerHTML = ICONS.map(ic=>{
+    const owned    = S.ownedIcons.includes(ic.id);
+    const equipped = S.currentIcon === ic.id;
+    const canBuy   = S.score >= ic.price;
+    const preview  = ic.fa
+      ? `<i class="${ic.fa}" style="font-size:24px"></i>`
+      : `<span style="font-size:14px;font-weight:800;letter-spacing:1px">TAP</span>`;
+    return `
+      <div class="card ${owned?'owned':''}">
+        ${!owned?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
+        <div class="preview" style="background:var(--btn-grad)">${preview}</div>
+        <div class="name">${ic.name}</div>
+        ${owned
+          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-icon="${ic.id}">
+               ${equipped?'Надето':'Надеть'}
+             </button>`
+          : `<div class="price" style="color:${canBuy?'':'var(--danger)'}">
+               <i class="fa-solid fa-star" style="color:var(--gold)"></i> ${fmt(ic.price)}
+             </div>
+             <button class="buy-btn" data-buy-icon="${ic.id}">Купить</button>`
+        }
+      </div>`;
+  }).join('');
+
+  g.querySelectorAll('[data-buy-icon]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const id = b.dataset.buyIcon;
+      const ic = ICONS.find(x=>x.id===id);
+      if(!ic) return;
+      if(S.score < ic.price){ toast('Недостаточно очков'); return; }
+      S.score -= ic.price;
+      if(!S.ownedIcons.includes(id)) S.ownedIcons.push(id);
+      S.currentIcon = id;
+      if($('#tapBtn')) renderIconInto($('#tapBtn'));
+      applyTheme();
+      save();
+      renderThemes(); renderIcons();
+      updateScoreUI();
+      toast(`Иконка «${ic.name}» куплена!`);
+    });
+  });
+  g.querySelectorAll('[data-icon]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      S.currentIcon = b.dataset.icon;
+      if($('#tapBtn')) renderIconInto($('#tapBtn'));
+      applyTheme();
+      save();
+      renderIcons();
+      toast('Иконка применена');
+    });
+  });
+}
+
+/* ============================================================
+   BOOSTS
+   ============================================================ */
+function renderBoosts(){
+  const s = $('#screen-boosts');
+  s.innerHTML = `
+    <div class="section-title"><i class="fa-solid fa-rocket"></i>Прокачка</div>
+    <div class="hint">Улучшай клик и пассивный доход. Максимальный уровень — 25.</div>
+
+    <div class="boost-card">
+      <div class="boost-head">
+        <div class="boost-title"><i class="fa-solid fa-hand-pointer"></i>Х2 за клик</div>
+        <div class="boost-lvl">Ур. ${S.clickBoostLvl}/${MAX_LVL}</div>
+      </div>
+      <div class="boost-desc">Умножает очки за клик. Множитель: <b>×${clickBoostMult()}</b></div>
+      <div class="boost-progress"><div style="width:${(S.clickBoostLvl/MAX_LVL)*100}%"></div></div>
+      <div class="boost-action">
+        <div class="boost-cost"><i class="fa-solid fa-star"></i>${fmt(clickBoostCost())}</div>
+        <button class="btn" id="buyClickBoost" ${S.clickBoostLvl>=MAX_LVL?'disabled':''}>
+          ${S.clickBoostLvl>=MAX_LVL?'МАКС':'Улучшить'}
+        </button>
+      </div>
+    </div>
+
+    <div class="boost-card">
+      <div class="boost-head">
+        <div class="boost-title"><i class="fa-solid fa-gauge-high"></i>Х2 за сек</div>
+        <div class="boost-lvl">Ур. ${S.autoBoostLvl}/${MAX_LVL}</div>
+      </div>
+      <div class="boost-desc">Пассивный доход в секунду. Множитель: <b>×${autoBoostMult()}</b></div>
+      <div class="boost-progress"><div style="width:${(S.autoBoostLvl/MAX_LVL)*100}%"></div></div>
+      <div class="boost-action">
+        <div class="boost-cost"><i class="fa-solid fa-star"></i>${fmt(autoBoostCost())}</div>
+        <button class="btn" id="buyAutoBoost" ${S.autoBoostLvl>=MAX_LVL?'disabled':''}>
+          ${S.autoBoostLvl>=MAX_LVL?'МАКС':'Улучшить'}
+        </button>
+      </div>
+    </div>
+
+    <div class="boost-card">
+      <div class="boost-head">
+        <div class="boost-title"><i class="fa-solid fa-bolt"></i>Прокачка кликера</div>
+        <div class="boost-lvl">Ур. ${S.clickPowerLvl}/${MAX_LVL}</div>
+      </div>
+      <div class="boost-desc">Базовый множитель клика. Множитель: <b>×${clickPowerMult()}</b></div>
+      <div class="boost-progress"><div style="width:${(S.clickPowerLvl/MAX_LVL)*100}%"></div></div>
+      <div class="boost-action">
+        <div class="boost-cost"><i class="fa-solid fa-star"></i>${fmt(clickPowerCost())}</div>
+        <button class="btn" id="buyClickPower" ${S.clickPowerLvl>=MAX_LVL?'disabled':''}>
+          ${S.clickPowerLvl>=MAX_LVL?'МАКС':'Улучшить'}
+        </button>
+      </div>
+    </div>
+  `;
+
+  $('#buyClickBoost')?.addEventListener('click', ()=>{
+    const c = clickBoostCost();
+    if(S.score < c || S.clickBoostLvl>=MAX_LVL){ toast('Недостаточно очков'); return; }
+    S.score -= c; S.clickBoostLvl++; save(); renderBoosts(); updateScoreUI(); toast('Улучшено!');
+  });
+  $('#buyAutoBoost')?.addEventListener('click', ()=>{
+    const c = autoBoostCost();
+    if(S.score < c || S.autoBoostLvl>=MAX_LVL){ toast('Недостаточно очков'); return; }
+    S.score -= c; S.autoBoostLvl++; save(); renderBoosts(); updateScoreUI(); toast('Улучшено!');
+  });
+  $('#buyClickPower')?.addEventListener('click', ()=>{
+    const c = clickPowerCost();
+    if(S.score < c || S.clickPowerLvl>=MAX_LVL){ toast('Недостаточно очков'); return; }
+    S.score -= c; S.clickPowerLvl++; save(); renderBoosts(); updateScoreUI(); toast('Улучшено!');
+  });
+}
+
+/* ============================================================
+   TASKS
+   ============================================================ */
+function dailyRewardForStreak(streak){
+  if(streak >= 15) return 7000;
+  return 50 * Math.pow(2, streak-1);
+}
+function todayKey(){
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+function canClaimDaily(){ return (Date.now() - S.lastDailyClaim) >= 24*60*60*1000; }
+function nextStreakIfClaim(){
+  const now = Date.now();
+  const oneDay = 24*60*60*1000;
+  if(S.lastDailyClaim === 0) return 1;
+  const gap = now - S.lastDailyClaim;
+  if(gap >= 2*oneDay) return 1;
+  if(gap >= oneDay) return Math.min(S.dailyStreak + 1, 15);
+  return S.dailyStreak;
+}
+
+function renderTasks(){
+  const s = $('#screen-tasks');
+  const claimable = canClaimDaily();
+  const nextStreak = nextStreakIfClaim();
+  const reward = dailyRewardForStreak(nextStreak);
+  const dots = Array.from({length:15}, (_,i)=>{
+    const dayN = i+1;
+    return `<div class="dd ${dayN<=S.dailyStreak?'on':''}">${dayN}</div>`;
+  }).join('');
+
+  s.innerHTML = `
+    <div class="section-title"><i class="fa-solid fa-calendar-day"></i>Ежедневный бонус</div>
+    <div class="daily-card">
+      <div class="dc-title">Серия дней: ${S.dailyStreak}/15</div>
+      <div class="dc-streak">+${fmt(reward)}</div>
+      <div class="dc-desc">${claimable ? 'Награда доступна!' : 'Возвращайся каждый день!'}</div>
+      <div class="daily-dots">${dots}</div>
+      <button class="btn" id="claimDaily" ${!claimable?'disabled':''}>
+        <i class="fa-solid fa-gift"></i> ${claimable?'Забрать':'Уже забрано'}
+      </button>
+    </div>
+    <div class="section-title"><i class="fa-solid fa-list-check"></i>Задания</div>
+    ${taskHtml('channel','fa-solid fa-tower-broadcast','Подписаться на канал «Tap&Tap»',400,'https://max.ru/channel_TapTap')}
+    ${taskHtml('share','fa-solid fa-share-nodes','Поделиться игрой с друзьями',600,'https://q-acd.github.io/tap_tap')}
+    ${taskHtml('review','fa-solid fa-envelope','Написать отзыв',500,'mailto:q-acd@mail.ru')}
+  `;
+
+  $('#claimDaily')?.addEventListener('click', ()=>{
+    if(!canClaimDaily()) return;
+    const ns = nextStreakIfClaim();
+    S.dailyStreak = ns;
+    S.lastDailyClaim = Date.now();
+    const r = dailyRewardForStreak(ns);
+    S.score += r; S.totalEarned += r;
+    save(); renderTasks(); updateScoreUI();
+    toast(`+${fmt(r)} очков! День ${ns}`);
+  });
+
+  $$('.task-card').forEach(card=>{
+    const key = card.dataset.key;
+    const link = card.dataset.link;
+    const reward = parseInt(card.dataset.reward,10);
+    card.querySelector('.task-go')?.addEventListener('click', ()=>{
+      if(link.startsWith('mailto:')) window.location.href = link;
+      else window.open(link,'_blank');
+    });
+    card.querySelector('.task-claim')?.addEventListener('click', ()=>{
+      if(S.tasksDone[key]) return;
+      S.tasksDone[key] = true;
+      S.score += reward; S.totalEarned += reward;
+      save(); renderTasks(); updateScoreUI();
+      toast(`+${reward} за задание!`);
+    });
+  });
+}
+
+function taskHtml(key, icon, name, reward, link){
+  const done = S.tasksDone[key];
+  return `
+    <div class="task-card" data-key="${key}" data-link="${link}" data-reward="${reward}">
+      <div class="task-icon"><i class="${icon}"></i></div>
+      <div class="task-body">
+        <div class="task-name">${name}</div>
+        <div class="task-reward">Награда: <b>+${reward}</b></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <button class="btn secondary task-go" style="padding:8px 12px;font-size:12px;">Открыть</button>
+        <button class="btn ${done?'secondary':'success'} task-claim" style="padding:8px 12px;font-size:12px;" ${done?'disabled':''}>
+          ${done?'✓':'Забрать'}
+        </button>
+      </div>
+    </div>`;
+}
+
+/* ============================================================
+   ACHIEVEMENTS
+   ============================================================ */
+function renderAch(){
+  const s = $('#screen-ach');
+  const ic = getIcon();
+  const th = getTheme();
+  s.innerHTML = `
+    <div class="profile-box">
+      <div class="pb-name"><i class="fa-solid fa-user-astronaut"></i>${escapeHtml(S.name)}</div>
+      <div class="pb-stats">
+        <div class="pb-stat"><div class="pv">${fmtShort(S.score)}</div><div class="pl">ОЧКОВ</div></div>
+        <div class="pb-stat"><div class="pv">${fmtShort(S.honestClicks)}</div><div class="pl">ЧЕСТНЫХ КЛИКОВ</div></div>
+        <div class="pb-stat"><div class="pv">${ic.fa ? `<i class="${ic.fa}"></i>` : 'TAP'}</div><div class="pl">ИКОНКА</div></div>
+        <div class="pb-stat"><div class="pv" style="font-size:14px">${th.name}</div><div class="pl">ТЕМА</div></div>
+      </div>
+      <button class="btn" style="margin-top:14px;background:#fff;color:#6750A4;width:100%;justify-content:center;" id="shareBtn">
+        <i class="fa-solid fa-share-nodes"></i> Поделиться
+      </button>
+    </div>
+    <div class="section-title"><i class="fa-solid fa-trophy"></i>Достижения</div>
+    <div id="achList"></div>
+    <div class="section-title"><i class="fa-solid fa-chart-line"></i>Достижения за день</div>
+    <div class="sort-tabs">
+      <button class="sort-tab active" data-sort="day">По дням</button>
+      <button class="sort-tab" data-sort="points">По очкам (+)</button>
+    </div>
+    <div id="histList"></div>
+  `;
+  renderAchList();
+  renderHistory('day');
+  $('#shareBtn')?.addEventListener('click', doShare);
+  $$('.sort-tab').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      $$('.sort-tab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      renderHistory(b.dataset.sort);
+    });
+  });
+}
+
+function renderAchList(){
+  const wrap = $('#achList');
+  if(!wrap) return;
+  wrap.innerHTML = ACHIEVEMENTS.map(a=>{
+    const un = S.unlockedAch.includes(a.id);
+    return `
+      <div class="ach-card ${un?'unlocked':''}">
+        <div class="ach-emoji">${a.emoji}</div>
+        <div class="ach-body">
+          <div class="ach-name">${a.name}</div>
+          <div class="ach-req">${fmt(a.req)} очков</div>
+        </div>
+        <div class="ach-status"><i class="fa-solid ${un?'fa-circle-check':'fa-circle'}"></i></div>
+      </div>`;
+  }).join('');
+}
+
+function renderHistory(sort){
+  const wrap = $('#histList');
+  if(!wrap) return;
+  let data = [...S.history];
+  if(sort === 'points') data.sort((a,b)=> (b.delta||0) - (a.delta||0));
+  else data.sort((a,b)=> a.day - b.day);
+  if(data.length === 0){
+    wrap.innerHTML = `<div class="hint" style="text-align:center;padding:20px;">История появится, когда ты начнёшь играть</div>`;
+    return;
+  }
+  wrap.innerHTML = data.map(h=>`
+    <div class="hist-row">
+      <div class="hist-day">День ${h.day}</div>
+      <div class="hist-val ${h.delta>0?'pos':''}">
+        ${fmt(h.score)}${h.delta>0?` <span style="font-size:12px;">(+${fmt(h.delta)})</span>`:''}
+      </div>
+    </div>`).join('');
+}
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+function renderSettings(){
+  const s = $('#screen-settings');
+  s.innerHTML = `
+    <div class="section-title"><i class="fa-solid fa-user"></i>Профиль</div>
+    <div class="field">
+      <label>Имя игрока</label>
+      <input type="text" id="nameInput" maxlength="20" value="${escapeHtml(S.name)}">
+    </div>
+    <div class="row-btns">
+      <button class="btn" id="saveName"><i class="fa-solid fa-check"></i> Сохранить имя</button>
+    </div>
+    <div class="section-title"><i class="fa-solid fa-palette"></i>Тема UI</div>
+    <div class="hint">Разблокированные темы можно применить здесь или в магазине.</div>
+    <div class="grid-2" id="settingsThemes"></div>
+    <div class="section-title"><i class="fa-solid fa-icons"></i>Иконка кнопки</div>
+    <div class="hint">Разблокированные иконки можно применить здесь.</div>
+    <div class="grid-2" id="settingsIcons"></div>
+    <div class="section-title"><i class="fa-solid fa-triangle-exclamation"></i>Опасная зона</div>
+    <div class="row-btns">
+      <button class="btn danger" id="resetBtn"><i class="fa-solid fa-trash"></i> Сбросить прогресс</button>
+    </div>
+    <div style="text-align:center;color:var(--on-surface-var);font-size:12px;margin:24px 0;">
+      Tap&Tap Gold Edition · v1.3
+    </div>
+  `;
+  $('#saveName')?.addEventListener('click', ()=>{
+    const v = $('#nameInput').value.trim() || 'Таппер';
+    S.name = v; save(); toast('Имя сохранено');
+    if($('#screen-ach').classList.contains('active')) renderAch();
+  });
+  $('#resetBtn')?.addEventListener('click', ()=>{
+    if(confirm('Точно сбросить весь прогресс?')){
+      localStorage.removeItem('taptap_gold_v1');
+      S = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      save(); applyTheme(); renderAll(); switchScreen('clicker');
+      toast('Прогресс сброшен');
+    }
+  });
+  renderSettingsThemes();
+  renderSettingsIcons();
+}
+
+function renderSettingsThemes(){
+  const g = $('#settingsThemes');
+  if(!g) return;
+  g.innerHTML = THEMES.map(t=>{
+    const owned = S.ownedThemes.includes(t.id);
+    const equipped = S.currentTheme === t.id;
+    return `
+      <div class="card ${owned?'owned':''}">
+        ${!owned?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
+        <div class="preview" style="background:${t.grad};${t.id==='dark'?'color:#fff;':''}">${t.id==='dark'?'🌙':'Aa'}</div>
+        <div class="name">${t.name}</div>
+        ${owned
+          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-set-theme="${t.id}">${equipped?'Надето':'Надеть'}</button>`
+          : `<div class="price"><i class="fa-solid fa-lock"></i> ${fmt(t.price)}</div>
+             <button class="buy-btn" disabled>В магазине</button>`
+        }
+      </div>`;
+  }).join('');
+  g.querySelectorAll('[data-set-theme]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      S.currentTheme = b.dataset.setTheme;
+      applyTheme(); save();
+      renderSettingsThemes(); renderSettingsIcons();
+      if($('#screen-shop').classList.contains('active')) renderShop();
+      toast('Тема применена');
+    });
+  });
+}
+
+function renderSettingsIcons(){
+  const g = $('#settingsIcons');
+  if(!g) return;
+  g.innerHTML = ICONS.map(ic=>{
+    const owned = S.ownedIcons.includes(ic.id);
+    const equipped = S.currentIcon === ic.id;
+    const preview = ic.fa
+      ? `<i class="${ic.fa}" style="font-size:24px"></i>`
+      : `<span style="font-size:14px;font-weight:800;letter-spacing:1px">TAP</span>`;
+    return `
+      <div class="card ${owned?'owned':''}">
+        ${!owned?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
+        <div class="preview" style="background:var(--btn-grad)">${preview}</div>
+        <div class="name">${ic.name}</div>
+        ${owned
+          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-set-icon="${ic.id}">${equipped?'Надето':'Надеть'}</button>`
+          : `<div class="price"><i class="fa-solid fa-lock"></i> ${fmt(ic.price)}</div>
+             <button class="buy-btn" disabled>В магазине</button>`
+        }
+      </div>`;
+  }).join('');
+  g.querySelectorAll('[data-set-icon]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      S.currentIcon = b.dataset.setIcon;
+      if($('#tapBtn')) renderIconInto($('#tapBtn'));
+      applyTheme(); save();
+      renderSettingsThemes(); renderSettingsIcons();
+      if($('#screen-shop').classList.contains('active')) renderShop();
+      toast('Иконка применена');
+    });
+  });
+}
+
+/* ============================================================
+   SHARE
+   ============================================================ */
+function doShare(){
+  const ic = getIcon();
+  const th = getTheme();
+
+  // Считаем разблокированные ачивки для «хвастовства»
+  const unlockedList = ACHIEVEMENTS.filter(a => S.unlockedAch.includes(a.id));
+  const achCount = unlockedList.length;
+  const topAch = unlockedList.length ? unlockedList[unlockedList.length - 1] : null;
+
+  // Звание по очкам (для вовлечения)
+  let rank = '🌑 Новичок';
+  if(S.score >= 1000000)     rank = '🌟 Бессмертный';
+  else if(S.score >= 512000) rank = '🎖 ГигаТап';
+  else if(S.score >= 500000) rank = '🌕 Легенда';
+  else if(S.score >= 100000) rank = '🌔 Мастер';
+  else if(S.score >= 50000)  rank = '🌓 Таппер';
+  else if(S.score >= 10000)  rank = '🌒 Любитель';
+  else if(S.score >= 1000)   rank = '🌑 Новичок';
+  else                        rank = '🐣 Только начал';
+
+  const iconLabel = ic.fa ? ic.name : 'TAP (текст)';
+  const themeLabel = th.name;
+
+  // Многострочный завлекающий текст
+  const lines = [
+    `🔥 Я ${S.name} в Tap&Tap и уже набрал ${fmt(S.score)} очков!`,
+    ``,
+    `📊 Мои достижения:`,
+    `• 🖱 Честных кликов: ${fmt(S.honestClicks)}`,
+    `• 🏆 Звание: ${rank}`,
+    `• ✨ Ачивок: ${achCount}/${ACHIEVEMENTS.length}${topAch ? ` (последняя: ${topAch.emoji} ${topAch.name})` : ''}`,
+    `• 🎨 Стиль: ${iconLabel} в ${themeLabel}`,
+    ``,
+    `💥 Слабо побить мой рекорд?`,
+    `Заходи — тут вкусно тапается 👇`,
+    `https://q-acd.github.io/tap_tap`,
+    ``,
+    `#TapTap #кликер`
+  ];
+  const text = lines.join('\n');
+
+  // Пытаемся поделиться через нативный share
+  if(navigator.share){
+    navigator.share({
+      title: `${S.name} в Tap&Tap · ${rank}`,
+      text: text,
+      url: 'https://q-acd.github.io/tap_tap'
+    }).catch(()=>{});
+    return;
+  }
+
+  // Fallback: копируем в буфер
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text)
+      .then(()=> toast('Текст скопирован! Отправь друзьям 🚀'))
+      .catch(()=> prompt('Скопируй текст:', text));
+    return;
+  }
+
+  // Ещё более старый fallback
+  prompt('Скопируй текст:', text);
+}
+
+/* ============================================================
+   ACH / EASTER EGGS
+   ============================================================ */
+function checkAchievements(){
+  let newUnlock = false;
+  ACHIEVEMENTS.forEach(a=>{
+    if(S.score >= a.req && !S.unlockedAch.includes(a.id)){
+      S.unlockedAch.push(a.id);
+      newUnlock = true;
+      if(!S.achNotified.includes(a.id)){
+        S.achNotified.push(a.id);
+        toast(`✨ ${a.emoji} ${a.name}!`);
+      }
+    }
+  });
+  if(newUnlock && $('#screen-ach').classList.contains('active')) renderAchList();
+}
+
+function checkEasterEggs(){
+  if(S.score >= 512000 && !S.thanksSeen){
+    S.thanksSeen = true;
+    save();
+    showThanks();
+  }
+}
+
+function showThanks(){
+  const m = $('#modalContent');
+  m.innerHTML = `
+    <span class="big-emoji">🎖</span>
+    <h2 class="thanks-grad">ГигаТап!</h2>
+    <p>Ты набрал 512 000 очков и стал настоящей легендой Tap&amp;Tap!</p>
+    <p>Нажми 7 раз на имя ниже, чтобы открыть секрет 🤫</p>
+    <p id="thanksName" style="font-size:18px;font-weight:800;color:var(--primary);padding:14px;background:var(--surface-2);border-radius:14px;">
+      ${escapeHtml(S.name)}
+    </p>
+    <button class="btn" id="thanksClose">Продолжить</button>
+  `;
+  $('#modalBg').classList.add('show');
+  let clicks = 0;
+  $('#thanksName').addEventListener('click', ()=>{
+    clicks++;
+    if(clicks === 7){
+      S.cyberVegUnlocked = true;
+      S.currentTheme = 'rainbow';
+      S.currentIcon = 'carrot';
+      if(!S.ownedThemes.includes('rainbow')) S.ownedThemes.push('rainbow');
+      if(!S.ownedIcons.includes('carrot'))   S.ownedIcons.push('carrot');
+      save(); applyTheme();
+      if($('#tapBtn')) renderIconInto($('#tapBtn'));
+      m.innerHTML = `
+        <span class="big-emoji">🥦⚡</span>
+        <h2 class="cyber-veg" style="background:none;-webkit-text-fill-color:initial;">КИБЕР-ОВОЩ!</h2>
+        <p>Секретная тема активирована! Морковь в стиле «Разноцветный» ждёт тебя 🔥</p>
+        <button class="btn" id="cyberClose">Погнали!</button>
+      `;
+      $('#cyberClose')?.addEventListener('click', ()=>$('#modalBg').classList.remove('show'));
+    }
+  });
+  $('#thanksClose')?.addEventListener('click', ()=>$('#modalBg').classList.remove('show'));
+}
+
+/* ============================================================
+   HISTORY
+   ============================================================ */
+function updateDailyHistory(){
+  const key = todayKey();
+  if(S.lastDayKey === null){
+    S.lastDayKey = key;
+    S.lastScoreSnapshot = S.score;
+    if(S.history.length === 0) S.history.push({day:1, score:S.score, delta:0});
+    save(); return;
+  }
+  if(S.lastDayKey !== key){
+    const lastScore = S.lastScoreSnapshot;
+    const delta = Math.max(0, S.score - lastScore);
+    const nextDay = (S.history.length ? S.history[S.history.length-1].day : 0) + 1;
+    S.history.push({day:nextDay, score:S.score, delta});
+    S.lastDayKey = key;
+    S.lastScoreSnapshot = S.score;
+    save();
+  } else {
+    if(S.history.length === 0) S.history.push({day:1, score:S.score, delta:0});
+    else {
+      const last = S.history[S.history.length-1];
+      const prevScore = S.history.length>1 ? S.history[S.history.length-2].score : 0;
+      last.score = S.score;
+      last.delta = Math.max(0, S.score - prevScore);
+    }
+    save();
+  }
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+function switchScreen(name){
+  $$('.screen').forEach(s=>s.classList.remove('active'));
+  $$('.top-tab, .nav-item').forEach(b=>b.classList.remove('active'));
+  const scr = $('#screen-'+name);
+  if(scr) scr.classList.add('active');
+  $$('.top-tab').forEach(b=>{ if(b.dataset.screen===name) b.classList.add('active'); });
+  $$('.nav-item').forEach(b=>{ if(b.dataset.screen===name) b.classList.add('active'); });
+
+  if(name === 'shop')     renderShop();
+  if(name === 'tasks')    renderTasks();
+  if(name === 'boosts')   renderBoosts();
+  if(name === 'clicker')  renderClicker();
+  if(name === 'ach')      renderAch();
+  if(name === 'settings') renderSettings();
+}
+
+function bindNav(){
+  $$('.top-tab, .nav-item').forEach(b=>{
+    b.addEventListener('click', ()=>switchScreen(b.dataset.screen));
+  });
+}
+
+function renderAll(){
+  renderShop(); renderTasks(); renderBoosts();
+  renderClicker(); renderAch(); renderSettings();
+  applyTheme(); updateScoreUI();
+}
+
+/* ============================================================
+   LOADER
+   ============================================================ */
+function runLoader(){
+  const bar = $('#loadBar');
+  const hint = $('#loadHint');
+  const hints = ['Загрузка Gold Edition…','Подготовка кнопок…','Разогрев тапов…','Синхронизация очков…','Почти готово…'];
+  const totalTime = 3000 + Math.random()*5000;
+  const start = performance.now();
+  let hintIdx = 0;
+  function tick(now){
+    const t = Math.min(1, (now - start) / totalTime);
+    bar.style.width = (t*100)+'%';
+    const ni = Math.min(hints.length-1, Math.floor(t * hints.length));
+    if(ni !== hintIdx){ hintIdx = ni; hint.textContent = hints[hintIdx]; }
+    if(t < 1) requestAnimationFrame(tick);
+    else setTimeout(()=>{
+      $('#loader').classList.add('hide');
+      $('#app').classList.add('ready');
+      switchScreen('clicker');
+    }, 250);
+  }
+  requestAnimationFrame(tick);
+}
+
+/* INIT */
+function init(){
+  applyTheme();
+  bindNav();
+  updateDailyHistory();
+  setInterval(()=>{
+    updateDailyHistory();
+    save();
+    if($('#screen-ach').classList.contains('active')){
+      renderHistory($('.sort-tab.active')?.dataset.sort || 'day');
+    }
+  }, 30000);
+  runLoader();
+}
+init();
+</script>
+</body>
+</html>
