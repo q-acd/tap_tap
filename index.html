@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6750A4">
+<title>Tap&Tap — кликер-игра с темами, бустами и достижениями</title>
+<meta name="description" content="Tap&Tap — увлекательный кликер: 19 иконок, 10 тем, бусты, ежедневные бонусы и ачивки. Тапай, качайся, хвастайся рекордами!">
+<meta name="keywords" content="Tap&Tap, кликер, игра, тапалка, taptap, кликер онлайн, играть бесплатно">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Open Graph для красивого превью при шаринге -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tap&Tap — тапай и становись легендой 🔥">
+<meta property="og:description" content="19 иконок, 10 тем, бусты, ачивки и ежедневные бонусы. Слабо побить мой рекорд?">
+<meta property="og:url" content="https://q-acd.github.io/tap_tap/">
+<meta property="og:image" content="https://q-acd.github.io/tap_tap/icons/icon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="icon" href="./icons/icon-192.png">
+
+<style>
+:root{
+  --primary:#6750A4;
+  --primary-2:#2196F3;
+  --accent:#E91E63;
+  --gold:#FFB300;
+  --surface:#0F0B1F;
+  --surface-2:#1A1430;
+  --surface-3:#241A3D;
+  --text:#F5F2FF;
+  --text-dim:#B8B0D6;
+  --outline:#3B3055;
+  --radius:20px;
+  --radius-lg:28px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--surface);
+  color:var(--text);
+  overflow-x:hidden;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+
+/* Анимированный фон */
+.bg-orbs{
+  position:fixed;inset:0;z-index:-1;overflow:hidden;
+  background:radial-gradient(ellipse at top,#1E1638 0%,#0F0B1F 55%,#0A0616 100%);
+}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;
+  animation:float 18s ease-in-out infinite;
+}
+.orb.o1{width:420px;height:420px;background:#6750A4;top:-120px;left:-120px;}
+.orb.o2{width:380px;height:380px;background:#2196F3;top:35%;right:-150px;animation-delay:-6s;}
+.orb.o3{width:340px;height:340px;background:#E91E63;bottom:-140px;left:20%;animation-delay:-12s;}
+@keyframes float{
+  0%,100%{transform:translate(0,0) scale(1);}
+  50%{transform:translate(30px,-40px) scale(1.08);}
+}
+
+.wrap{
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 20px;
+}
+
+/* NAV */
+.nav{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(14px);
+  background:rgba(15,11,31,.65);
+  border-bottom:1px solid var(--outline);
+}
+.nav-inner{
+  max-width:1080px;margin:0 auto;
+  padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-weight:800;font-size:20px;letter-spacing:-.5px;
+}
+.logo i{
+  background:linear-gradient(135deg,#6750A4,#2196F3);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  font-size:26px;
+}
+.nav-cta{
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;padding:10px 18px;border-radius:999px;
+  font-weight:700;font-size:14px;
+  border:none;cursor:pointer;
+  transition:transform .15s,box-shadow .2s;
+  box-shadow:0 6px 18px rgba(103,80,164,.35);
+}
+.nav-cta:active{transform:scale(.96);}
+@media (max-width:480px){
+  .nav-cta{display:none;}
+}
+
+/* HERO */
+.hero{
+  padding:60px 0 40px;
+  text-align:center;
+}
+.hero h1{
+  font-size:clamp(38px,7vw,72px);
+  font-weight:900;
+  letter-spacing:-2px;
+  line-height:1.05;
+  margin:0 0 16px;
+  background:linear-gradient(135deg,#fff 0%,#C8B8FF 45%,#7CD0FF 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero .sub{
+  font-size:clamp(15px,2.2vw,19px);
+  color:var(--text-dim);
+  max-width:620px;margin:0 auto 32px;
+}
+.hero-ctas{
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 28px;border-radius:999px;
+  font-weight:700;font-size:16px;
+  border:none;cursor:pointer;
+  transition:transform .15s,box-shadow .2s,background .2s;
+  font-family:inherit;
+}
+.btn:active{transform:scale(.96);}
+.btn-primary{
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;
+  box-shadow:0 10px 30px rgba(103,80,164,.45);
+}
+.btn-primary:hover{box-shadow:0 14px 40px rgba(103,80,164,.6);}
+.btn-ghost{
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  border:1px solid var(--outline);
+}
+.btn-ghost:hover{background:rgba(255,255,255,.12);}
+
+/* Игровая кнопка-превью */
+.hero-preview{
+  margin:44px auto 0;
+  position:relative;
+  width:min(280px,70vw);
+  height:min(280px,70vw);
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-btn{
+  width:100%;height:100%;
+  border-radius:50%;
+  background:linear-gradient(135deg,#6750A4,#2196F3,#E91E63,#FF9800,#6750A4);
+  background-size:300% 300%;
+  animation:gradientShift 6s ease infinite, pulseGlow 3s ease-in-out infinite;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:110px;
+  box-shadow:
+    0 20px 60px rgba(103,80,164,.55),
+    inset 0 -10px 30px rgba(0,0,0,.25),
+    inset 0 10px 30px rgba(255,255,255,.3);
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  user-select:none;
+}
+.hero-btn:active{transform:scale(.96);}
+.hero-btn::before{
+  content:'';
+  position:absolute;
+  inset:0;border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.4),transparent 55%);
+  pointer-events:none;
+}
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+@keyframes pulseGlow{
+  0%,100%{box-shadow:0 20px 60px rgba(103,80,164,.55),inset 0 -10px 30px rgba(0,0,0,.25),inset 0 10px 30px rgba(255,255,255,.3);}
+  50%{box-shadow:0 20px 80px rgba(33,150,243,.65),inset 0 -10px 30px rgba(0,0,0,.25),inset 0 10px 30px rgba(255,255,255,.3);}
+}
+.hero-hint{
+  margin-top:22px;
+  font-size:14px;
+  color:var(--text-dim);
+  font-weight:600;
+  animation:bounce 1.6s ease-in-out infinite;
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+
+/* СЕКЦИИ */
+.section{padding:70px 0;}
+.section-title{
+  text-align:center;
+  margin-bottom:40px;
+}
+.section-title h2{
+  font-size:clamp(28px,4vw,40px);
+  font-weight:800;letter-spacing:-1px;
+  margin:0 0 10px;
+  background:linear-gradient(135deg,#fff,#B8B0D6);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.section-title p{
+  color:var(--text-dim);
+  margin:0;font-size:16px;
+}
+
+/* FEATURES */
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+.feature{
+  background:linear-gradient(160deg,var(--surface-2),rgba(36,26,61,.5));
+  border:1px solid var(--outline);
+  border-radius:var(--radius);
+  padding:24px 20px;
+  transition:transform .25s,border-color .25s;
+  position:relative;overflow:hidden;
+}
+.feature:hover{transform:translateY(-4px);border-color:var(--primary);}
+.feature i{
+  font-size:28px;
+  background:linear-gradient(135deg,#6750A4,#2196F3);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:14px;display:inline-block;
+}
+.feature h3{
+  margin:0 0 8px;font-size:17px;font-weight:700;
+}
+.feature p{
+  margin:0;font-size:14px;color:var(--text-dim);line-height:1.5;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:16px;
+}
+.stat{
+  text-align:center;
+  background:var(--surface-2);
+  border:1px solid var(--outline);
+  border-radius:var(--radius);
+  padding:24px 16px;
+}
+.stat .num{
+  font-size:32px;font-weight:900;
+  background:linear-gradient(135deg,#6750A4,#2196F3,#E91E63);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  line-height:1;
+}
+.stat .lbl{
+  font-size:12px;color:var(--text-dim);
+  text-transform:uppercase;font-weight:700;letter-spacing:1px;
+  margin-top:8px;
+}
+
+/* ACHIEVEMENTS превью */
+.ach-preview{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:12px;
+}
+.ach-card{
+  background:linear-gradient(160deg,var(--surface-2),rgba(36,26,61,.4));
+  border:1px solid var(--outline);
+  border-radius:18px;
+  padding:18px 12px;
+  text-align:center;
+  transition:transform .25s,border-color .25s;
+}
+.ach-card:hover{transform:translateY(-3px);border-color:var(--gold);}
+.ach-card .emoji{font-size:34px;display:block;margin-bottom:8px;}
+.ach-card .name{font-weight:700;font-size:13px;}
+.ach-card .req{font-size:11px;color:var(--text-dim);margin-top:2px;}
+
+/* ИКОНКИ */
+.icon-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(80px,1fr));
+  gap:10px;
+}
+.icon-tile{
+  aspect-ratio:1;
+  border-radius:16px;
+  background:linear-gradient(160deg,var(--surface-2),rgba(36,26,61,.5));
+  border:1px solid var(--outline);
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;
+  transition:transform .2s,border-color .2s;
+}
+.icon-tile:hover{transform:translateY(-3px) rotate(-4deg);border-color:var(--primary);}
+
+/* ТЕМЫ */
+.theme-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px;
+}
+.theme-dot{
+  height:90px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;color:#fff;font-size:18px;
+  text-shadow:0 2px 8px rgba(0,0,0,.35);
+  transition:transform .2s;
+}
+.theme-dot:hover{transform:scale(1.04);}
+
+/* CTA */
+.cta-final{
+  margin:60px auto 80px;
+  padding:60px 32px;
+  border-radius:32px;
+  background:linear-gradient(135deg,rgba(103,80,164,.25),rgba(33,150,243,.2));
+  border:1px solid var(--outline);
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  max-width:1000px;
+}
+.cta-final::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 20% 30%,rgba(103,80,164,.35),transparent 60%),
+             radial-gradient(circle at 80% 70%,rgba(33,150,243,.3),transparent 60%);
+  pointer-events:none;
+}
+.cta-final h2{
+  position:relative;
+  font-size:clamp(28px,5vw,44px);font-weight:900;letter-spacing:-1px;
+  margin:0 0 12px;
+  background:linear-gradient(135deg,#fff,#C8B8FF);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.cta-final p{
+  position:relative;
+  color:var(--text-dim);margin:0 0 28px;font-size:17px;
+}
+.cta-final .btn{position:relative;}
+
+/* FOOTER */
+footer{
+  padding:32px 0 44px;
+  text-align:center;
+  color:var(--text-dim);
+  font-size:13px;
+  border-top:1px solid var(--outline);
+}
+footer a{color:#7CD0FF;font-weight:600;}
+footer a:hover{text-decoration:underline;}
+
+/* Появление при скролле */
+.reveal{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .6s ease,transform .6s ease;
+}
+.reveal.on{opacity:1;transform:none;}
+
+@media (max-width:600px){
+  .hero{padding:40px 0 20px;}
+  .section{padding:50px 0;}
+  .hero-btn{font-size:80px;}
+  .btn{padding:14px 22px;font-size:15px;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo"><i class="fa-solid fa-hand-pointer"></i>Tap&amp;Tap</div>
+    <button class="nav-cta" onclick="location.href='./play.html'">
+      <i class="fa-solid fa-play"></i> Играть
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero wrap">
+  <h1>Тапай. Качайся.<br>Стань легендой.</h1>
+  <p class="sub">19 иконок, 10 тем, бусты, ежедневные бонусы и звёздные достижения. Всё, что нужно от кликера — и даже больше.</p>
+  <div class="hero-ctas">
+    <button class="btn btn-primary" onclick="location.href='./play.html'">
+      <i class="fa-solid fa-play"></i> Играть бесплатно
+    </button>
+    <button class="btn btn-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+      <i class="fa-solid fa-circle-info"></i> Что внутри
+    </button>
+  </div>
+
+  <div class="hero-preview">
+    <div class="hero-btn" onclick="location.href='./play.html'">
+      <i class="fa-solid fa-hand-pointer"></i>
+    </div>
+  </div>
+  <div class="hero-hint">
+    <i class="fa-solid fa-arrow-up"></i> Нажми на кнопку — откроется игра
+  </div>
+</header>
+
+<!-- FEATURES -->
+<section class="section wrap reveal" id="features">
+  <div class="section-title">
+    <h2>Что ждёт внутри</h2>
+    <p>Механики, которые не дадут заскучать</p>
+  </div>
+  <div class="features">
+    <div class="feature">
+      <i class="fa-solid fa-hand-pointer"></i>
+      <h3>Клик-механика</h3>
+      <p>Каждый тап — очки. Считаем и клики, и пассивный доход от бустов.</p>
+    </div>
+    <div class="feature">
+      <i class="fa-solid fa-palette"></i>
+      <h3>10 тем кнопки</h3>
+      <p>От голубой до радужной. Открываются за очки, как и полагается.</p>
+    </div>
+    <div class="feature">
+      <i class="fa-solid fa-icons"></i>
+      <h3>19 иконок</h3>
+      <p>Мишка, панда, огонь, корона, череп — выбирай под настроение.</p>
+    </div>
+    <div class="feature">
+      <i class="fa-solid fa-rocket"></i>
+      <h3>3 буста до 25 ур.</h3>
+      <p>Х2 за клик, Х2 за секунду и прокачка кликера. Умножай очки!</p>
+    </div>
+    <div class="feature">
+      <i class="fa-solid fa-calendar-day"></i>
+      <h3>Ежедневный бонус</h3>
+      <p>Заходи каждый день — награда растёт. На 15-й день ждёт 7000.</p>
+    </div>
+    <div class="feature">
+      <i class="fa-solid fa-trophy"></i>
+      <h3>7 ачивок</h3>
+      <p>От 🌑 Новичка до 🌟 Бессмертного. Собери их все.</p>
+    </div>
+    <div class="feature">
+      <i class="fa-solid fa-share-nodes"></i>
+      <h3>Виральность</h3>
+      <p>Делись рекордами с друзьями одной кнопкой — и вызывай на бой.</p>
+    </div>
+    <div class="feature">
+      <i class="fa-solid fa-mobile-screen-button"></i>
+      <h3>PWA-игра</h3>
+      <p>Устанавливается на телефон как приложение. Работает офлайн.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section wrap reveal">
+  <div class="stats">
+    <div class="stat"><div class="num">10</div><div class="lbl">Тем</div></div>
+    <div class="stat"><div class="num">19</div><div class="lbl">Иконок</div></div>
+    <div class="stat"><div class="num">7</div><div class="lbl">Ачивок</div></div>
+    <div class="stat"><div class="num">75×</div><div class="lbl">Кликов/сек</div></div>
+    <div class="stat"><div class="num">∞</div><div class="lbl">Очков</div></div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section class="section wrap reveal">
+  <div class="section-title">
+    <h2>Достижения ✨</h2>
+    <p>Собери все семь звёздных знаков</p>
+  </div>
+  <div class="ach-preview">
+    <div class="ach-card"><span class="emoji">🌑</span><div class="name">Новичок</div><div class="req">1 000</div></div>
+    <div class="ach-card"><span class="emoji">🌒</span><div class="name">Любитель</div><div class="req">10 000</div></div>
+    <div class="ach-card"><span class="emoji">🌓</span><div class="name">Таппер</div><div class="req">50 000</div></div>
+    <div class="ach-card"><span class="emoji">🌔</span><div class="name">Мастер</div><div class="req">100 000</div></div>
+    <div class="ach-card"><span class="emoji">🎖</span><div class="name">ГигаТап</div><div class="req">512 000</div></div>
+    <div class="ach-card"><span class="emoji">🌕</span><div class="name">Легенда</div><div class="req">500 000</div></div>
+    <div class="ach-card"><span class="emoji">🌟</span><div class="name">Бессмертный</div><div class="req">1 000 000</div></div>
+  </div>
+</section>
+
+<!-- ICONS -->
+<section class="section wrap reveal">
+  <div class="section-title">
+    <h2>19 иконок на выбор</h2>
+    <p>Каждая — со своим вайбом</p>
+  </div>
+  <div class="icon-grid">
+    <div class="icon-tile">🧸</div>
+    <div class="icon-tile">🐼</div>
+    <div class="icon-tile">🐊</div>
+    <div class="icon-tile">🦆</div>
+    <div class="icon-tile">🥕</div>
+    <div class="icon-tile">🐝</div>
+    <div class="icon-tile">🖼️</div>
+    <div class="icon-tile">🤔</div>
+    <div class="icon-tile">🤩</div>
+    <div class="icon-tile">⭐</div>
+    <div class="icon-tile">❤️</div>
+    <div class="icon-tile">💎</div>
+    <div class="icon-tile">👑</div>
+    <div class="icon-tile">🔥</div>
+    <div class="icon-tile">🎁</div>
+    <div class="icon-tile">🤪</div>
+    <div class="icon-tile">💀</div>
+    <div class="icon-tile">🤞</div>
+    <div class="icon-tile" style="font-size:16px;font-weight:800;">TAP</div>
+  </div>
+</section>
+
+<!-- THEMES -->
+<section class="section wrap reveal">
+  <div class="section-title">
+    <h2>10 тем кнопки</h2>
+    <p>Меняй цвет под настроение</p>
+  </div>
+  <div class="theme-row">
+    <div class="theme-dot" style="background:linear-gradient(135deg,#2196F3,#2196F3)">Aa</div>
+    <div class="theme-dot" style="background:linear-gradient(135deg,#9C27B0,#9C27B0)">Aa</div>
+    <div class="theme-dot" style="background:linear-gradient(135deg,#FF9800,#FF9800)">Aa</div>
+    <div class="theme-dot" style="background:linear-gradient(135deg,#F44336,#F44336)">Aa</div>
+    <div class="theme-dot" style="background:linear-gradient(135deg,#4CAF50,#4CAF50)">Aa</div>
+    <div class="theme-dot" style="background:linear-gradient(135deg,#3F51B5,#9C27B0)">Aa</div>
+    <div class="theme-dot" style="background:linear-gradient(135deg,#F44336,#FF9800)">Aa</div>
+    <div class="theme-dot" style="background:linear-gradient(135deg,#4CAF50,#2196F3)">Aa</div>
+    <div class="theme-dot" style="background:linear-gradient(135deg,#F44336,#FF9800,#FFEB3B,#4CAF50,#2196F3,#9C27B0)">Aa</div>
+    <div class="theme-dot" style="background:linear-gradient(135deg,#141218,#3A3A3A)">🌙</div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-final wrap reveal">
+  <h2>Готов стать Бессмертным?</h2>
+  <p>Хватит читать. Начинай тапать — рекорд сам себя не побьёт 🔥</p>
+  <button class="btn btn-primary" onclick="location.href='./play.html'">
+    <i class="fa-solid fa-play"></i> Играть сейчас
+  </button>
+</section>
+
+<footer>
+  <div class="wrap">
+    Tap&amp;Tap Gold Edition · Сделано с 🔥 · <a href="./play.html">Открыть игру</a>
+    <br><br>
+    <span style="opacity:.6;">© 2025 · Все тапы защищены</span>
+  </div>
+</footer>
+
+<script>
+// Reveal on scroll
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('on');
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// Регистрация service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
