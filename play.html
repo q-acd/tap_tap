@@ -4,7 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#6750A4">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WSSEELHL51"></script>
+<title>Tap&amp;Tap — Galaxy Edition</title>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+   <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WSSEELHL51"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -12,11 +18,6 @@
 
   gtag('config', 'G-WSSEELHL51');
 </script>
-<title>Tap&Tap — Gold Edition</title>
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --primary:#6750A4;
@@ -39,18 +40,16 @@
   --shadow-3:0 10px 28px rgba(0,0,0,.16), 0 4px 8px rgba(0,0,0,.08);
   --btn-grad:linear-gradient(135deg,#2196F3,#2196F3);
   --tap-size:200px;
+  --wallpaper:linear-gradient(135deg,#FEF7FF,#EADDFF);
 }
 [data-ui="dark"]{
-  --primary:#D0BCFF;
-  --primary-container:#4F378B;
-  --on-primary:#381E72;
-  --on-primary-container:#EADDFF;
   --surface:#141218;
   --surface-2:#1D1B20;
   --surface-3:#25232A;
   --on-surface:#E6E0E9;
   --on-surface-var:#CAC4D0;
   --outline-var:#49454F;
+  --wallpaper:linear-gradient(135deg,#141218,#1D1B20);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;margin:0;padding:0;}
@@ -62,44 +61,52 @@ body{
 }
 #loader{
   position:fixed;inset:0;z-index:9999;
-  background:linear-gradient(135deg,
-    var(--primary) 0%,
-    var(--btn-color, #2196F3) 55%,
-    var(--primary) 100%);
+  background:linear-gradient(135deg,var(--primary) 0%,var(--btn-color, #2196F3) 55%,var(--primary) 100%);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  color:#fff;gap:24px;
-  transition:opacity .6s, visibility .6s, background .35s ease;
+  color:#fff;gap:24px;transition:opacity .6s, visibility .6s, background .35s ease;
 }
 #loader.hide{opacity:0;visibility:hidden;}
-.loader-logo{
-  font-size:60px;font-weight:800;letter-spacing:-2px;
-  text-shadow:0 8px 30px rgba(0,0,0,.3);
-  animation:pop 2.4s ease-in-out infinite;
-}
+.loader-logo{font-size:60px;font-weight:800;letter-spacing:-2px;text-shadow:0 8px 30px rgba(0,0,0,.3);animation:pop 2.4s ease-in-out infinite;}
 .loader-logo i{margin-right:10px;}
 @keyframes pop{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
-.loader-bar{
-  width:min(320px,70vw);height:8px;border-radius:99px;
-  background:rgba(255,255,255,.25);overflow:hidden;
-}
-.loader-bar>div{
-  height:100%;width:0%;
-  background:#fff;border-radius:99px;
-  transition:width .25s ease;
-}
+.loader-bar{width:min(320px,70vw);height:8px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden;}
+.loader-bar>div{height:100%;width:0%;background:#fff;border-radius:99px;transition:width .25s ease;}
 .loader-hint{font-size:13px;opacity:.85;letter-spacing:.4px;}
 
-/* APP */
-#app{display:none;height:100dvh;grid-template-rows:auto 1fr auto;max-width:520px;margin:0 auto;background:var(--surface);position:relative;}
+#app{
+  display:none;height:100dvh;grid-template-rows:auto auto 1fr auto;
+  max-width:520px;margin:0 auto;background:var(--wallpaper);
+  background-size:cover;background-position:center;position:relative;
+  transition:background .5s ease;
+}
 #app.ready{display:grid;}
 
-.top-tabs{display:flex;gap:6px;padding:12px 12px 6px;background:var(--surface);position:sticky;top:0;z-index:20;}
+#topBar{position:relative;display:flex;align-items:center;justify-content:center;padding:12px 16px 6px;min-height:48px;background:transparent;}
+#tabTitle,#gameName{
+  position:absolute;left:50%;transform:translateX(-50%);
+  font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  transition:opacity .28s ease, transform .28s ease;cursor:pointer;color:var(--on-surface);
+}
+#gameName{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(-6px);
+  background:linear-gradient(135deg,var(--primary),#2196F3);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+#topBar.showGame #tabTitle{opacity:0;transform:translateX(-50%) translateY(6px);}
+#topBar.showGame #gameName{opacity:1;transform:translateX(-50%) translateY(0);}
+#settingsTopBtn{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border-radius:50%;
+  background:var(--surface-2);border:1px solid var(--outline-var);
+  color:var(--on-surface);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform .2s, background .2s;
+}
+#settingsTopBtn:active{transform:translateY(-50%) scale(.92);}
+
+.top-tabs{display:flex;gap:6px;padding:0 12px 8px;background:transparent;position:sticky;top:0;z-index:20;}
 .top-tab{
-  flex:1;padding:10px 8px;border-radius:999px;
+  flex:1;padding:10px 6px;border-radius:999px;
   background:var(--surface-2);color:var(--on-surface-var);
-  font-weight:600;font-size:13px;cursor:pointer;border:none;
-  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;
-  font-family:inherit;
+  font-weight:600;font-size:12px;cursor:pointer;border:none;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;
 }
 .top-tab.active{background:var(--primary-container);color:var(--on-primary-container);box-shadow:var(--shadow-1);}
 
@@ -110,19 +117,27 @@ body{
 .bottom-nav{
   display:grid;grid-template-columns:repeat(3,1fr);
   background:var(--surface-2);border-top:1px solid var(--outline-var);
-  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));position:relative;
 }
 .nav-item{
   display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:8px 4px;border-radius:16px;background:transparent;border:none;
   color:var(--on-surface-var);font-size:11px;font-weight:600;
-  cursor:pointer;transition:all .2s;font-family:inherit;
+  cursor:pointer;transition:all .2s;font-family:inherit;position:relative;
 }
 .nav-item i{font-size:18px;}
 .nav-item.active{color:var(--on-primary-container);background:var(--primary-container);}
+.nav-item .nav-badge{
+  position:absolute;top:2px;right:calc(50% - 22px);
+  min-width:16px;height:16px;border-radius:8px;
+  background:var(--danger);color:#fff;font-size:10px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;padding:0 4px;
+  box-shadow:0 0 0 2px var(--surface-2);
+}
 
-/* CLICKER */
-.score-card{background:var(--surface-2);border-radius:var(--radius-lg);padding:20px 16px;text-align:center;margin-bottom:20px;box-shadow:var(--shadow-1);}
+.score-card{background:var(--surface-2);border-radius:var(--radius-lg);padding:20px 16px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow-1);transition:box-shadow .3s, background .3s;}
+.score-card.penalty{background:rgba(179,38,30,.15);box-shadow:0 0 0 3px var(--danger), 0 0 24px rgba(179,38,30,.6);animation:penaltyShake .5s ease;}
+@keyframes penaltyShake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
 .score-label{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--on-surface-var);font-weight:600;}
 .score-value{
   font-size:42px;font-weight:800;letter-spacing:-1px;margin:4px 0;
@@ -136,35 +151,28 @@ body{
 .tap-wrap{position:relative;display:flex;justify-content:center;align-items:center;margin:16px 0 24px;min-height:260px;}
 #tapBtn{
   width:var(--tap-size);height:var(--tap-size);border-radius:50%;
-  border:none;background:var(--btn-grad);color:#fff;
-  cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;
+  border:none;background:var(--btn-grad);color:#fff;cursor:pointer;position:relative;
+  display:flex;align-items:center;justify-content:center;
   box-shadow:0 12px 32px rgba(0,0,0,.20),inset 0 -6px 20px rgba(0,0,0,.15),inset 0 6px 20px rgba(255,255,255,.25);
-  transition:transform .08s ease;overflow:hidden;font-weight:800;letter-spacing:1px;
-  touch-action:manipulation;
+  transition:transform .08s ease;overflow:hidden;font-weight:800;letter-spacing:1px;touch-action:manipulation;
 }
 #tapBtn:active{transform:scale(.94);}
 #tapBtn .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);opacity:.9;animation:ripple .6s ease-out forwards;pointer-events:none;}
 @keyframes ripple{to{transform:scale(4);opacity:0;}}
-#tapBtn .icon-fa{font-size:80px;}
+#tapBtn .icon-fa{font-size:80px;line-height:1;}
 #tapBtn .tap-text{font-size:48px;font-weight:800;letter-spacing:2px;}
 
-.float-plus{
-  position:absolute;pointer-events:none;font-weight:800;font-size:22px;
-  color:var(--primary);animation:floatUp .9s ease-out forwards;
-  text-shadow:0 2px 8px rgba(0,0,0,.15);z-index:5;
-}
-@keyframes floatUp{
-  0%{transform:translate(0,0) scale(.7);opacity:0;}
-  20%{opacity:1;transform:translate(0,-10px) scale(1.1);}
-  100%{transform:translate(var(--dx),-90px) scale(1);opacity:0;}
-}
+.float-plus{position:absolute;pointer-events:none;font-weight:800;font-size:22px;color:var(--primary);animation:floatUp .9s ease-out forwards;text-shadow:0 2px 8px rgba(0,0,0,.15);z-index:5;}
+@keyframes floatUp{0%{transform:translate(0,0) scale(.7);opacity:0;}20%{opacity:1;transform:translate(0,-10px) scale(1.1);}100%{transform:translate(var(--dx),-90px) scale(1);opacity:0;}}
+.float-minus{position:absolute;pointer-events:none;font-weight:800;font-size:26px;color:var(--danger);animation:floatUp 1.4s ease-out forwards;text-shadow:0 2px 12px rgba(0,0,0,.25);z-index:8;}
+.particle{position:absolute;pointer-events:none;font-size:16px;animation:particleFly .9s ease-out forwards;z-index:4;}
+@keyframes particleFly{0%{transform:translate(0,0) scale(.4);opacity:1;}100%{transform:translate(var(--dx),var(--dy)) scale(1.2);opacity:0;}}
 
 .boost-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .mini-boost{background:var(--surface-2);border-radius:16px;padding:10px 6px;text-align:center;border:1px solid var(--outline-var);}
 .mini-boost .mv{font-weight:800;font-size:16px;color:var(--primary);}
 .mini-boost .ml{font-size:10px;color:var(--on-surface-var);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
 
-/* SECTION / CARDS */
 .section-title{font-size:18px;font-weight:700;margin:20px 0 12px;display:flex;align-items:center;gap:8px;}
 .section-title i{color:var(--primary);}
 .hint{font-size:12px;color:var(--on-surface-var);margin-bottom:12px;line-height:1.4;}
@@ -178,38 +186,25 @@ body{
 }
 .card:active{transform:scale(.98);}
 .card.owned{border-color:var(--primary);background:var(--primary-container);}
-.card .lock{
-  position:absolute;top:8px;right:8px;
-  background:var(--surface);color:var(--on-surface-var);
-  width:26px;height:26px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;box-shadow:var(--shadow-1);
-}
-.card .preview{
-  width:52px;height:52px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:26px;color:#fff;font-weight:800;margin:0 auto;
-  box-shadow:inset 0 -4px 12px rgba(0,0,0,.15),inset 0 4px 12px rgba(255,255,255,.2);
-}
+.card .lock{position:absolute;top:8px;right:8px;background:var(--surface);color:var(--on-surface-var);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:var(--shadow-1);}
+.card .preview{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;font-weight:800;margin:0 auto;box-shadow:inset 0 -4px 12px rgba(0,0,0,.15),inset 0 4px 12px rgba(255,255,255,.2);}
+.card .preview.emoji-preview{background:var(--surface-3)!important;box-shadow:none;font-size:30px;}
 .card .name{font-size:13px;font-weight:700;text-align:center;}
 .card .price{font-size:12px;font-weight:700;text-align:center;color:var(--on-surface-var);display:flex;align-items:center;justify-content:center;gap:4px;}
-.card .buy-btn{
-  border:none;border-radius:12px;padding:8px;font-weight:700;font-size:12px;
-  cursor:pointer;transition:all .2s;background:var(--primary);color:var(--on-primary);font-family:inherit;
-}
+.card .buy-btn{border:none;border-radius:12px;padding:8px;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s;background:var(--primary);color:var(--on-primary);font-family:inherit;}
 .card .buy-btn:disabled{opacity:.5;cursor:not-allowed;}
 .card .buy-btn.owned-btn{background:var(--success);}
 .card .buy-btn.equipped-btn{background:var(--gold);color:#000;}
 
-/* BOOSTS */
 .boost-card{background:var(--surface-2);border-radius:var(--radius);padding:16px;border:1px solid var(--outline-var);box-shadow:var(--shadow-1);margin-bottom:12px;}
 .boost-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
 .boost-title{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px;}
 .boost-title i{color:var(--primary);font-size:18px;}
 .boost-lvl{background:var(--primary);color:var(--on-primary);font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;}
 .boost-desc{font-size:13px;color:var(--on-surface-var);margin-bottom:12px;line-height:1.4;}
-.boost-progress{height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden;margin-bottom:12px;}
+.boost-progress{height:10px;border-radius:99px;background:var(--surface-3);overflow:hidden;margin-bottom:12px;position:relative;}
 .boost-progress>div{height:100%;background:linear-gradient(90deg,var(--primary),#2196F3);border-radius:99px;transition:width .4s ease;}
+.boost-progress .tick{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--outline-var);}
 .boost-action{display:flex;justify-content:space-between;align-items:center;gap:10px;}
 .boost-cost{font-weight:800;font-size:15px;display:flex;align-items:center;gap:6px;}
 .boost-cost i{color:var(--gold);}
@@ -223,8 +218,8 @@ body{
 .btn:disabled{opacity:.45;cursor:not-allowed;}
 .btn.secondary{background:var(--surface-3);color:var(--on-surface);}
 .btn.success{background:var(--success);color:#fff;}
+.btn.danger{background:var(--danger);color:#fff;}
 
-/* TASKS */
 .task-card{display:flex;gap:12px;align-items:center;background:var(--surface-2);border-radius:var(--radius);padding:14px;border:1px solid var(--outline-var);margin-bottom:10px;box-shadow:var(--shadow-1);}
 .task-icon{width:48px;height:48px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:linear-gradient(135deg,var(--primary),#2196F3);}
 .task-body{flex:1;min-width:0;}
@@ -232,7 +227,6 @@ body{
 .task-reward{font-size:12px;color:var(--on-surface-var);font-weight:600;}
 .task-reward b{color:var(--gold);}
 
-/* DAILY */
 .daily-card{background:linear-gradient(135deg,var(--primary),#7C4DFF);color:#fff;border-radius:var(--radius-lg);padding:20px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow-2);}
 .daily-card .dc-title{font-size:14px;opacity:.9;font-weight:600;margin-bottom:6px;}
 .daily-card .dc-streak{font-size:34px;font-weight:800;margin-bottom:4px;}
@@ -242,15 +236,15 @@ body{
 .dd{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.3);font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;}
 .dd.on{background:#fff;color:var(--primary);}
 
-/* ACH */
 .ach-card{display:flex;gap:12px;align-items:center;background:var(--surface-2);border-radius:var(--radius);padding:12px 14px;border:1px solid var(--outline-var);margin-bottom:8px;box-shadow:var(--shadow-1);transition:all .3s;}
 .ach-card.unlocked{border-color:var(--gold);background:linear-gradient(135deg,rgba(255,179,0,.12),transparent);}
 .ach-emoji{font-size:30px;flex-shrink:0;width:44px;text-align:center;}
-.ach-body{flex:1;}
+.ach-body{flex:1;min-width:0;}
 .ach-name{font-weight:700;font-size:14px;}
 .ach-req{font-size:12px;color:var(--on-surface-var);font-weight:600;}
-.ach-status{font-size:20px;color:var(--outline-var);}
+.ach-status{font-size:22px;color:var(--outline-var);}
 .ach-card.unlocked .ach-status{color:var(--gold);}
+
 .profile-box{background:linear-gradient(135deg,var(--primary),#2196F3);color:#fff;border-radius:var(--radius-lg);padding:20px;margin-bottom:16px;box-shadow:var(--shadow-2);}
 .profile-box .pb-name{font-size:22px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .profile-box .pb-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -258,7 +252,6 @@ body{
 .pb-stat .pv{font-size:18px;font-weight:800;}
 .pb-stat .pl{font-size:11px;opacity:.9;font-weight:600;letter-spacing:.5px;}
 
-/* HISTORY */
 .sort-tabs{display:flex;gap:6px;margin-bottom:12px;}
 .sort-tab{flex:1;padding:8px;border-radius:999px;border:none;background:var(--surface-2);color:var(--on-surface-var);font-weight:600;font-size:12px;cursor:pointer;font-family:inherit;}
 .sort-tab.active{background:var(--primary);color:var(--on-primary);}
@@ -267,37 +260,87 @@ body{
 .hist-val{font-weight:800;font-size:15px;color:var(--primary);}
 .hist-val.pos{color:var(--success);}
 
-/* SETTINGS */
 .field{margin-bottom:16px;}
 .field label{display:block;font-size:13px;font-weight:600;color:var(--on-surface-var);margin-bottom:6px;}
 .field input{width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid var(--outline-var);background:var(--surface-2);color:var(--on-surface);font-size:15px;font-family:inherit;font-weight:600;outline:none;transition:all .2s;}
 .field input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-container);}
 .row-btns{display:flex;gap:8px;flex-wrap:wrap;}
 .row-btns .btn{flex:1;justify-content:center;}
-.danger{background:var(--danger)!important;color:#fff!important;}
 
-/* MODAL */
+.toggle-row{display:flex;justify-content:space-between;align-items:center;background:var(--surface-2);border-radius:14px;padding:14px 16px;margin-bottom:10px;border:1px solid var(--outline-var);}
+.toggle-row .tr-label{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px;}
+.switch{position:relative;width:48px;height:26px;border-radius:99px;background:var(--surface-3);cursor:pointer;transition:background .25s;border:none;padding:0;flex-shrink:0;}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .25s, background .25s;box-shadow:0 1px 3px rgba(0,0,0,.25);}
+.switch.on{background:var(--primary);}
+.switch.on::after{transform:translateX(22px);}
+
+.lang-btns{display:flex;gap:6px;}
+.lang-btn{padding:6px 12px;border-radius:99px;border:1px solid var(--outline-var);background:var(--surface-3);color:var(--on-surface-var);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s;}
+.lang-btn.active{background:var(--primary);color:var(--on-primary);border-color:var(--primary);}
+
+.music-row{display:flex;gap:8px;margin-top:8px;}
+.music-btn{flex:1;padding:10px;border-radius:14px;border:1px solid var(--outline-var);background:var(--surface-3);color:var(--on-surface);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.music-btn.active{background:var(--primary);color:var(--on-primary);border-color:var(--primary);}
+
+.wallpaper-card{cursor:pointer;}
+.wallpaper-card .wp-preview{width:100%;height:80px;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);}
+
 .modal-bg{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;}
 .modal-bg.show{display:flex;animation:fadeUp .25s ease;}
-.modal{background:var(--surface);border-radius:28px;padding:24px;max-width:420px;width:100%;box-shadow:var(--shadow-3);text-align:center;animation:pop .35s cubic-bezier(.2,1.4,.5,1);max-height:85vh;overflow-y:auto;}
+.modal{background:var(--surface);border-radius:28px;padding:24px;max-width:460px;width:100%;box-shadow:var(--shadow-3);text-align:center;animation:pop .35s cubic-bezier(.2,1.4,.5,1);max-height:88vh;overflow-y:auto;}
 .modal h2{margin:0 0 8px;font-size:22px;font-weight:800;}
 .modal p{margin:0 0 16px;color:var(--on-surface-var);font-size:14px;line-height:1.5;}
 .modal .big-emoji{font-size:56px;margin-bottom:8px;display:block;}
 .modal .btn{width:100%;justify-content:center;margin-top:8px;}
 
+.reels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;}
+.reel{background:var(--surface-2);border-radius:16px;padding:24px 8px;font-size:44px;text-align:center;border:2px solid var(--outline-var);min-height:100px;display:flex;align-items:center;justify-content:center;transition:all .2s;overflow:hidden;}
+.reel.spinning{animation:reelSpin .15s linear infinite;border-color:var(--primary);}
+@keyframes reelSpin{0%{transform:translateY(0);opacity:1;}50%{transform:translateY(-8px);opacity:.7;}100%{transform:translateY(0);opacity:1;}}
+.reel.win{border-color:var(--gold);box-shadow:0 0 20px rgba(255,179,0,.6);animation:winPulse .6s ease;}
+@keyframes winPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+
+.lvl-btns{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+.lvl-btn{padding:12px;border-radius:14px;border:1.5px solid var(--outline-var);background:var(--surface-2);color:var(--on-surface);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;flex-direction:column;gap:4px;}
+.lvl-btn .lb-title{font-size:14px;}
+.lvl-btn .lb-sub{font-size:11px;color:var(--on-surface-var);font-weight:600;}
+.lvl-btn.active{border-color:var(--primary);background:var(--primary-container);color:var(--on-primary-container);}
+.lvl-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+.casino-score{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--surface-2);border-radius:14px;
+  padding:10px 14px;margin-bottom:14px;
+  border:1px solid var(--outline-var);
+  font-size:14px;font-weight:700;
+  flex-wrap:wrap;
+}
+.casino-score i{color:var(--gold);}
+.casino-score .cs-value{color:var(--primary);font-size:16px;font-weight:800;}
+.casino-score .cs-hint{font-size:11px;color:var(--on-surface-var);font-weight:600;}
+
+.toast-ach{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-120px);background:linear-gradient(135deg,var(--primary),#2196F3);color:#fff;padding:14px 20px;border-radius:16px;font-weight:700;font-size:14px;box-shadow:var(--shadow-3);transition:transform .4s cubic-bezier(.2,1.4,.5,1);z-index:2500;display:flex;align-items:center;gap:10px;max-width:90vw;}
+.toast-ach.show{transform:translateX(-50%) translateY(0);}
+.toast-ach .ta-emoji{font-size:28px;}
+
 #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(30px);background:var(--on-surface);color:var(--surface);padding:12px 20px;border-radius:14px;font-weight:600;font-size:14px;box-shadow:var(--shadow-3);opacity:0;pointer-events:none;transition:all .3s;z-index:2000;max-width:90vw;text-align:center;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.confetti{position:fixed;top:-30px;font-size:22px;pointer-events:none;z-index:3000;animation:confettiFall linear forwards;}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(105vh) rotate(720deg);opacity:0.8;}}
 
 .thanks-grad{background:linear-gradient(135deg,#FFB300,#FF6F00,#7C4DFF,#2196F3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 #thanksName{cursor:pointer;}
 .cyber-veg{background:linear-gradient(135deg,#00E676,#00B0FF,#AA00FF)!important;animation:cyberShift 3s linear infinite;}
 @keyframes cyberShift{0%{filter:hue-rotate(0deg);}100%{filter:hue-rotate(360deg);}}
 ::-webkit-scrollbar{width:0;height:0;}
+
 @media (max-width:400px){
   :root{--tap-size:170px;}
   .score-value{font-size:36px;}
   #tapBtn .icon-fa{font-size:64px;}
   #tapBtn .tap-text{font-size:38px;}
+  .reel{font-size:34px;padding:18px 4px;min-height:80px;}
 }
 </style>
 </head>
@@ -306,14 +349,19 @@ body{
 <div id="loader">
   <div class="loader-logo"><i class="fa-solid fa-hand-pointer"></i>Tap&amp;Tap</div>
   <div class="loader-bar"><div id="loadBar"></div></div>
-  <div class="loader-hint" id="loadHint">Загрузка Gold Edition…</div>
+  <div class="loader-hint" id="loadHint">Загрузка Galaxy Edition…</div>
 </div>
 
 <div id="app">
+  <div id="topBar">
+    <span id="tabTitle">КЛИКЕР</span>
+    <span id="gameName">TAP&amp;TAP</span>
+    <button id="settingsTopBtn" title="Настройки"><i class="fa-solid fa-gear"></i></button>
+  </div>
   <div class="top-tabs">
-    <button class="top-tab" data-screen="shop"><i class="fa-solid fa-store"></i>Магазин</button>
-    <button class="top-tab" data-screen="tasks"><i class="fa-solid fa-list-check"></i>Задания</button>
-    <button class="top-tab" data-screen="boosts"><i class="fa-solid fa-rocket"></i>Бусты</button>
+    <button class="top-tab" data-screen="shop"><i class="fa-solid fa-store"></i><span data-i18n="tab_shop">Магазин</span></button>
+    <button class="top-tab" data-screen="tasks"><i class="fa-solid fa-list-check"></i><span data-i18n="tab_tasks">Задания</span></button>
+    <button class="top-tab" data-screen="boosts"><i class="fa-solid fa-rocket"></i><span data-i18n="tab_boosts">Бусты</span></button>
   </div>
 
   <div class="screen" id="screen-shop"></div>
@@ -324,99 +372,227 @@ body{
   <div class="screen" id="screen-settings"></div>
 
   <div class="bottom-nav">
-    <button class="nav-item active" data-screen="clicker"><i class="fa-solid fa-hand-pointer"></i>Кликер</button>
-    <button class="nav-item" data-screen="ach"><i class="fa-solid fa-trophy"></i>Достижения</button>
-    <button class="nav-item" data-screen="settings"><i class="fa-solid fa-gear"></i>Настройки</button>
+    <button class="nav-item active" data-screen="clicker"><i class="fa-solid fa-hand-pointer"></i><span data-i18n="nav_clicker">Кликер</span></button>
+    <button class="nav-item" data-screen="ach"><i class="fa-solid fa-trophy"></i><span data-i18n="nav_ach">Достижения</span></button>
+    <button class="nav-item" data-screen="lottery" id="lotteryNavBtn"><i class="fa-solid fa-dice"></i><span data-i18n="nav_lottery">Лотерея</span></button>
   </div>
 </div>
 
 <div id="toast"></div>
+<div id="toastAch" class="toast-ach"><span class="ta-emoji">🏆</span><span class="ta-text"></span></div>
 
 <div class="modal-bg" id="modalBg">
   <div class="modal" id="modalContent"></div>
 </div>
 
 <script>
-/* ============================================================
-   TAP&TAP — GOLD EDITION  v1.3 (магазин работает, анти-чит)
-   ============================================================ */
+const I18N = {
+  ru:{
+    tab_clicker:'КЛИКЕР', tab_shop:'МАГАЗИН', tab_tasks:'ЗАДАНИЯ',
+    tab_boosts:'БУСТЫ', tab_ach:'ДОСТИЖЕНИЯ', tab_settings:'НАСТРОЙКИ',
+    nav_clicker:'Кликер', nav_ach:'Достижения', nav_lottery:'Лотерея',
+    score:'Очки', per_sec:'в сек', per_click:'за клик',
+    themes_title:'Темы кнопки', icons_title:'Иконки', wallpaper_title:'Обои',
+    themes_hint:'Меняй цвет и стиль кнопки. Некоторые темы открываются за очки.',
+    icons_hint:'Иконка, которая отображается на кнопке кликера.',
+    wp_hint_unlocked:'Разблокировано! Все обои доступны.',
+    wp_hint_locked:'Заблокировано до 300 000 очков (кастомные)',
+    buy:'Купить', equip:'Надеть', equipped:'Надето', locked_lbl:'Заблокировано',
+    boost_title:'Прокачка',
+    boost_hint:'Улучшай клик и пассивный доход. Максимальный уровень — 15.',
+    boost_click:'Х2 за клик', boost_click_desc:'Умножает очки за клик. Множитель:',
+    boost_auto:'Х2 за сек', boost_auto_desc:'Пассивный доход в секунду. Множитель:',
+    boost_power:'Прокачка кликера', boost_power_desc:'Базовый множитель клика. Множитель:',
+    improve:'Улучшить', max:'МАКС',
+    daily_title:'Ежедневный бонус', tasks_title:'Задания',
+    daily_streak:'Серия дней', daily_claim:'Забрать', daily_claimed:'Уже забрано',
+    daily_available:'Награда доступна!', daily_comeback:'Возвращайся каждый день!',
+    ach_title:'Достижения', hist_title:'История',
+    profile:'Профиль', appearance:'Внешний вид', music_title:'Музыка',
+    dark_theme:'Тёмная тема', lang_label:'Язык',
+    music_lbl:'Музыка', music_on:'Вкл.', music_off:'Выкл.',
+    theme_ui:'Тема кнопки', icon_ui:'Иконка кнопки', wp_ui:'Обои',
+    danger_zone:'Опасная зона', reset_progress:'Сбросить прогресс',
+    reset_points:'Сбросить очки',
+    reset_points_confirm:'Сбросить только очки и историю? Прокачка, темы, иконки и достижения сохранятся.',
+    reset_points_done:'Очки сброшены',
+    save_name:'Сохранить', name_label:'Имя игрока',
+    reset_confirm:'Точно сбросить весь прогресс? Прокачка тоже сбросится!',
+    name_saved:'Имя сохранено', theme_applied:'Тема применена', icon_applied:'Иконка применена',
+    wp_applied:'Обои применены', reset_done:'Прогресс сброшен',
+    insufficient:'Недостаточно очков', upgraded:'Улучшено!',
+    not_enough_for_theme:'Недостаточно очков',
+    theme_bought:'куплена!', icon_bought:'куплена!', wp_bought:'Обои куплены!',
+    casino:'Лотерея', spin:'КРУТИТЬ', upgrade_btn:'ПРОКАЧАТЬ',
+    close:'Закрыть', level:'Уровень', icons_count:'иконок',
+    block_counter:'Счётчик', casino_intro:'Выбери уровень и испытай удачу. Каждый спин стоит 1000 очков.',
+    win_prize:'ВЫИГРЫШ!', penalty:'Штраф!', casino_lvl:'Уровень лотереи',
+    max_lvl:'Максимальный уровень',
+    music_playing_jazz:'🎷 Jazz играет', music_playing_pop:'🎤 Поп играет',
+    dark_on:'Тёмная тема включена', dark_off:'Светлая тема включена',
+    lang_ru:'Язык: Русский', lang_en:'Language: English',
+    need_for_lottery:'Требуется:', need_score:'1000 очков', need_click_lvl:'3 уровень кликера',
+    share:'Поделиться',
+    rapid_ach:'Скорострел',
+    honest_clicks:'ЧЕСТНЫХ КЛИКОВ',
+    score_lbl:'ОЧКОВ', icon_lbl:'ИКОНКА', theme_lbl:'ТЕМА',
+    wp_unlocked_toast:'Кастомные обои разблокированы!',
+    day_lbl:'День',
+    sort_day:'По дням', sort_points:'По очкам (+)',
+    hist_empty:'История появится, когда ты начнёшь играть',
+    your_score:'Ваши очки',
+    spin_cost:'Стоимость спина: 1000',
+    not_enough_spin:'Недостаточно очков для спина'
+  },
+  en:{
+    tab_clicker:'CLICKER', tab_shop:'SHOP', tab_tasks:'TASKS',
+    tab_boosts:'BOOSTS', tab_ach:'ACHIEVEMENTS', tab_settings:'SETTINGS',
+    nav_clicker:'Clicker', nav_ach:'Achievements', nav_lottery:'Lottery',
+    score:'Score', per_sec:'/sec', per_click:'per click',
+    themes_title:'Button themes', icons_title:'Icons', wallpaper_title:'Wallpapers',
+    themes_hint:'Change button color and style. Some themes cost points.',
+    icons_hint:'The icon shown on the clicker button.',
+    wp_hint_unlocked:'Unlocked! All wallpapers available.',
+    wp_hint_locked:'Locked until 300 000 points (custom)',
+    buy:'Buy', equip:'Equip', equipped:'Equipped', locked_lbl:'Locked',
+    boost_title:'Upgrades',
+    boost_hint:'Upgrade tap and passive income. Max level — 15.',
+    boost_click:'X2 per tap', boost_click_desc:'Multiplies points per tap. Multiplier:',
+    boost_auto:'X2 per sec', boost_auto_desc:'Passive income per second. Multiplier:',
+    boost_power:'Clicker upgrade', boost_power_desc:'Base tap multiplier. Multiplier:',
+    improve:'Upgrade', max:'MAX',
+    daily_title:'Daily bonus', tasks_title:'Tasks',
+    daily_streak:'Streak', daily_claim:'Claim', daily_claimed:'Claimed',
+    daily_available:'Reward available!', daily_comeback:'Come back every day!',
+    ach_title:'Achievements', hist_title:'History',
+    profile:'Profile', appearance:'Appearance', music_title:'Music',
+    dark_theme:'Dark theme', lang_label:'Language',
+    music_lbl:'Music', music_on:'On', music_off:'Off',
+    theme_ui:'Button theme', icon_ui:'Button icon', wp_ui:'Wallpapers',
+    danger_zone:'Danger zone', reset_progress:'Reset progress',
+    reset_points:'Reset points',
+    reset_points_confirm:'Reset points and history only? Upgrades, themes, icons and achievements will be kept.',
+    reset_points_done:'Points reset',
+    save_name:'Save', name_label:'Player name',
+    reset_confirm:'Reset all progress? Upgrades will also be reset!',
+    name_saved:'Name saved', theme_applied:'Theme applied', icon_applied:'Icon applied',
+    wp_applied:'Wallpaper applied', reset_done:'Progress reset',
+    insufficient:'Not enough points', upgraded:'Upgraded!',
+    not_enough_for_theme:'Not enough points',
+    theme_bought:'bought!', icon_bought:'bought!', wp_bought:'Wallpaper bought!',
+    casino:'Lottery', spin:'SPIN', upgrade_btn:'UPGRADE',
+    close:'Close', level:'Level', icons_count:'icons',
+    block_counter:'Counter', casino_intro:'Pick a level and try your luck. Each spin costs 1000 points.',
+    win_prize:'WIN!', penalty:'Penalty!', casino_lvl:'Lottery level',
+    max_lvl:'Max level',
+    music_playing_jazz:'🎷 Jazz playing', music_playing_pop:'🎤 Pop playing',
+    dark_on:'Dark theme on', dark_off:'Light theme on',
+    lang_ru:'Язык: Русский', lang_en:'Language: English',
+    need_for_lottery:'Requires:', need_score:'1000 points', need_click_lvl:'Clicker level 3',
+    share:'Share',
+    rapid_ach:'Trigger-happy',
+    honest_clicks:'HONEST CLICKS',
+    score_lbl:'POINTS', icon_lbl:'ICON', theme_lbl:'THEME',
+    wp_unlocked_toast:'Custom wallpapers unlocked!',
+    day_lbl:'Day',
+    sort_day:'By day', sort_points:'By points (+)',
+    hist_empty:'History will appear once you start playing',
+    your_score:'Your score',
+    spin_cost:'Spin cost: 1000',
+    not_enough_spin:'Not enough points for spin'
+  }
+};
+function t(k){ return (I18N[S.lang] && I18N[S.lang][k]) || I18N.ru[k] || k; }
 
 const THEMES = [
-  {id:'blue', name:'Голубой', price:0,
-    grad:'linear-gradient(135deg,#2196F3,#2196F3)',
-    primary:'#1565C0', primaryContainer:'#BBDEFB', onPrimary:'#FFFFFF', onPrimaryContainer:'#0D47A1'},
-
-  {id:'purple', name:'Фиолетовый', price:1000,
-    grad:'linear-gradient(135deg,#9C27B0,#9C27B0)',
-    primary:'#7B1FA2', primaryContainer:'#E1BEE7', onPrimary:'#FFFFFF', onPrimaryContainer:'#4A148C'},
-
-  {id:'orange', name:'Оранжевый', price:3000,
-    grad:'linear-gradient(135deg,#FF9800,#FF9800)',
-    primary:'#E65100', primaryContainer:'#FFE0B2', onPrimary:'#FFFFFF', onPrimaryContainer:'#BF360C'},
-
-  {id:'red', name:'Красный', price:7000,
-    grad:'linear-gradient(135deg,#F44336,#F44336)',
-    primary:'#C62828', primaryContainer:'#FFCDD2', onPrimary:'#FFFFFF', onPrimaryContainer:'#8E0000'},
-
-  {id:'green', name:'Зелёный', price:11000,
-    grad:'linear-gradient(135deg,#4CAF50,#4CAF50)',
-    primary:'#2E7D32', primaryContainer:'#C8E6C9', onPrimary:'#FFFFFF', onPrimaryContainer:'#1B5E20'},
-
-  {id:'blueviolet', name:'Сине-фиолетовый', price:20000,
-    grad:'linear-gradient(135deg,#3F51B5,#9C27B0)',
-    primary:'#4A148C', primaryContainer:'#D1C4E9', onPrimary:'#FFFFFF', onPrimaryContainer:'#311B92'},
-
-  {id:'redorange', name:'Красно-оранжевый', price:32000,
-    grad:'linear-gradient(135deg,#F44336,#FF9800)',
-    primary:'#D84315', primaryContainer:'#FFCCBC', onPrimary:'#FFFFFF', onPrimaryContainer:'#BF360C'},
-
-  {id:'greenblue', name:'Зелено-синий', price:48000,
-    grad:'linear-gradient(135deg,#4CAF50,#2196F3)',
-    primary:'#00695C', primaryContainer:'#B2DFDB', onPrimary:'#FFFFFF', onPrimaryContainer:'#004D40'},
-
-  {id:'rainbow', name:'Разноцветный ✨', price:75000,
-    grad:'linear-gradient(135deg,#F44336,#FF9800,#FFEB3B,#4CAF50,#2196F3,#9C27B0)',
-    primary:'#E91E63', primaryContainer:'#F8BBD0', onPrimary:'#FFFFFF', onPrimaryContainer:'#880E4F'},
-
-  {id:'dark', name:'Тёмная тема (UI)', price:15,
-    grad:'linear-gradient(135deg,#141218,#3A3A3A)',
-    primary:'#D0BCFF', primaryContainer:'#4F378B', onPrimary:'#381E72', onPrimaryContainer:'#EADDFF'}
+  {id:'blue', name:'Голубой / Blue', price:0, grad:'linear-gradient(135deg,#2196F3,#2196F3)', primary:'#1565C0', primaryContainer:'#BBDEFB', onPrimary:'#FFFFFF', onPrimaryContainer:'#0D47A1'},
+  {id:'purple', name:'Фиолетовый / Purple', price:1000, grad:'linear-gradient(135deg,#9C27B0,#9C27B0)', primary:'#7B1FA2', primaryContainer:'#E1BEE7', onPrimary:'#FFFFFF', onPrimaryContainer:'#4A148C'},
+  {id:'orange', name:'Оранжевый / Orange', price:3000, grad:'linear-gradient(135deg,#FF9800,#FF9800)', primary:'#E65100', primaryContainer:'#FFE0B2', onPrimary:'#FFFFFF', onPrimaryContainer:'#BF360C'},
+  {id:'pink', name:'Розовый / Pink', price:4000, grad:'linear-gradient(135deg,#FF80AB,#F06292)', primary:'#C2185B', primaryContainer:'#F8BBD0', onPrimary:'#FFFFFF', onPrimaryContainer:'#880E4F'},
+  {id:'red', name:'Красный / Red', price:7000, grad:'linear-gradient(135deg,#F44336,#F44336)', primary:'#C62828', primaryContainer:'#FFCDD2', onPrimary:'#FFFFFF', onPrimaryContainer:'#8E0000'},
+  {id:'green', name:'Зелёный / Green', price:11000, grad:'linear-gradient(135deg,#4CAF50,#4CAF50)', primary:'#2E7D32', primaryContainer:'#C8E6C9', onPrimary:'#FFFFFF', onPrimaryContainer:'#1B5E20'},
+  {id:'blueviolet', name:'Сине-фиолетовый / Blue-Violet', price:20000, grad:'linear-gradient(135deg,#3F51B5,#9C27B0)', primary:'#4A148C', primaryContainer:'#D1C4E9', onPrimary:'#FFFFFF', onPrimaryContainer:'#311B92'},
+  {id:'autumn', name:'Осенние листья / Autumn', price:25000, grad:'linear-gradient(135deg,#FF6F00,#8D4E00,#B71C1C)', primary:'#BF360C', primaryContainer:'#FFCCBC', onPrimary:'#FFFFFF', onPrimaryContainer:'#870000'},
+  {id:'snow', name:'Снежинки / Snow', price:30000, grad:'linear-gradient(135deg,#B3E5FC,#81D4FA,#E1F5FE)', primary:'#0277BD', primaryContainer:'#B3E5FC', onPrimary:'#FFFFFF', onPrimaryContainer:'#01579B'},
+  {id:'redorange', name:'Красно-оранжевый / Red-Orange', price:32000, grad:'linear-gradient(135deg,#F44336,#FF9800)', primary:'#D84315', primaryContainer:'#FFCCBC', onPrimary:'#FFFFFF', onPrimaryContainer:'#BF360C'},
+  {id:'greenblue', name:'Зелено-синий / Green-Blue', price:48000, grad:'linear-gradient(135deg,#4CAF50,#2196F3)', primary:'#00695C', primaryContainer:'#B2DFDB', onPrimary:'#FFFFFF', onPrimaryContainer:'#004D40'},
+  {id:'rainbow', name:'Разноцветный / Rainbow ✨', price:75000, grad:'linear-gradient(135deg,#F44336,#FF9800,#FFEB3B,#4CAF50,#2196F3,#9C27B0)', primary:'#E91E63', primaryContainer:'#F8BBD0', onPrimary:'#FFFFFF', onPrimaryContainer:'#880E4F'}
 ];
 
 const ICONS = [
-  {id:'tap',      name:'TAP',            fa:null,                                price:0,      emoji:'TAP'},
-  {id:'bear',     name:'Мишка',          fa:'fa-solid fa-paw',                   price:250,    emoji:'🧸'},
-  {id:'panda',    name:'Панда',          fa:'fa-solid fa-paw',                   price:700,    emoji:'🐼'},
-  {id:'croc',     name:'Крокодил',       fa:'fa-solid fa-dragon',                price:1400,   emoji:'🐊'},
-  {id:'goose',    name:'Гусь',           fa:'fa-solid fa-dove',                  price:2300,   emoji:'🦆'},
-  {id:'carrot',   name:'Морковь',        fa:'fa-solid fa-carrot',                price:3200,   emoji:'🥕'},
-  {id:'bee',      name:'Пчела',          fa:'fa-solid fa-bug',                   price:4000,   emoji:'🐝'},
-  {id:'picture',  name:'Картина',        fa:'fa-solid fa-image',                 price:5000,   emoji:'🖼️'},
-  {id:'think',    name:'Думающий',       fa:'fa-solid fa-face-thinking',         price:7400,   emoji:'🤔'},
-  {id:'starface', name:'Звёздный смайл', fa:'fa-solid fa-face-grin-stars',       price:8600,   emoji:'🤩'},
-  {id:'star',     name:'Звезда',         fa:'fa-solid fa-star',                  price:10000,  emoji:'⭐'},
-  {id:'heart',    name:'Сердце',         fa:'fa-solid fa-heart',                 price:13000,  emoji:'❤️'},
-  {id:'diamond',  name:'Бриллиант',      fa:'fa-solid fa-gem',                   price:20000,  emoji:'💎'},
-  {id:'crown',    name:'Корона',         fa:'fa-solid fa-crown',                 price:36000,  emoji:'👑'},
-  {id:'fire',     name:'Огонь',          fa:'fa-solid fa-fire',                  price:42000,  emoji:'🔥'},
-  {id:'gift',     name:'Подарок',        fa:'fa-solid fa-gift',                  price:50000,  emoji:'🎁'},
-  {id:'crazy',    name:'Смайл',          fa:'fa-solid fa-face-grin-tongue-wink', price:67000,  emoji:'🤪'},
-  {id:'skull',    name:'Череп',          fa:'fa-solid fa-skull',                 price:90000,  emoji:'💀'},
-  {id:'facepalm', name:'Рукалицо',       fa:'fa-solid fa-hand',                  price:100000, emoji:'🤞'}
+  {id:'tap',      name:'TAP',            emoji:'👆', price:0,      text:true},
+  {id:'poop',     name:'Какашка',        emoji:'💩', price:50},
+  {id:'bear',     name:'Мишка',          emoji:'🧸', price:250},
+  {id:'panda',    name:'Панда',          emoji:'🐼', price:700},
+  {id:'tree',     name:'Ёлка',           emoji:'🎄', price:1200},
+  {id:'croc',     name:'Крокодил',       emoji:'🐊', price:1400},
+  {id:'goose',    name:'Гусь',           emoji:'🦆', price:2300},
+  {id:'snowflake',name:'Снежинка',       emoji:'❄️', price:3112},
+  {id:'carrot',   name:'Морковь',        emoji:'🥕', price:3200},
+  {id:'bee',      name:'Пчела',          emoji:'🐝', price:4000},
+  {id:'santa',    name:'Дед Мороз',      emoji:'🎅', price:4300},
+  {id:'picture',  name:'Картина',        emoji:'🖼️', price:5000},
+  {id:'sixseven', name:'Сикс-севен',     emoji:'6️⃣7️⃣', price:6767},
+  {id:'think',    name:'Думающий',       emoji:'🤔', price:7400},
+  {id:'starface', name:'Звёздный смайл', emoji:'🤩', price:8600},
+  {id:'star',     name:'Звезда',         emoji:'⭐', price:10000},
+  {id:'heart',    name:'Сердце',         emoji:'❤️', price:13000},
+  {id:'diamond',  name:'Бриллиант',      emoji:'💎', price:20000},
+  {id:'crown',    name:'Корона',         emoji:'👑', price:36000},
+  {id:'fire',     name:'Огонь',          emoji:'🔥', price:42000},
+  {id:'gift',     name:'Подарок',        emoji:'🎁', price:50000},
+  {id:'crazy',    name:'Смайл',          emoji:'🤪', price:67000},
+  {id:'skull',    name:'Череп',          emoji:'💀', price:90000},
+  {id:'gamer',    name:'Геймер',         emoji:'🎮', price:100000},
+  {id:'facepalm', name:'Рукалицо',       emoji:'🤦', price:100000},
+  {id:'muscle',   name:'Сила',           emoji:'💪', price:250000},
+  {id:'god',      name:'Бог',            emoji:'😇', price:25000000},
+  {id:'scream',   name:'Крик',           emoji:'😱', price:1000000000}
+];
+
+const WALLPAPERS = [
+  {id:'default', name:'По умолчанию / Default', grad:'linear-gradient(135deg,#FEF7FF,#EADDFF)', custom:false},
+  {id:'sunset',  name:'Закат / Sunset',        grad:'linear-gradient(135deg,#f6d365,#fda085)', custom:false},
+  {id:'ocean',   name:'Океан / Ocean',         grad:'linear-gradient(135deg,#4facfe,#00f2fe)', custom:false},
+  {id:'forest',  name:'Лес / Forest',          grad:'linear-gradient(135deg,#43e97b,#38f9d7)', custom:false},
+  {id:'space',   name:'Космос / Space',        grad:'linear-gradient(135deg,#0f0c29,#302b63,#24243e)', custom:true, price:300000},
+  {id:'neon',    name:'Неон / Neon',           grad:'linear-gradient(135deg,#ff00cc,#333399)', custom:true, price:300000},
+  {id:'galaxy',  name:'Галактика / Galaxy',    grad:'linear-gradient(135deg,#7C4DFF,#2196F3,#00E676)', custom:true, price:300000}
 ];
 
 const ACHIEVEMENTS = [
-  {id:'novice',   emoji:'🌑', name:'Новичок',     req:1000},
-  {id:'amateur',  emoji:'🌒', name:'Любитель',    req:10000},
-  {id:'tapper',   emoji:'🌓', name:'Таппер',      req:50000},
-  {id:'master',   emoji:'🌔', name:'Мастер',      req:100000},
-  {id:'gigatap',  emoji:'🎖', name:'ГигаТап',     req:512000},
-  {id:'legend',   emoji:'🌕', name:'Легенда',     req:500000},
-  {id:'immortal', emoji:'🌟', name:'Бессмертный', req:1000000}
+  {id:'novice',    emoji:'🌑', name:'Новичок',          desc:'1 000', type:'score', req:1000},
+  {id:'amateur',   emoji:'🌒', name:'Любитель',         desc:'10 000', type:'score', req:10000},
+  {id:'tapper',    emoji:'🌓', name:'Таппер',           desc:'50 000', type:'score', req:50000},
+  {id:'master',    emoji:'🌔', name:'Мастер',           desc:'100 000', type:'score', req:100000},
+  {id:'gigatap',   emoji:'🎖', name:'ГигаТап',          desc:'512 000', type:'score', req:512000},
+  {id:'legend',    emoji:'🌕', name:'Легенда',          desc:'500 000', type:'score', req:500000},
+  {id:'immortal',  emoji:'🌟', name:'Бессмертный',      desc:'1 000 000', type:'score', req:1000000},
+  {id:'beast',     emoji:'🍚', name:'Мистер Бист ест рис', desc:'1 000 000', type:'score', req:1000000},
+  {id:'pivo',      emoji:'🍺', name:'Подержите моё пиво', desc:'67 000 000', type:'score', req:67000000},
+  {id:'love',      emoji:'💜', name:'Я люблю Tap&Tap',  desc:'1 000 000 000', type:'score', req:1000000000},
+  {id:'musk',      emoji:'🚀', name:'Илон Маск завидует', desc:'1 000 000 000 000', type:'score', req:1000000000000},
+  {id:'time',      emoji:'⏳', name:'На что потрачено время...', desc:'7 дней', type:'days', req:7},
+  {id:'home',      emoji:'🏠', name:'Как дома',         desc:'15 дней', type:'days', req:15},
+  {id:'gameMaster',emoji:'🎮', name:'Мастер игры',      desc:'Все бусты 15 ур.', type:'boostmax', req:15},
+  {id:'honest',    emoji:'🎯', name:'Честный игрок',    desc:'4 369 честных кликов', type:'clicks', req:4369},
+  {id:'rapid',     emoji:'⚡', name:'Скорострел',       desc:'Быстрые серии кликов', type:'special'},
+  {id:'meloman',   emoji:'🎵', name:'Меломан',          desc:'Музыкальный стриминг', type:'special'},
+  {id:'decorator', emoji:'🎨', name:'Декоратор',        desc:'Кастомные обои', type:'special'},
+  {id:'lucky',     emoji:'🍀', name:'Счастливчик',      desc:'Победа в лотерее', type:'special'},
+  {id:'persistent',emoji:'🔥', name:'Настойчивый',      desc:'Ежедневный вход', type:'special'},
+  {id:'immortalAll',emoji:'👑',name:'Бессмертный (все)', desc:'Все достижения', type:'special'}
 ];
 
+const CASINO_LEVELS = {
+  1: {pool:['🍀','⭐','💎','🚫'], cost:1000, upgrade:1000},
+  2: {pool:['🍀','⭐','💎','👑','🔥','🚫'], cost:1000, upgrade:10000},
+  3: {pool:['🍀','⭐','💎','👑','🔥','🎁','💀','🎮','🚫'], cost:1000, upgrade:100000},
+  4: {pool:['🍀','⭐','💎','👑','🔥','🎁','💀','🎮','💪','😇','😱','🎅','❄️','🎄','🚫'], cost:1000, upgrade:null}
+};
+
 const DEFAULT_STATE = {
-  name:'Таппер',
+  name:'',
   score:0,
   honestClicks:0,
   totalEarned:0,
@@ -425,21 +601,39 @@ const DEFAULT_STATE = {
   clickPowerLvl:0,
   currentTheme:'blue',
   currentIcon:'tap',
+  currentWallpaper:'default',
   ownedThemes:['blue'],
   ownedIcons:['tap'],
+  ownedWallpapers:['default'],
   unlockedAch:[],
   achNotified:[],
   dailyStreak:0,
-  lastDailyClaim:0,
+  lastDailyClaimDate:null,
+  daysPlayed:1,
+  lastVisitDay:null,
   tasksDone:{channel:false,share:false,review:false},
   history:[],
   lastDayKey:null,
   lastScoreSnapshot:0,
   cyberVegUnlocked:false,
-  thanksSeen:false
+  thanksSeen:false,
+  trillionSeen:false,
+  casinoLevel:1,
+  blockCount:0,
+  musicOn:false,
+  musicStream:null,
+  darkUI:false,
+  lang:'ru',
+  customWallpaperUnlocked:false,
+  rapidClicksWindow:0,
+  rapidCombo:0,
+  specialAch:{rapid:false,meloman:false,decorator:false,lucky:false,persistent:false,immortalAll:false},
+  lastLotterySpin:0
 };
 
 let S = load();
+const MAX_LVL = 15;
+let _currentScreen = 'clicker';
 
 function load(){
   try{
@@ -447,14 +641,21 @@ function load(){
     if(!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
     const parsed = JSON.parse(raw);
     const merged = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
-    // гарантируем массивы
     merged.ownedThemes = Array.isArray(merged.ownedThemes) ? merged.ownedThemes : ['blue'];
     merged.ownedIcons  = Array.isArray(merged.ownedIcons)  ? merged.ownedIcons  : ['tap'];
+    merged.ownedWallpapers = Array.isArray(merged.ownedWallpapers) ? merged.ownedWallpapers : ['default'];
     merged.unlockedAch = Array.isArray(merged.unlockedAch) ? merged.unlockedAch : [];
     merged.achNotified = Array.isArray(merged.achNotified) ? merged.achNotified : [];
     merged.history     = Array.isArray(merged.history)     ? merged.history     : [];
+    if(!merged.specialAch) merged.specialAch = {rapid:false,meloman:false,decorator:false,lucky:false,persistent:false,immortalAll:false};
     if(!merged.ownedThemes.includes('blue')) merged.ownedThemes.push('blue');
     if(!merged.ownedIcons.includes('tap'))   merged.ownedIcons.push('tap');
+    if(!merged.ownedWallpapers.includes('default')) merged.ownedWallpapers.push('default');
+    if(!merged.lang) merged.lang = 'ru';
+    if(typeof merged.clickBoostLvl !== 'number') merged.clickBoostLvl = 0;
+    if(typeof merged.autoBoostLvl !== 'number') merged.autoBoostLvl = 0;
+    if(typeof merged.clickPowerLvl !== 'number') merged.clickPowerLvl = 0;
+    if(typeof merged.casinoLevel !== 'number' || merged.casinoLevel < 1) merged.casinoLevel = 1;
     return merged;
   }catch(e){
     return JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -477,21 +678,106 @@ function fmtShort(n){
   if(n < 1000) return n.toString();
   if(n < 1e6) return (n/1000).toFixed(n<10000?1:0)+'K';
   if(n < 1e9) return (n/1e6).toFixed(1)+'M';
-  return (n/1e9).toFixed(1)+'B';
+  if(n < 1e12) return (n/1e9).toFixed(1)+'B';
+  return (n/1e12).toFixed(1)+'T';
 }
 function toast(msg, ms=1800){
-  const t = $('#toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._t);
-  t._t = setTimeout(()=>t.classList.remove('show'), ms);
+  const tt = $('#toast');
+  tt.textContent = msg;
+  tt.classList.add('show');
+  clearTimeout(tt._t);
+  tt._t = setTimeout(()=>tt.classList.remove('show'), ms);
+}
+function toastAch(emoji, text){
+  const tt = $('#toastAch');
+  tt.querySelector('.ta-emoji').textContent = emoji;
+  tt.querySelector('.ta-text').textContent = text;
+  tt.classList.add('show');
+  clearTimeout(tt._t);
+  tt._t = setTimeout(()=>tt.classList.remove('show'), 2400);
+  playSound('ach');
 }
 function escapeHtml(str){
   return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-/* BOOSTS */
-const MAX_LVL = 25;
+let _audioCtx = null;
+function getAudioCtx(){
+  if(!_audioCtx){
+    try{
+      _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }catch(e){ return null; }
+  }
+  if(_audioCtx.state === 'suspended'){
+    try{ _audioCtx.resume(); }catch(e){}
+  }
+  return _audioCtx;
+}
+
+function playSound(type){
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  const now = ctx.currentTime;
+  if(type === 'ach'){
+    [523.25, 659.25, 783.99].forEach((f, i)=>{
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.frequency.value = f;
+      g.gain.setValueAtTime(0.001, now + i*0.08);
+      g.gain.exponentialRampToValueAtTime(0.15, now + i*0.08 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, now + i*0.08 + 0.25);
+      osc.start(now + i*0.08);
+      osc.stop(now + i*0.08 + 0.3);
+    });
+  } else if(type === 'win'){
+    [659.25, 783.99, 1046.5].forEach((f, i)=>{
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.frequency.value = f;
+      g.gain.setValueAtTime(0.001, now + i*0.1);
+      g.gain.exponentialRampToValueAtTime(0.12, now + i*0.1 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, now + i*0.1 + 0.3);
+      osc.start(now + i*0.1);
+      osc.stop(now + i*0.1 + 0.35);
+    });
+  } else if(type === 'lose'){
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.connect(g); g.connect(ctx.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.exponentialRampToValueAtTime(80, now + 0.4);
+    g.gain.setValueAtTime(0.12, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+    osc.start(now);
+    osc.stop(now + 0.4);
+  } else if(type === 'tap'){
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.connect(g); g.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(780 + Math.random()*60, now);
+    osc.frequency.exponentialRampToValueAtTime(420, now + 0.055);
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(0.055, now + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+    osc.start(now);
+    osc.stop(now + 0.08);
+    const osc2 = ctx.createOscillator();
+    const g2 = ctx.createGain();
+    osc2.connect(g2); g2.connect(ctx.destination);
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(1500 + Math.random()*100, now);
+    g2.gain.setValueAtTime(0.0001, now);
+    g2.gain.exponentialRampToValueAtTime(0.018, now + 0.003);
+    g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+    osc2.start(now);
+    osc2.stop(now + 0.05);
+  }
+}
+
 function upgradeCost(base, lvl, mult1, threshold, mult2){
   let cost = base;
   for(let i=0;i<lvl;i++) cost = Math.floor(cost * (i < threshold ? mult1 : mult2));
@@ -499,7 +785,7 @@ function upgradeCost(base, lvl, mult1, threshold, mult2){
 }
 function clickBoostCost(){ return upgradeCost(100, S.clickBoostLvl, 5, 5, 8); }
 function autoBoostCost(){  return upgradeCost(400, S.autoBoostLvl,  4, 3, 5); }
-function clickPowerCost(){ return upgradeCost(500, S.clickPowerLvl, 3, 25, 3); }
+function clickPowerCost(){ return upgradeCost(500, S.clickPowerLvl, 3, 8, 3); }
 
 function clickBoostMult(){ return Math.pow(2, S.clickBoostLvl); }
 function autoBoostMult(){  return Math.pow(2, S.autoBoostLvl);  }
@@ -508,37 +794,38 @@ function clickPowerMult(){ return Math.pow(2, S.clickPowerLvl); }
 function pointsPerClick(){ return 1 * clickPowerMult() * clickBoostMult(); }
 function pointsPerSecond(){ return autoBoostMult() * clickPowerMult(); }
 
-/* THEME / ICON */
 function getTheme(){ return THEMES.find(t=>t.id===S.currentTheme) || THEMES[0]; }
 function getIcon(){  return ICONS.find(i=>i.id===S.currentIcon)  || ICONS[0];  }
+function getWallpaper(){ return WALLPAPERS.find(w=>w.id===S.currentWallpaper) || WALLPAPERS[0]; }
 
 function applyTheme(){
   const th = getTheme();
   const root = document.documentElement;
 
-  // градиент кнопки
   root.style.setProperty('--btn-grad', th.grad);
   root.style.setProperty('--btn-color', th.primary);
 
-  // акценты MD3
+  // Тёмный UI — переключает ТОЛЬКО фоны/поверхности
+  if(S.darkUI){
+    root.setAttribute('data-ui','dark');
+  } else {
+    root.removeAttribute('data-ui');
+  }
+
+  // Акцентные цвета выбранной темы применяем ВСЕГДА (инлайн перебивает [data-ui="dark"])
   root.style.setProperty('--primary', th.primary);
   root.style.setProperty('--primary-container', th.primaryContainer);
   root.style.setProperty('--on-primary', th.onPrimary);
   root.style.setProperty('--on-primary-container', th.onPrimaryContainer);
 
-  // тёмная UI-тема — только когда выбрана именно она
-  if(S.currentTheme === 'dark' && S.ownedThemes.includes('dark')){
-    root.setAttribute('data-ui','dark');
-    // переустановим акценты — их перебивает [data-ui="dark"] в CSS
-    root.style.setProperty('--primary', th.primary);
-    root.style.setProperty('--primary-container', th.primaryContainer);
-    root.style.setProperty('--on-primary', th.onPrimary);
-    root.style.setProperty('--on-primary-container', th.onPrimaryContainer);
+  // Обои: в тёмном UI — тёмный фон из [data-ui="dark"]
+  const wp = getWallpaper();
+  if(!S.darkUI){
+    root.style.setProperty('--wallpaper', wp.grad);
   } else {
-    root.removeAttribute('data-ui');
+    root.style.removeProperty('--wallpaper');
   }
 
-  // обновим градиент счётчика очков
   const scoreEl = document.querySelector('.score-value');
   if(scoreEl){
     scoreEl.style.background = `linear-gradient(135deg, ${th.primary}, ${th.primary === '#D0BCFF' ? '#7C4DFF' : th.primary})`;
@@ -556,28 +843,25 @@ function applyTheme(){
 
 function renderIconInto(el){
   const ic = getIcon();
-  if(ic.fa) el.innerHTML = `<i class="${ic.fa} icon-fa"></i>`;
-  else      el.innerHTML = `<span class="tap-text">TAP</span>`;
+  if(ic.text) el.innerHTML = `<span class="tap-text">TAP</span>`;
+  else        el.innerHTML = `<span class="icon-fa">${ic.emoji}</span>`;
 }
 
-/* ============================================================
-   CLICKER
-   ============================================================ */
 function renderClicker(){
   const s = $('#screen-clicker');
   s.innerHTML = `
-    <div class="score-card">
-      <div class="score-label">Очки</div>
+    <div class="score-card" id="scoreCard">
+      <div class="score-label" data-i18n="score">${t('score')}</div>
       <div class="score-value" id="scoreVal">${fmt(S.score)}</div>
-      <div class="score-sub" id="scoreSub">+${fmt(pointsPerClick())} за клик · +${fmt(pointsPerSecond())}/сек</div>
+      <div class="score-sub" id="scoreSub">+${fmt(pointsPerSecond())} ${t('per_sec')} · +${fmt(pointsPerClick())} ${t('per_click')}</div>
     </div>
     <div class="tap-wrap" id="tapWrap">
-      <button id="tapBtn" aria-label="Клик"></button>
+      <button id="tapBtn" aria-label="Tap"></button>
     </div>
     <div class="boost-strip">
-      <div class="mini-boost"><div class="mv" id="mv1">x${clickBoostMult()}</div><div class="ml">Клик</div></div>
-      <div class="mini-boost"><div class="mv" id="mv2">x${clickPowerMult()}</div><div class="ml">Прокачка</div></div>
-      <div class="mini-boost"><div class="mv" id="mv3">x${autoBoostMult()}</div><div class="ml">В сек</div></div>
+      <div class="mini-boost"><div class="mv" id="mv1">x${clickBoostMult()}</div><div class="ml">Tap</div></div>
+      <div class="mini-boost"><div class="mv" id="mv2">x${clickPowerMult()}</div><div class="ml">Power</div></div>
+      <div class="mini-boost"><div class="mv" id="mv3">x${autoBoostMult()}</div><div class="ml">Sec</div></div>
     </div>
   `;
   renderIconInto($('#tapBtn'));
@@ -585,26 +869,38 @@ function renderClicker(){
   bindTap();
 }
 
-let _blockedUntil = 0;   // античит: зажатие игнорируется
+let _blockedUntil = 0;
+let _rapidStart = 0;
 
 function bindTap(){
   const btn = $('#tapBtn');
   const wrap = $('#tapWrap');
   if(!btn) return;
 
-  // pointerdown — считаем клик и блокируем повторные срабатывания,
-  // пока палец не отпущен (защита от автоповтора и удержания)
   btn.addEventListener('pointerdown', (e)=>{
     e.preventDefault();
     if(Date.now() < _blockedUntil) return;
-    _blockedUntil = Date.now() + 40; // антиспам: 40мс между зачётами (до 25 кликов/сек) 
+    _blockedUntil = Date.now() + 40;
+
+    const now = Date.now();
+    if(now - _rapidStart < 200){
+      S.rapidCombo++;
+      if(S.rapidCombo >= 20 && !S.specialAch.rapid){
+        S.specialAch.rapid = true;
+        unlockSpecialAch('rapid');
+      }
+    } else {
+      S.rapidCombo = 0;
+    }
+    _rapidStart = now;
 
     const gain = pointsPerClick();
     S.score += gain;
     S.totalEarned += gain;
     S.honestClicks++;
 
-    // ripple
+    playSound('tap');
+
     const rect = btn.getBoundingClientRect();
     const rip = document.createElement('span');
     rip.className = 'ripple';
@@ -615,7 +911,6 @@ function bindTap(){
     btn.appendChild(rip);
     setTimeout(()=>rip.remove(), 650);
 
-    // +N
     const fp = document.createElement('div');
     fp.className = 'float-plus';
     fp.textContent = '+'+fmtShort(gain);
@@ -626,13 +921,24 @@ function bindTap(){
     wrap.appendChild(fp);
     setTimeout(()=>fp.remove(), 950);
 
+    for(let i=0; i<3; i++){
+      const p = document.createElement('span');
+      p.className = 'particle';
+      p.textContent = ['✨','⭐','💫','🌟'][Math.floor(Math.random()*4)];
+      p.style.left = (e.clientX - wr.left - 8)+'px';
+      p.style.top = (e.clientY - wr.top - 8)+'px';
+      p.style.setProperty('--dx', (Math.random()*100-50)+'px');
+      p.style.setProperty('--dy', (-50-Math.random()*60)+'px');
+      wrap.appendChild(p);
+      setTimeout(()=>p.remove(), 900);
+    }
+
     updateScoreUI();
     checkAchievements();
     checkEasterEggs();
     save();
   });
 
-  // отключаем context menu на долгое нажатие
   btn.addEventListener('contextmenu', e=>e.preventDefault());
 }
 
@@ -644,15 +950,25 @@ function updateScoreUI(){
     setTimeout(()=>el.classList.remove('pulse'), 150);
   }
   const sub = $('#scoreSub');
-  if(sub) sub.textContent = `+${fmt(pointsPerClick())} за клик · +${fmt(pointsPerSecond())}/сек`;
+  if(sub) sub.textContent = `+${fmt(pointsPerSecond())} ${t('per_sec')} · +${fmt(pointsPerClick())} ${t('per_click')}`;
   const mv1 = $('#mv1'); if(mv1) mv1.textContent = 'x'+clickBoostMult();
   const mv2 = $('#mv2'); if(mv2) mv2.textContent = 'x'+clickPowerMult();
   const mv3 = $('#mv3'); if(mv3) mv3.textContent = 'x'+autoBoostMult();
 
-  // Перерисовываем открытые вкладки, чтобы кнопки/цены обновились
+  const csVal = document.querySelector('.casino-score .cs-value');
+  if(csVal) csVal.textContent = fmt(S.score);
+
+  const spinBtn = $('#spinBtn');
+  if(spinBtn){
+    const lvl = S.casinoLevel;
+    const canSpin = S.score >= CASINO_LEVELS[lvl].cost;
+    spinBtn.disabled = !canSpin;
+  }
+
   if($('#screen-shop')?.classList.contains('active')){
     renderThemes();
     renderIcons();
+    renderWallpapers();
   }
   if($('#screen-boosts')?.classList.contains('active')){
     renderBoosts();
@@ -660,6 +976,7 @@ function updateScoreUI(){
   if($('#screen-settings')?.classList.contains('active')){
     renderSettingsThemes();
     renderSettingsIcons();
+    renderSettingsWallpapers();
   }
 }
 
@@ -675,45 +992,44 @@ setInterval(()=>{
   }
 }, 1000);
 
-/* ============================================================
-   SHOP
-   ============================================================ */
 function renderShop(){
   const s = $('#screen-shop');
   s.innerHTML = `
-    <div class="section-title"><i class="fa-solid fa-palette"></i>Темы кнопки</div>
-    <div class="hint">Меняй цвет и стиль кнопки. Некоторые темы открываются за очки.</div>
+    <div class="section-title"><i class="fa-solid fa-palette"></i>${t('themes_title')}</div>
+    <div class="hint">${t('themes_hint')}</div>
     <div class="grid-2" id="themesGrid"></div>
-    <div class="section-title"><i class="fa-solid fa-icons"></i>Иконки</div>
-    <div class="hint">Иконка, которая отображается на кнопке кликера.</div>
+    <div class="section-title"><i class="fa-solid fa-icons"></i>${t('icons_title')}</div>
+    <div class="hint">${t('icons_hint')}</div>
     <div class="grid-2" id="iconsGrid"></div>
+    <div class="section-title"><i class="fa-solid fa-image"></i>${t('wallpaper_title')}</div>
+    <div class="hint" id="wpHint">${customWallpaperUnlocked() ? t('wp_hint_unlocked') : t('wp_hint_locked')}</div>
+    <div class="grid-2" id="wpGrid"></div>
   `;
   renderThemes();
   renderIcons();
+  renderWallpapers();
 }
 
 function renderThemes(){
   const g = $('#themesGrid');
   if(!g) return;
-  g.innerHTML = THEMES.map(t=>{
-    const owned    = S.ownedThemes.includes(t.id);
-    const equipped = S.currentTheme === t.id;
-    const canBuy   = S.score >= t.price;
+  g.innerHTML = THEMES.map(th=>{
+    const owned    = S.ownedThemes.includes(th.id);
+    const equipped = S.currentTheme === th.id;
+    const canBuy   = S.score >= th.price;
     return `
       <div class="card ${owned?'owned':''}">
         ${!owned?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
-        <div class="preview" style="background:${t.grad};${t.id==='dark'?'color:#fff;':''}">
-          ${t.id==='dark'?'🌙':'Aa'}
-        </div>
-        <div class="name">${t.name}</div>
+        <div class="preview" style="background:${th.grad}">Aa</div>
+        <div class="name">${th.name}</div>
         ${owned
-          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-theme="${t.id}">
-               ${equipped?'Надето':'Надеть'}
+          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-theme="${th.id}">
+               ${equipped?t('equipped'):t('equip')}
              </button>`
           : `<div class="price" style="color:${canBuy?'':'var(--danger)'}">
-               <i class="fa-solid fa-star" style="color:var(--gold)"></i> ${fmt(t.price)}
+               <i class="fa-solid fa-star" style="color:var(--gold)"></i> ${fmt(th.price)}
              </div>
-             <button class="buy-btn" data-buy-theme="${t.id}">Купить</button>`
+             <button class="buy-btn" data-buy-theme="${th.id}">${t('buy')}</button>`
         }
       </div>`;
   }).join('');
@@ -721,17 +1037,17 @@ function renderThemes(){
   g.querySelectorAll('[data-buy-theme]').forEach(b=>{
     b.addEventListener('click', ()=>{
       const id = b.dataset.buyTheme;
-      const t = THEMES.find(x=>x.id===id);
-      if(!t) return;
-      if(S.score < t.price){ toast('Недостаточно очков'); return; }
-      S.score -= t.price;
+      const th = THEMES.find(x=>x.id===id);
+      if(!th) return;
+      if(S.score < th.price){ toast(t('insufficient')); return; }
+      S.score -= th.price;
       if(!S.ownedThemes.includes(id)) S.ownedThemes.push(id);
       S.currentTheme = id;
       applyTheme();
       save();
       renderThemes(); renderIcons();
       updateScoreUI();
-      toast(`Тема «${t.name}» куплена!`);
+      toast(`${th.name} ${t('theme_bought')}`);
     });
   });
   g.querySelectorAll('[data-theme]').forEach(b=>{
@@ -740,7 +1056,7 @@ function renderThemes(){
       applyTheme();
       save();
       renderThemes();
-      toast('Тема применена');
+      toast(t('theme_applied'));
     });
   });
 }
@@ -752,22 +1068,22 @@ function renderIcons(){
     const owned    = S.ownedIcons.includes(ic.id);
     const equipped = S.currentIcon === ic.id;
     const canBuy   = S.score >= ic.price;
-    const preview  = ic.fa
-      ? `<i class="${ic.fa}" style="font-size:24px"></i>`
-      : `<span style="font-size:14px;font-weight:800;letter-spacing:1px">TAP</span>`;
+    const preview  = ic.text
+      ? `<span style="font-size:12px;font-weight:800;letter-spacing:1px;color:var(--on-surface)">TAP</span>`
+      : `<span style="font-size:28px">${ic.emoji}</span>`;
     return `
       <div class="card ${owned?'owned':''}">
         ${!owned?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
-        <div class="preview" style="background:var(--btn-grad)">${preview}</div>
+        <div class="preview emoji-preview">${preview}</div>
         <div class="name">${ic.name}</div>
         ${owned
           ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-icon="${ic.id}">
-               ${equipped?'Надето':'Надеть'}
+               ${equipped?t('equipped'):t('equip')}
              </button>`
           : `<div class="price" style="color:${canBuy?'':'var(--danger)'}">
                <i class="fa-solid fa-star" style="color:var(--gold)"></i> ${fmt(ic.price)}
              </div>
-             <button class="buy-btn" data-buy-icon="${ic.id}">Купить</button>`
+             <button class="buy-btn" data-buy-icon="${ic.id}">${t('buy')}</button>`
         }
       </div>`;
   }).join('');
@@ -777,7 +1093,7 @@ function renderIcons(){
       const id = b.dataset.buyIcon;
       const ic = ICONS.find(x=>x.id===id);
       if(!ic) return;
-      if(S.score < ic.price){ toast('Недостаточно очков'); return; }
+      if(S.score < ic.price){ toast(t('insufficient')); return; }
       S.score -= ic.price;
       if(!S.ownedIcons.includes(id)) S.ownedIcons.push(id);
       S.currentIcon = id;
@@ -786,7 +1102,7 @@ function renderIcons(){
       save();
       renderThemes(); renderIcons();
       updateScoreUI();
-      toast(`Иконка «${ic.name}» куплена!`);
+      toast(`${ic.name} ${t('icon_bought')}`);
     });
   });
   g.querySelectorAll('[data-icon]').forEach(b=>{
@@ -796,61 +1112,110 @@ function renderIcons(){
       applyTheme();
       save();
       renderIcons();
-      toast('Иконка применена');
+      toast(t('icon_applied'));
     });
   });
 }
 
-/* ============================================================
-   BOOSTS
-   ============================================================ */
+function customWallpaperUnlocked(){
+  return S.score >= 300000 || S.customWallpaperUnlocked;
+}
+
+function renderWallpapers(){
+  const g = $('#wpGrid');
+  if(!g) return;
+  const hint = $('#wpHint');
+  if(hint){
+    hint.textContent = customWallpaperUnlocked() ? t('wp_hint_unlocked') : t('wp_hint_locked');
+  }
+  g.innerHTML = WALLPAPERS.map(w=>{
+    const unlocked = !w.custom || customWallpaperUnlocked();
+    const owned = S.ownedWallpapers.includes(w.id) || unlocked;
+    const equipped = S.currentWallpaper === w.id;
+    return `
+      <div class="card wallpaper-card ${owned?'owned':''}" data-wp-card="${w.id}">
+        ${!unlocked?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
+        <div class="wp-preview" style="background:${w.grad}"></div>
+        <div class="name">${w.name}</div>
+        ${unlocked
+          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-wp="${w.id}">
+               ${equipped?t('equipped'):t('equip')}
+             </button>`
+          : `<div class="price"><i class="fa-solid fa-lock"></i> 300 000</div>
+             <button class="buy-btn" disabled>${t('locked_lbl')}</button>`
+        }
+      </div>`;
+  }).join('');
+
+  g.querySelectorAll('[data-wp]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      S.currentWallpaper = b.dataset.wp;
+      if(!S.ownedWallpapers.includes(S.currentWallpaper)) S.ownedWallpapers.push(S.currentWallpaper);
+      applyTheme();
+      save();
+      renderWallpapers();
+      if($('#screen-settings').classList.contains('active')) renderSettingsWallpapers();
+      toast(t('wp_applied'));
+    });
+  });
+}
+
 function renderBoosts(){
   const s = $('#screen-boosts');
   s.innerHTML = `
-    <div class="section-title"><i class="fa-solid fa-rocket"></i>Прокачка</div>
-    <div class="hint">Улучшай клик и пассивный доход. Максимальный уровень — 25.</div>
+    <div class="section-title"><i class="fa-solid fa-rocket"></i>${t('boost_title')}</div>
+    <div class="hint">${t('boost_hint')}</div>
 
     <div class="boost-card">
       <div class="boost-head">
-        <div class="boost-title"><i class="fa-solid fa-hand-pointer"></i>Х2 за клик</div>
-        <div class="boost-lvl">Ур. ${S.clickBoostLvl}/${MAX_LVL}</div>
+        <div class="boost-title"><i class="fa-solid fa-hand-pointer"></i>${t('boost_click')}</div>
+        <div class="boost-lvl">${t('level')} ${S.clickBoostLvl}/${MAX_LVL}</div>
       </div>
-      <div class="boost-desc">Умножает очки за клик. Множитель: <b>×${clickBoostMult()}</b></div>
-      <div class="boost-progress"><div style="width:${(S.clickBoostLvl/MAX_LVL)*100}%"></div></div>
+      <div class="boost-desc">${t('boost_click_desc')} <b>×${clickBoostMult()}</b></div>
+      <div class="boost-progress" data-max="${MAX_LVL}">
+        <div style="width:${(S.clickBoostLvl/MAX_LVL)*100}%"></div>
+        ${renderTicks(MAX_LVL)}
+      </div>
       <div class="boost-action">
         <div class="boost-cost"><i class="fa-solid fa-star"></i>${fmt(clickBoostCost())}</div>
         <button class="btn" id="buyClickBoost" ${S.clickBoostLvl>=MAX_LVL?'disabled':''}>
-          ${S.clickBoostLvl>=MAX_LVL?'МАКС':'Улучшить'}
+          ${S.clickBoostLvl>=MAX_LVL?t('max'):t('improve')}
         </button>
       </div>
     </div>
 
     <div class="boost-card">
       <div class="boost-head">
-        <div class="boost-title"><i class="fa-solid fa-gauge-high"></i>Х2 за сек</div>
-        <div class="boost-lvl">Ур. ${S.autoBoostLvl}/${MAX_LVL}</div>
+        <div class="boost-title"><i class="fa-solid fa-gauge-high"></i>${t('boost_auto')}</div>
+        <div class="boost-lvl">${t('level')} ${S.autoBoostLvl}/${MAX_LVL}</div>
       </div>
-      <div class="boost-desc">Пассивный доход в секунду. Множитель: <b>×${autoBoostMult()}</b></div>
-      <div class="boost-progress"><div style="width:${(S.autoBoostLvl/MAX_LVL)*100}%"></div></div>
+      <div class="boost-desc">${t('boost_auto_desc')} <b>×${autoBoostMult()}</b></div>
+      <div class="boost-progress" data-max="${MAX_LVL}">
+        <div style="width:${(S.autoBoostLvl/MAX_LVL)*100}%"></div>
+        ${renderTicks(MAX_LVL)}
+      </div>
       <div class="boost-action">
         <div class="boost-cost"><i class="fa-solid fa-star"></i>${fmt(autoBoostCost())}</div>
         <button class="btn" id="buyAutoBoost" ${S.autoBoostLvl>=MAX_LVL?'disabled':''}>
-          ${S.autoBoostLvl>=MAX_LVL?'МАКС':'Улучшить'}
+          ${S.autoBoostLvl>=MAX_LVL?t('max'):t('improve')}
         </button>
       </div>
     </div>
 
     <div class="boost-card">
       <div class="boost-head">
-        <div class="boost-title"><i class="fa-solid fa-bolt"></i>Прокачка кликера</div>
-        <div class="boost-lvl">Ур. ${S.clickPowerLvl}/${MAX_LVL}</div>
+        <div class="boost-title"><i class="fa-solid fa-bolt"></i>${t('boost_power')}</div>
+        <div class="boost-lvl">${t('level')} ${S.clickPowerLvl}/${MAX_LVL}</div>
       </div>
-      <div class="boost-desc">Базовый множитель клика. Множитель: <b>×${clickPowerMult()}</b></div>
-      <div class="boost-progress"><div style="width:${(S.clickPowerLvl/MAX_LVL)*100}%"></div></div>
+      <div class="boost-desc">${t('boost_power_desc')} <b>×${clickPowerMult()}</b></div>
+      <div class="boost-progress" data-max="${MAX_LVL}">
+        <div style="width:${(S.clickPowerLvl/MAX_LVL)*100}%"></div>
+        ${renderTicks(MAX_LVL)}
+      </div>
       <div class="boost-action">
         <div class="boost-cost"><i class="fa-solid fa-star"></i>${fmt(clickPowerCost())}</div>
         <button class="btn" id="buyClickPower" ${S.clickPowerLvl>=MAX_LVL?'disabled':''}>
-          ${S.clickPowerLvl>=MAX_LVL?'МАКС':'Улучшить'}
+          ${S.clickPowerLvl>=MAX_LVL?t('max'):t('improve')}
         </button>
       </div>
     </div>
@@ -858,41 +1223,49 @@ function renderBoosts(){
 
   $('#buyClickBoost')?.addEventListener('click', ()=>{
     const c = clickBoostCost();
-    if(S.score < c || S.clickBoostLvl>=MAX_LVL){ toast('Недостаточно очков'); return; }
-    S.score -= c; S.clickBoostLvl++; save(); renderBoosts(); updateScoreUI(); toast('Улучшено!');
+    if(S.score < c || S.clickBoostLvl>=MAX_LVL){ toast(t('insufficient')); return; }
+    S.score -= c; S.clickBoostLvl++; save(); renderBoosts(); updateScoreUI(); toast(t('upgraded'));
   });
   $('#buyAutoBoost')?.addEventListener('click', ()=>{
     const c = autoBoostCost();
-    if(S.score < c || S.autoBoostLvl>=MAX_LVL){ toast('Недостаточно очков'); return; }
-    S.score -= c; S.autoBoostLvl++; save(); renderBoosts(); updateScoreUI(); toast('Улучшено!');
+    if(S.score < c || S.autoBoostLvl>=MAX_LVL){ toast(t('insufficient')); return; }
+    S.score -= c; S.autoBoostLvl++; save(); renderBoosts(); updateScoreUI(); toast(t('upgraded'));
   });
   $('#buyClickPower')?.addEventListener('click', ()=>{
     const c = clickPowerCost();
-    if(S.score < c || S.clickPowerLvl>=MAX_LVL){ toast('Недостаточно очков'); return; }
-    S.score -= c; S.clickPowerLvl++; save(); renderBoosts(); updateScoreUI(); toast('Улучшено!');
+    if(S.score < c || S.clickPowerLvl>=MAX_LVL){ toast(t('insufficient')); return; }
+    S.score -= c; S.clickPowerLvl++; save(); renderBoosts(); updateScoreUI(); toast(t('upgraded'));
   });
 }
 
-/* ============================================================
-   TASKS
-   ============================================================ */
+function renderTicks(max){
+  let html = '';
+  for(let i=1;i<max;i++){
+    html += `<div class="tick" style="left:${(i/max)*100}%"></div>`;
+  }
+  return html;
+}
+
 function dailyRewardForStreak(streak){
   if(streak >= 15) return 7000;
   return 50 * Math.pow(2, streak-1);
 }
-function todayKey(){
-  const d = new Date();
-  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+function dateKey(d){
+  d = d || new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
-function canClaimDaily(){ return (Date.now() - S.lastDailyClaim) >= 24*60*60*1000; }
+function todayKey(){ return dateKey(new Date()); }
+function yesterdayKey(){
+  const d = new Date();
+  d.setDate(d.getDate()-1);
+  return dateKey(d);
+}
+function canClaimDaily(){ return S.lastDailyClaimDate !== todayKey(); }
 function nextStreakIfClaim(){
-  const now = Date.now();
-  const oneDay = 24*60*60*1000;
-  if(S.lastDailyClaim === 0) return 1;
-  const gap = now - S.lastDailyClaim;
-  if(gap >= 2*oneDay) return 1;
-  if(gap >= oneDay) return Math.min(S.dailyStreak + 1, 15);
-  return S.dailyStreak;
+  const today = todayKey();
+  if(S.lastDailyClaimDate === today) return S.dailyStreak;
+  if(S.lastDailyClaimDate === yesterdayKey()) return Math.min(S.dailyStreak + 1, 15);
+  return 1;
 }
 
 function renderTasks(){
@@ -906,31 +1279,35 @@ function renderTasks(){
   }).join('');
 
   s.innerHTML = `
-    <div class="section-title"><i class="fa-solid fa-calendar-day"></i>Ежедневный бонус</div>
+    <div class="section-title"><i class="fa-solid fa-calendar-day"></i>${t('daily_title')}</div>
     <div class="daily-card">
-      <div class="dc-title">Серия дней: ${S.dailyStreak}/15</div>
+      <div class="dc-title">${t('daily_streak')}: ${S.dailyStreak}/15</div>
       <div class="dc-streak">+${fmt(reward)}</div>
-      <div class="dc-desc">${claimable ? 'Награда доступна!' : 'Возвращайся каждый день!'}</div>
+      <div class="dc-desc">${claimable ? t('daily_available') : t('daily_comeback')}</div>
       <div class="daily-dots">${dots}</div>
       <button class="btn" id="claimDaily" ${!claimable?'disabled':''}>
-        <i class="fa-solid fa-gift"></i> ${claimable?'Забрать':'Уже забрано'}
+        <i class="fa-solid fa-gift"></i> ${claimable?t('daily_claim'):t('daily_claimed')}
       </button>
     </div>
-    <div class="section-title"><i class="fa-solid fa-list-check"></i>Задания</div>
-    ${taskHtml('channel','fa-solid fa-tower-broadcast','Подписаться на канал «Tap&Tap»',400,'https://max.ru/channel_TapTap')}
-    ${taskHtml('share','fa-solid fa-share-nodes','Поделиться игрой с друзьями',600,'https://q-acd.github.io/tap_tap')}
-    ${taskHtml('review','fa-solid fa-envelope','Написать отзыв',500,'mailto:q-acd@mail.ru')}
+    <div class="section-title"><i class="fa-solid fa-list-check"></i>${t('tasks_title')}</div>
+    ${taskHtml('channel','<i class="fa-solid fa-tower-broadcast"></i>','Подписаться на канал «Tap&Tap»',400,'https://max.ru/channel_TapTap')}
+    ${taskHtml('share','<i class="fa-solid fa-share-nodes"></i>','Поделиться игрой с друзьями',600,'https://q-acd.github.io/tap_tap')}
+    ${taskHtml('review','<i class="fa-solid fa-envelope"></i>','Написать отзыв',500,'mailto:q-acd@mail.ru')}
   `;
 
   $('#claimDaily')?.addEventListener('click', ()=>{
     if(!canClaimDaily()) return;
     const ns = nextStreakIfClaim();
     S.dailyStreak = ns;
-    S.lastDailyClaim = Date.now();
+    S.lastDailyClaimDate = todayKey();
+    if(!S.specialAch.persistent){
+      S.specialAch.persistent = true;
+      unlockSpecialAch('persistent');
+    }
     const r = dailyRewardForStreak(ns);
     S.score += r; S.totalEarned += r;
     save(); renderTasks(); updateScoreUI();
-    toast(`+${fmt(r)} очков! День ${ns}`);
+    toast(`+${fmt(r)} ${t('score')}! ${t('day_lbl')} ${ns}`);
   });
 
   $$('.task-card').forEach(card=>{
@@ -946,7 +1323,7 @@ function renderTasks(){
       S.tasksDone[key] = true;
       S.score += reward; S.totalEarned += reward;
       save(); renderTasks(); updateScoreUI();
-      toast(`+${reward} за задание!`);
+      toast(`+${reward}!`);
     });
   });
 }
@@ -955,46 +1332,43 @@ function taskHtml(key, icon, name, reward, link){
   const done = S.tasksDone[key];
   return `
     <div class="task-card" data-key="${key}" data-link="${link}" data-reward="${reward}">
-      <div class="task-icon"><i class="${icon}"></i></div>
+      <div class="task-icon">${icon}</div>
       <div class="task-body">
         <div class="task-name">${name}</div>
-        <div class="task-reward">Награда: <b>+${reward}</b></div>
+        <div class="task-reward">+<b>${reward}</b></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:6px;">
-        <button class="btn secondary task-go" style="padding:8px 12px;font-size:12px;">Открыть</button>
+        <button class="btn secondary task-go" style="padding:8px 12px;font-size:12px;">${t('buy')==='Buy'?'Open':'Открыть'}</button>
         <button class="btn ${done?'secondary':'success'} task-claim" style="padding:8px 12px;font-size:12px;" ${done?'disabled':''}>
-          ${done?'✓':'Забрать'}
+          ${done?'✓':t('daily_claim')}
         </button>
       </div>
     </div>`;
 }
 
-/* ============================================================
-   ACHIEVEMENTS
-   ============================================================ */
 function renderAch(){
   const s = $('#screen-ach');
   const ic = getIcon();
   const th = getTheme();
   s.innerHTML = `
     <div class="profile-box">
-      <div class="pb-name"><i class="fa-solid fa-user-astronaut"></i>${escapeHtml(S.name)}</div>
+      <div class="pb-name"><i class="fa-solid fa-user-astronaut"></i>${escapeHtml(S.name || 'Player')}</div>
       <div class="pb-stats">
-        <div class="pb-stat"><div class="pv">${fmtShort(S.score)}</div><div class="pl">ОЧКОВ</div></div>
-        <div class="pb-stat"><div class="pv">${fmtShort(S.honestClicks)}</div><div class="pl">ЧЕСТНЫХ КЛИКОВ</div></div>
-        <div class="pb-stat"><div class="pv">${ic.fa ? `<i class="${ic.fa}"></i>` : 'TAP'}</div><div class="pl">ИКОНКА</div></div>
-        <div class="pb-stat"><div class="pv" style="font-size:14px">${th.name}</div><div class="pl">ТЕМА</div></div>
+        <div class="pb-stat"><div class="pv">${fmtShort(S.score)}</div><div class="pl">${t('score_lbl')}</div></div>
+        <div class="pb-stat"><div class="pv">${fmtShort(S.honestClicks)}</div><div class="pl">${t('honest_clicks')}</div></div>
+        <div class="pb-stat"><div class="pv" style="font-size:20px">${ic.text ? 'TAP' : ic.emoji}</div><div class="pl">${t('icon_lbl')}</div></div>
+        <div class="pb-stat"><div class="pv" style="font-size:13px">${th.name}</div><div class="pl">${t('theme_lbl')}</div></div>
       </div>
       <button class="btn" style="margin-top:14px;background:#fff;color:#6750A4;width:100%;justify-content:center;" id="shareBtn">
-        <i class="fa-solid fa-share-nodes"></i> Поделиться
+        <i class="fa-solid fa-share-nodes"></i> ${t('share')}
       </button>
     </div>
-    <div class="section-title"><i class="fa-solid fa-trophy"></i>Достижения</div>
+    <div class="section-title"><i class="fa-solid fa-trophy"></i>${t('ach_title')}</div>
     <div id="achList"></div>
-    <div class="section-title"><i class="fa-solid fa-chart-line"></i>Достижения за день</div>
+    <div class="section-title"><i class="fa-solid fa-chart-line"></i>${t('hist_title')}</div>
     <div class="sort-tabs">
-      <button class="sort-tab active" data-sort="day">По дням</button>
-      <button class="sort-tab" data-sort="points">По очкам (+)</button>
+      <button class="sort-tab active" data-sort="day">${t('sort_day')}</button>
+      <button class="sort-tab" data-sort="points">${t('sort_points')}</button>
     </div>
     <div id="histList"></div>
   `;
@@ -1014,17 +1388,30 @@ function renderAchList(){
   const wrap = $('#achList');
   if(!wrap) return;
   wrap.innerHTML = ACHIEVEMENTS.map(a=>{
-    const un = S.unlockedAch.includes(a.id);
+    const un = isAchUnlocked(a);
     return `
       <div class="ach-card ${un?'unlocked':''}">
         <div class="ach-emoji">${a.emoji}</div>
         <div class="ach-body">
           <div class="ach-name">${a.name}</div>
-          <div class="ach-req">${fmt(a.req)} очков</div>
+          <div class="ach-req">${a.desc}</div>
         </div>
         <div class="ach-status"><i class="fa-solid ${un?'fa-circle-check':'fa-circle'}"></i></div>
       </div>`;
   }).join('');
+}
+
+function isAchUnlocked(a){
+  if(a.type === 'score')   return S.score >= a.req;
+  if(a.type === 'days')    return S.daysPlayed >= a.req;
+  if(a.type === 'clicks')  return S.honestClicks >= a.req;
+  if(a.type === 'boostmax'){
+    return S.clickBoostLvl>=MAX_LVL && S.autoBoostLvl>=MAX_LVL && S.clickPowerLvl>=MAX_LVL;
+  }
+  if(a.type === 'special'){
+    return !!S.specialAch[a.id];
+  }
+  return S.unlockedAch.includes(a.id);
 }
 
 function renderHistory(sort){
@@ -1034,78 +1421,164 @@ function renderHistory(sort){
   if(sort === 'points') data.sort((a,b)=> (b.delta||0) - (a.delta||0));
   else data.sort((a,b)=> a.day - b.day);
   if(data.length === 0){
-    wrap.innerHTML = `<div class="hint" style="text-align:center;padding:20px;">История появится, когда ты начнёшь играть</div>`;
+    wrap.innerHTML = `<div class="hint" style="text-align:center;padding:20px;">${t('hist_empty')}</div>`;
     return;
   }
   wrap.innerHTML = data.map(h=>`
     <div class="hist-row">
-      <div class="hist-day">День ${h.day}</div>
+      <div class="hist-day">${t('day_lbl')} ${h.day}</div>
       <div class="hist-val ${h.delta>0?'pos':''}">
         ${fmt(h.score)}${h.delta>0?` <span style="font-size:12px;">(+${fmt(h.delta)})</span>`:''}
       </div>
     </div>`).join('');
 }
 
-/* ============================================================
-   SETTINGS
-   ============================================================ */
 function renderSettings(){
   const s = $('#screen-settings');
   s.innerHTML = `
-    <div class="section-title"><i class="fa-solid fa-user"></i>Профиль</div>
+    <div class="section-title"><i class="fa-solid fa-user"></i>${t('profile')}</div>
     <div class="field">
-      <label>Имя игрока</label>
-      <input type="text" id="nameInput" maxlength="20" value="${escapeHtml(S.name)}">
+      <label>${t('name_label')}</label>
+      <input type="text" id="nameInput" maxlength="20" placeholder="…" value="${escapeHtml(S.name)}">
     </div>
     <div class="row-btns">
-      <button class="btn" id="saveName"><i class="fa-solid fa-check"></i> Сохранить имя</button>
+      <button class="btn" id="saveName"><i class="fa-solid fa-check"></i> ${t('save_name')}</button>
     </div>
-    <div class="section-title"><i class="fa-solid fa-palette"></i>Тема UI</div>
-    <div class="hint">Разблокированные темы можно применить здесь или в магазине.</div>
+
+    <div class="section-title"><i class="fa-solid fa-palette"></i>${t('appearance')}</div>
+    <div class="toggle-row">
+      <div class="tr-label"><i class="fa-solid fa-moon"></i>${t('dark_theme')}</div>
+      <button class="switch ${S.darkUI?'on':''}" id="darkToggle"></button>
+    </div>
+    <div class="toggle-row">
+      <div class="tr-label"><i class="fa-solid fa-globe"></i>${t('lang_label')}</div>
+      <div class="lang-btns">
+        <button class="lang-btn ${S.lang==='ru'?'active':''}" data-lang="ru">RU</button>
+        <button class="lang-btn ${S.lang==='en'?'active':''}" data-lang="en">EN</button>
+      </div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-music"></i>${t('music_title')}</div>
+    <div class="toggle-row">
+      <div class="tr-label" id="musicLabel"><i class="fa-solid ${S.musicOn?'fa-volume-high':'fa-volume-xmark'}"></i> ${t('music_lbl')}: ${S.musicOn?t('music_on'):t('music_off')}</div>
+      <button class="switch ${S.musicOn?'on':''}" id="musicToggle"></button>
+    </div>
+    <div class="music-row">
+      <button class="music-btn ${S.musicStream==='jazz' && S.musicOn ? 'active':''}" data-stream="jazz"><i class="fa-solid fa-music"></i> Jazz</button>
+      <button class="music-btn ${S.musicStream==='pop' && S.musicOn ? 'active':''}" data-stream="pop"><i class="fa-solid fa-microphone"></i> Pop</button>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-palette"></i>${t('theme_ui')}</div>
     <div class="grid-2" id="settingsThemes"></div>
-    <div class="section-title"><i class="fa-solid fa-icons"></i>Иконка кнопки</div>
-    <div class="hint">Разблокированные иконки можно применить здесь.</div>
+
+    <div class="section-title"><i class="fa-solid fa-icons"></i>${t('icon_ui')}</div>
     <div class="grid-2" id="settingsIcons"></div>
-    <div class="section-title"><i class="fa-solid fa-triangle-exclamation"></i>Опасная зона</div>
-    <div class="row-btns">
-      <button class="btn danger" id="resetBtn"><i class="fa-solid fa-trash"></i> Сбросить прогресс</button>
+
+    <div class="section-title"><i class="fa-solid fa-image"></i>${t('wp_ui')}</div>
+    <div class="hint" id="settingsWpHint"></div>
+    <div class="grid-2" id="settingsWp"></div>
+
+    <div class="section-title"><i class="fa-solid fa-triangle-exclamation"></i>${t('danger_zone')}</div>
+    <div class="row-btns" style="flex-direction:column;">
+      <button class="btn secondary" id="resetPointsBtn"><i class="fa-solid fa-eraser"></i> ${t('reset_points')}</button>
+      <button class="btn danger" id="resetBtn"><i class="fa-solid fa-trash"></i> ${t('reset_progress')}</button>
     </div>
     <div style="text-align:center;color:var(--on-surface-var);font-size:12px;margin:24px 0;">
-      Tap&Tap Gold Edition · v1.3
+      Tap&Tap Galaxy Edition · v2.4
     </div>
   `;
   $('#saveName')?.addEventListener('click', ()=>{
-    const v = $('#nameInput').value.trim() || 'Таппер';
-    S.name = v; save(); toast('Имя сохранено');
+    const v = $('#nameInput').value.trim() || '';
+    S.name = v; save(); toast(t('name_saved'));
     if($('#screen-ach').classList.contains('active')) renderAch();
   });
+  $('#darkToggle')?.addEventListener('click', ()=>{
+    S.darkUI = !S.darkUI;
+    applyTheme();
+    save();
+    $('#darkToggle').classList.toggle('on', S.darkUI);
+    toast(S.darkUI ? t('dark_on') : t('dark_off'));
+  });
+  $$('.lang-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      S.lang = b.dataset.lang; save();
+      $$('.lang-btn').forEach(x=>x.classList.toggle('active', x.dataset.lang === S.lang));
+      applyLang();
+      renderAll();
+      switchScreen(_currentScreen);
+      toast(S.lang === 'ru' ? t('lang_ru') : t('lang_en'));
+    });
+  });
+  $('#musicToggle')?.addEventListener('click', ()=>{
+    toggleMusic();
+    $('#musicToggle').classList.toggle('on', S.musicOn);
+    const lbl = $('#musicLabel');
+    if(lbl) lbl.innerHTML = `<i class="fa-solid ${S.musicOn?'fa-volume-high':'fa-volume-xmark'}"></i> ${t('music_lbl')}: ${S.musicOn?t('music_on'):t('music_off')}`;
+    $$('.music-btn').forEach(x=>x.classList.toggle('active', S.musicOn && x.dataset.stream === S.musicStream));
+  });
+  $$('.music-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const stream = b.dataset.stream;
+      if(!S.musicOn){
+        S.musicOn = true;
+        $('#musicToggle')?.classList.add('on');
+        const lbl = $('#musicLabel');
+        if(lbl) lbl.innerHTML = `<i class="fa-solid fa-volume-high"></i> ${t('music_lbl')}: ${t('music_on')}`;
+      }
+      S.musicStream = stream;
+      startMusicStream(stream);
+      if(!S.specialAch.meloman){
+        S.specialAch.meloman = true;
+        unlockSpecialAch('meloman');
+      }
+      save();
+      $$('.music-btn').forEach(x=>x.classList.toggle('active', x.dataset.stream === stream));
+      toast(stream === 'jazz' ? t('music_playing_jazz') : t('music_playing_pop'));
+    });
+  });
+  $('#resetPointsBtn')?.addEventListener('click', ()=>{
+    if(confirm(t('reset_points_confirm'))){
+      S.score = 0;
+      S.totalEarned = 0;
+      S.history = [];
+      S.lastDayKey = todayKey();
+      S.lastScoreSnapshot = 0;
+      S.history.push({day:1, score:0, delta:0});
+      save();
+      renderAll();
+      switchScreen(_currentScreen);
+      toast(t('reset_points_done'));
+    }
+  });
   $('#resetBtn')?.addEventListener('click', ()=>{
-    if(confirm('Точно сбросить весь прогресс?')){
+    if(confirm(t('reset_confirm'))){
       localStorage.removeItem('taptap_gold_v1');
       S = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      S.lastDayKey = todayKey();
       save(); applyTheme(); renderAll(); switchScreen('clicker');
-      toast('Прогресс сброшен');
+      toast(t('reset_done'));
     }
   });
   renderSettingsThemes();
   renderSettingsIcons();
+  renderSettingsWallpapers();
 }
 
 function renderSettingsThemes(){
   const g = $('#settingsThemes');
   if(!g) return;
-  g.innerHTML = THEMES.map(t=>{
-    const owned = S.ownedThemes.includes(t.id);
-    const equipped = S.currentTheme === t.id;
+  g.innerHTML = THEMES.map(th=>{
+    const owned = S.ownedThemes.includes(th.id);
+    const equipped = S.currentTheme === th.id;
     return `
       <div class="card ${owned?'owned':''}">
         ${!owned?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
-        <div class="preview" style="background:${t.grad};${t.id==='dark'?'color:#fff;':''}">${t.id==='dark'?'🌙':'Aa'}</div>
-        <div class="name">${t.name}</div>
+        <div class="preview" style="background:${th.grad}">Aa</div>
+        <div class="name">${th.name}</div>
         ${owned
-          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-set-theme="${t.id}">${equipped?'Надето':'Надеть'}</button>`
-          : `<div class="price"><i class="fa-solid fa-lock"></i> ${fmt(t.price)}</div>
-             <button class="buy-btn" disabled>В магазине</button>`
+          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-set-theme="${th.id}">${equipped?t('equipped'):t('equip')}</button>`
+          : `<div class="price"><i class="fa-solid fa-lock"></i> ${fmt(th.price)}</div>
+             <button class="buy-btn" disabled>${t('locked_lbl')}</button>`
         }
       </div>`;
   }).join('');
@@ -1115,7 +1588,7 @@ function renderSettingsThemes(){
       applyTheme(); save();
       renderSettingsThemes(); renderSettingsIcons();
       if($('#screen-shop').classList.contains('active')) renderShop();
-      toast('Тема применена');
+      toast(t('theme_applied'));
     });
   });
 }
@@ -1126,18 +1599,18 @@ function renderSettingsIcons(){
   g.innerHTML = ICONS.map(ic=>{
     const owned = S.ownedIcons.includes(ic.id);
     const equipped = S.currentIcon === ic.id;
-    const preview = ic.fa
-      ? `<i class="${ic.fa}" style="font-size:24px"></i>`
-      : `<span style="font-size:14px;font-weight:800;letter-spacing:1px">TAP</span>`;
+    const preview = ic.text
+      ? `<span style="font-size:12px;font-weight:800;letter-spacing:1px;color:var(--on-surface)">TAP</span>`
+      : `<span style="font-size:28px">${ic.emoji}</span>`;
     return `
       <div class="card ${owned?'owned':''}">
         ${!owned?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
-        <div class="preview" style="background:var(--btn-grad)">${preview}</div>
+        <div class="preview emoji-preview">${preview}</div>
         <div class="name">${ic.name}</div>
         ${owned
-          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-set-icon="${ic.id}">${equipped?'Надето':'Надеть'}</button>`
+          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-set-icon="${ic.id}">${equipped?t('equipped'):t('equip')}</button>`
           : `<div class="price"><i class="fa-solid fa-lock"></i> ${fmt(ic.price)}</div>
-             <button class="buy-btn" disabled>В магазине</button>`
+             <button class="buy-btn" disabled>${t('locked_lbl')}</button>`
         }
       </div>`;
   }).join('');
@@ -1148,93 +1621,156 @@ function renderSettingsIcons(){
       applyTheme(); save();
       renderSettingsThemes(); renderSettingsIcons();
       if($('#screen-shop').classList.contains('active')) renderShop();
-      toast('Иконка применена');
+      toast(t('icon_applied'));
     });
   });
 }
 
-/* ============================================================
-   SHARE
-   ============================================================ */
+function renderSettingsWallpapers(){
+  const g = $('#settingsWp');
+  if(!g) return;
+  const hint = $('#settingsWpHint');
+  if(hint){
+    hint.textContent = customWallpaperUnlocked() ? t('wp_hint_unlocked') : t('wp_hint_locked');
+  }
+  g.innerHTML = WALLPAPERS.map(w=>{
+    const unlocked = !w.custom || customWallpaperUnlocked();
+    const equipped = S.currentWallpaper === w.id;
+    return `
+      <div class="card ${unlocked?'owned':''}">
+        ${!unlocked?`<div class="lock"><i class="fa-solid fa-lock"></i></div>`:''}
+        <div class="wp-preview" style="background:${w.grad};height:60px;border-radius:12px;"></div>
+        <div class="name">${w.name}</div>
+        ${unlocked
+          ? `<button class="buy-btn ${equipped?'equipped-btn':'owned-btn'}" data-set-wp="${w.id}">${equipped?t('equipped'):t('equip')}</button>`
+          : `<div class="price"><i class="fa-solid fa-lock"></i> 300 000</div>
+             <button class="buy-btn" disabled>${t('locked_lbl')}</button>`
+        }
+      </div>`;
+  }).join('');
+  g.querySelectorAll('[data-set-wp]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      S.currentWallpaper = b.dataset.setWp;
+      applyTheme(); save();
+      renderSettingsWallpapers();
+      if($('#screen-shop').classList.contains('active')) renderWallpapers();
+      toast(t('wp_applied'));
+    });
+  });
+}
+
+let _audioEl = null;
+function startMusicStream(stream){
+  if(_audioEl){
+    try{ _audioEl.pause(); }catch(e){}
+    _audioEl = null;
+  }
+  if(!S.musicOn || !stream) return;
+  const url = stream === 'jazz'
+    ? 'https://region-ru2.tunio.ai/jaz.aac'
+    : 'https://region-ru2.tunio.ai/pop.aac';
+  try{
+    _audioEl = new Audio(url);
+    _audioEl.crossOrigin = 'anonymous';
+    _audioEl.volume = 0.5;
+    _audioEl.play().catch(()=>{});
+  }catch(e){}
+}
+function toggleMusic(){
+  S.musicOn = !S.musicOn;
+  if(S.musicOn){
+    if(!S.musicStream) S.musicStream = 'jazz';
+    startMusicStream(S.musicStream);
+  } else {
+    if(_audioEl){ try{ _audioEl.pause(); }catch(e){} _audioEl = null; }
+  }
+  save();
+}
+
 function doShare(){
   const ic = getIcon();
   const th = getTheme();
-
-  // Считаем разблокированные ачивки для «хвастовства»
-  const unlockedList = ACHIEVEMENTS.filter(a => S.unlockedAch.includes(a.id));
+  const unlockedList = ACHIEVEMENTS.filter(a => isAchUnlocked(a));
   const achCount = unlockedList.length;
   const topAch = unlockedList.length ? unlockedList[unlockedList.length - 1] : null;
 
-  // Звание по очкам (для вовлечения)
-  let rank = '🌑 Новичок';
-  if(S.score >= 1000000)     rank = '🌟 Бессмертный';
-  else if(S.score >= 512000) rank = '🎖 ГигаТап';
-  else if(S.score >= 500000) rank = '🌕 Легенда';
-  else if(S.score >= 100000) rank = '🌔 Мастер';
-  else if(S.score >= 50000)  rank = '🌓 Таппер';
-  else if(S.score >= 10000)  rank = '🌒 Любитель';
-  else if(S.score >= 1000)   rank = '🌑 Новичок';
-  else                        rank = '🐣 Только начал';
+  let rank = '🐣 ' + (S.lang === 'ru' ? 'Только начал' : 'Just started');
+  if(S.score >= 10000000000000)  rank = '🌌 Галактика';
+  else if(S.score >= 100000000000) rank = '💪 Силач';
+  else if(S.score >= 100000000)   rank = '🖐️ Бедные пальцы';
+  else if(S.score >= 1000000)     rank = '🌟 Бессмертный';
+  else if(S.score >= 512000)      rank = '🎖 ГигаТап';
+  else if(S.score >= 500000)      rank = '🌕 Легенда';
+  else if(S.score >= 100000)      rank = '🌔 Мастер';
+  else if(S.score >= 50000)       rank = '🌓 Таппер';
+  else if(S.score >= 10000)       rank = '🌒 Любитель';
+  else if(S.score >= 1000)        rank = '🌑 Новичок';
 
-  const iconLabel = ic.fa ? ic.name : 'TAP (текст)';
-  const themeLabel = th.name;
+  const iconLabel = ic.text ? 'TAP' : ic.emoji + ' ' + ic.name;
 
-  // Многострочный завлекающий текст
   const lines = [
-    `🔥 Я ${S.name} в Tap&Tap и уже набрал ${fmt(S.score)} очков!`,
+    `🔥 ${S.name || 'Player'} @ Tap&Tap — ${fmt(S.score)}!`,
     ``,
-    `📊 Мои достижения:`,
-    `• 🖱 Честных кликов: ${fmt(S.honestClicks)}`,
-    `• 🏆 Звание: ${rank}`,
-    `• ✨ Ачивок: ${achCount}/${ACHIEVEMENTS.length}${topAch ? ` (последняя: ${topAch.emoji} ${topAch.name})` : ''}`,
-    `• 🎨 Стиль: ${iconLabel} в ${themeLabel}`,
+    `📊:`,
+    `• 🖱 ${fmt(S.honestClicks)}`,
+    `• 🏆 ${rank}`,
+    `• ✨ ${achCount}/${ACHIEVEMENTS.length}${topAch ? ` (${topAch.emoji} ${topAch.name})` : ''}`,
+    `• 🎨 ${iconLabel} / ${th.name}`,
     ``,
-    `💥 Слабо побить мой рекорд?`,
-    `Заходи — тут вкусно тапается 👇`,
     `https://q-acd.github.io/tap_tap`,
-    ``,
-    `#TapTap #кликер`
+    `#TapTap`
   ];
   const text = lines.join('\n');
 
-  // Пытаемся поделиться через нативный share
   if(navigator.share){
     navigator.share({
-      title: `${S.name} в Tap&Tap · ${rank}`,
+      title: `${S.name || 'Player'} · Tap&Tap`,
       text: text,
       url: 'https://q-acd.github.io/tap_tap'
     }).catch(()=>{});
     return;
   }
 
-  // Fallback: копируем в буфер
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text)
-      .then(()=> toast('Текст скопирован! Отправь друзьям 🚀'))
-      .catch(()=> prompt('Скопируй текст:', text));
+      .then(()=> toast('✓'))
+      .catch(()=> prompt('Copy:', text));
     return;
   }
-
-  // Ещё более старый fallback
-  prompt('Скопируй текст:', text);
+  prompt('Copy:', text);
 }
 
-/* ============================================================
-   ACH / EASTER EGGS
-   ============================================================ */
+function unlockSpecialAch(id){
+  if(S.unlockedAch.includes(id)) return;
+  S.unlockedAch.push(id);
+  const a = ACHIEVEMENTS.find(x=>x.id===id);
+  if(a) toastAch(a.emoji, a.name);
+  save();
+  if($('#screen-ach').classList.contains('active')) renderAchList();
+}
+
 function checkAchievements(){
-  let newUnlock = false;
+  let changed = false;
   ACHIEVEMENTS.forEach(a=>{
-    if(S.score >= a.req && !S.unlockedAch.includes(a.id)){
+    if(a.type === 'special') return;
+    if(isAchUnlocked(a) && !S.unlockedAch.includes(a.id)){
       S.unlockedAch.push(a.id);
-      newUnlock = true;
+      changed = true;
       if(!S.achNotified.includes(a.id)){
         S.achNotified.push(a.id);
-        toast(`✨ ${a.emoji} ${a.name}!`);
+        toastAch(a.emoji, a.name);
       }
     }
   });
-  if(newUnlock && $('#screen-ach').classList.contains('active')) renderAchList();
+  const allSpecial = ACHIEVEMENTS.filter(x=>x.type!=='special').every(x=>isAchUnlocked(x))
+    && S.specialAch.rapid && S.specialAch.meloman && S.specialAch.decorator
+    && S.specialAch.lucky && S.specialAch.persistent;
+  if(allSpecial && !S.specialAch.immortalAll){
+    S.specialAch.immortalAll = true;
+    unlockSpecialAch('immortalAll');
+    changed = true;
+  }
+  if(changed && $('#screen-ach').classList.contains('active')) renderAchList();
 }
 
 function checkEasterEggs(){
@@ -1243,6 +1779,11 @@ function checkEasterEggs(){
     save();
     showThanks();
   }
+  if(S.score >= 1000000000000 && !S.trillionSeen){
+    S.trillionSeen = true;
+    save();
+    showTrillion();
+  }
 }
 
 function showThanks(){
@@ -1250,12 +1791,12 @@ function showThanks(){
   m.innerHTML = `
     <span class="big-emoji">🎖</span>
     <h2 class="thanks-grad">ГигаТап!</h2>
-    <p>Ты набрал 512 000 очков и стал настоящей легендой Tap&amp;Tap!</p>
-    <p>Нажми 7 раз на имя ниже, чтобы открыть секрет 🤫</p>
+    <p>512 000 очков!</p>
+    <p>7 кликов по имени — секрет 🤫</p>
     <p id="thanksName" style="font-size:18px;font-weight:800;color:var(--primary);padding:14px;background:var(--surface-2);border-radius:14px;">
-      ${escapeHtml(S.name)}
+      ${escapeHtml(S.name || 'Player')}
     </p>
-    <button class="btn" id="thanksClose">Продолжить</button>
+    <button class="btn" id="thanksClose">${t('close')}</button>
   `;
   $('#modalBg').classList.add('show');
   let clicks = 0;
@@ -1272,8 +1813,8 @@ function showThanks(){
       m.innerHTML = `
         <span class="big-emoji">🥦⚡</span>
         <h2 class="cyber-veg" style="background:none;-webkit-text-fill-color:initial;">КИБЕР-ОВОЩ!</h2>
-        <p>Секретная тема активирована! Морковь в стиле «Разноцветный» ждёт тебя 🔥</p>
-        <button class="btn" id="cyberClose">Погнали!</button>
+        <p>Секретная тема активирована!</p>
+        <button class="btn" id="cyberClose">OK</button>
       `;
       $('#cyberClose')?.addEventListener('click', ()=>$('#modalBg').classList.remove('show'));
     }
@@ -1281,9 +1822,224 @@ function showThanks(){
   $('#thanksClose')?.addEventListener('click', ()=>$('#modalBg').classList.remove('show'));
 }
 
-/* ============================================================
-   HISTORY
-   ============================================================ */
+function showTrillion(){
+  const m = $('#modalContent');
+  m.innerHTML = `
+    <span class="big-emoji">🌌</span>
+    <h2 class="thanks-grad">ГАЛАКТИКА!</h2>
+    <p>1 ТРИЛЛИОН очков!</p>
+    <button class="btn" id="trilClose">OK</button>
+  `;
+  $('#modalBg').classList.add('show');
+  $('#trilClose')?.addEventListener('click', ()=>$('#modalBg').classList.remove('show'));
+  for(let i=0;i<40;i++){
+    setTimeout(()=>spawnConfetti(), i*60);
+  }
+}
+
+function spawnConfetti(){
+  const el = document.createElement('div');
+  el.className = 'confetti';
+  el.textContent = ['🎉','✨','🎊','⭐','💫','🌟','🎈'][Math.floor(Math.random()*7)];
+  el.style.left = (Math.random()*100)+'vw';
+  el.style.animationDuration = (2 + Math.random()*2)+'s';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 4200);
+}
+
+function openLottery(){
+  const modal = $('#modalContent');
+  const lvl = S.casinoLevel;
+  const lvlInfo = CASINO_LEVELS[lvl];
+  const canSpin = S.score >= lvlInfo.cost;
+  modal.innerHTML = `
+    <h2>🎰 ${t('casino')}</h2>
+    <p>${t('casino_intro')}</p>
+    <div class="casino-score">
+      <i class="fa-solid fa-star"></i>
+      <span>${t('your_score')}:</span>
+      <span class="cs-value">${fmt(S.score)}</span>
+      <span class="cs-hint">· ${t('spin_cost')}</span>
+    </div>
+    <div class="lvl-btns" id="lvlBtns">
+      ${[1,2,3,4].map(n=>`
+        <button class="lvl-btn ${n===lvl?'active':''}" data-lvl="${n}" ${n>lvl?'disabled':''}>
+          <span class="lb-title">${t('level')} ${n}</span>
+          <span class="lb-sub">${CASINO_LEVELS[n].pool.length} ${t('icons_count')}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="reels" id="reels">
+      <div class="reel" id="reel0">❔</div>
+      <div class="reel" id="reel1">❔</div>
+      <div class="reel" id="reel2">❔</div>
+    </div>
+    <div style="font-size:13px;color:var(--on-surface-var);margin-bottom:12px;" id="casinoStats">
+      ${t('level')}: <b>${lvl}</b> · ${t('block_counter')} 🚫: <b>${S.blockCount}/3</b>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <button class="btn" id="spinBtn" style="flex:1;justify-content:center;" ${!canSpin?'disabled':''}>🎲 ${t('spin')} (1000)</button>
+      <button class="btn secondary" id="upgBtn" style="flex:1;justify-content:center;" ${!lvlInfo.upgrade?'disabled':''}>
+        ${lvlInfo.upgrade ? '⬆ '+t('upgrade_btn')+' ('+fmt(lvlInfo.upgrade)+')' : t('max')}
+      </button>
+    </div>
+    <button class="btn secondary" id="closeLottery" style="width:100%;justify-content:center;">${t('close')}</button>
+  `;
+  $('#modalBg').classList.add('show');
+
+  modal.querySelectorAll('[data-lvl]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const n = parseInt(b.dataset.lvl,10);
+      if(n > S.casinoLevel) return;
+      S.casinoLevel = n; save();
+      openLottery();
+    });
+  });
+
+  $('#closeLottery')?.addEventListener('click', ()=>{
+    $('#modalBg').classList.remove('show');
+  });
+
+  $('#spinBtn')?.addEventListener('click', spinLottery);
+  $('#upgBtn')?.addEventListener('click', upgradeCasino);
+}
+
+function spinLottery(){
+  const lvl = S.casinoLevel;
+  const info = CASINO_LEVELS[lvl];
+  if(S.score < info.cost){ toast(t('not_enough_spin')); return; }
+  S.score -= info.cost;
+  updateScoreUI();
+
+  const reels = [$('#reel0'), $('#reel1'), $('#reel2')];
+  reels.forEach(r=>{ if(r) r.classList.add('spinning'); r?.classList.remove('win'); });
+
+  const spinInterval = setInterval(()=>{
+    reels.forEach(r=>{
+      if(r) r.textContent = info.pool[Math.floor(Math.random()*info.pool.length)];
+    });
+  }, 70);
+
+  setTimeout(()=>{
+    clearInterval(spinInterval);
+    reels.forEach(r=>r?.classList.remove('spinning'));
+
+    const result = [
+      info.pool[Math.floor(Math.random()*info.pool.length)],
+      info.pool[Math.floor(Math.random()*info.pool.length)],
+      info.pool[Math.floor(Math.random()*info.pool.length)]
+    ];
+    reels.forEach((r, i)=>{ if(r) r.textContent = result[i]; });
+
+    const allSame = result[0] === result[1] && result[1] === result[2];
+    const allBust = result.every(x=>x === '🚫');
+
+    if(allBust) reels.forEach(r=>r?.classList.add('win'));
+
+    if(allSame && result[0] !== '🚫'){
+      const icon = ICONS.find(i=>i.emoji === result[0]);
+      const prize = icon ? icon.price : 5000;
+      S.score += prize;
+      S.totalEarned += prize;
+      updateScoreUI();
+      reels.forEach(r=>r?.classList.add('win'));
+      playSound('win');
+      toast(`🎉 ${t('win_prize')} +${fmt(prize)}`);
+      if(!S.specialAch.lucky){
+        S.specialAch.lucky = true;
+        unlockSpecialAch('lucky');
+      }
+      S.blockCount = 0;
+      save();
+      setTimeout(()=>{
+        $('#modalBg').classList.remove('show');
+        checkAchievements();
+      }, 1400);
+      return;
+    }
+
+    if(result.filter(x=>x === '🚫').length >= 1){
+      S.blockCount++;
+      if(S.blockCount >= 3){
+        applyPenalty();
+        S.blockCount = 0;
+      }
+    } else {
+      S.blockCount = 0;
+    }
+
+    save();
+    const statsEl = $('#casinoStats');
+    if(statsEl) statsEl.innerHTML = `${t('level')}: <b>${lvl}</b> · ${t('block_counter')} 🚫: <b>${S.blockCount}/3</b>`;
+    const csVal = document.querySelector('.casino-score .cs-value');
+    if(csVal) csVal.textContent = fmt(S.score);
+    const sb = $('#spinBtn');
+    if(sb) sb.disabled = S.score < info.cost;
+
+    if(!allSame) playSound('lose');
+    checkAchievements();
+  }, 1200);
+}
+
+function applyPenalty(){
+  const loss = Math.floor(S.score * 0.2);
+  S.score = Math.max(0, S.score - loss);
+  const sc = $('#scoreCard');
+  if(sc){
+    sc.classList.add('penalty');
+    setTimeout(()=>sc.classList.remove('penalty'), 900);
+  }
+  const wrap = $('#tapWrap');
+  if(wrap){
+    const fp = document.createElement('div');
+    fp.className = 'float-minus';
+    fp.textContent = `-20% (-${fmtShort(loss)})`;
+    fp.style.left = '50%';
+    fp.style.top = '50%';
+    fp.style.transform = 'translateX(-50%)';
+    fp.style.setProperty('--dx', '0px');
+    wrap.appendChild(fp);
+    setTimeout(()=>fp.remove(), 1500);
+  }
+  if(navigator.vibrate){
+    try{ navigator.vibrate([100,50,100,50,200]); }catch(e){}
+  }
+  playSound('lose');
+  toast(`🚫 ${t('penalty')} -${fmt(loss)}`);
+  updateScoreUI();
+  save();
+}
+
+function upgradeCasino(){
+  const lvl = S.casinoLevel;
+  const info = CASINO_LEVELS[lvl];
+  if(!info.upgrade){ toast(t('max_lvl')); return; }
+  if(S.score < info.upgrade){ toast(t('insufficient')); return; }
+  S.score -= info.upgrade;
+  S.casinoLevel = Math.min(4, lvl + 1);
+  save();
+  updateScoreUI();
+  toast(`⬆ ${t('casino_lvl')}: ${S.casinoLevel}`);
+  openLottery();
+}
+
+function updateLotteryBadge(){
+  const btn = $('#lotteryNavBtn');
+  if(!btn) return;
+  const canPlay = S.score >= 1000 && S.clickPowerLvl >= 3;
+  let badge = btn.querySelector('.nav-badge');
+  if(canPlay){
+    if(!badge){
+      badge = document.createElement('span');
+      badge.className = 'nav-badge';
+      badge.textContent = '!';
+      btn.appendChild(badge);
+    }
+  } else {
+    if(badge) badge.remove();
+  }
+}
+
 function updateDailyHistory(){
   const key = todayKey();
   if(S.lastDayKey === null){
@@ -1299,6 +2055,7 @@ function updateDailyHistory(){
     S.history.push({day:nextDay, score:S.score, delta});
     S.lastDayKey = key;
     S.lastScoreSnapshot = S.score;
+    S.daysPlayed = Math.max(S.daysPlayed, nextDay);
     save();
   } else {
     if(S.history.length === 0) S.history.push({day:1, score:S.score, delta:0});
@@ -1312,16 +2069,40 @@ function updateDailyHistory(){
   }
 }
 
-/* ============================================================
-   NAV
-   ============================================================ */
+function updateTopBarTitle(name){
+  const el = $('#tabTitle');
+  if(!el) return;
+  const map = {
+    clicker:t('tab_clicker'),
+    shop:t('tab_shop'),
+    tasks:t('tab_tasks'),
+    boosts:t('tab_boosts'),
+    ach:t('tab_ach'),
+    settings:t('tab_settings')
+  };
+  el.textContent = map[name] || name.toUpperCase();
+  el.dataset.screen = name;
+}
+
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    el.textContent = t(el.dataset.i18n);
+  });
+  if(_currentScreen) updateTopBarTitle(_currentScreen);
+}
+
 function switchScreen(name){
+  _currentScreen = name;
   $$('.screen').forEach(s=>s.classList.remove('active'));
   $$('.top-tab, .nav-item').forEach(b=>b.classList.remove('active'));
   const scr = $('#screen-'+name);
   if(scr) scr.classList.add('active');
   $$('.top-tab').forEach(b=>{ if(b.dataset.screen===name) b.classList.add('active'); });
   $$('.nav-item').forEach(b=>{ if(b.dataset.screen===name) b.classList.add('active'); });
+
+  if(name !== 'lottery'){
+    updateTopBarTitle(name);
+  }
 
   if(name === 'shop')     renderShop();
   if(name === 'tasks')    renderTasks();
@@ -1333,7 +2114,35 @@ function switchScreen(name){
 
 function bindNav(){
   $$('.top-tab, .nav-item').forEach(b=>{
-    b.addEventListener('click', ()=>switchScreen(b.dataset.screen));
+    b.addEventListener('click', ()=>{
+      const scr = b.dataset.screen;
+      if(scr === 'lottery'){
+        if(S.score >= 1000 && S.clickPowerLvl >= 3){
+          openLottery();
+        } else {
+          const need = [];
+          if(S.score < 1000) need.push(t('need_score'));
+          if(S.clickPowerLvl < 3) need.push(t('need_click_lvl'));
+          toast(`🔒 ${t('need_for_lottery')} ` + need.join(' + '));
+        }
+        return;
+      }
+      switchScreen(scr);
+    });
+  });
+
+  $('#settingsTopBtn')?.addEventListener('click', ()=>{
+    switchScreen('settings');
+  });
+
+  $('#tabTitle')?.addEventListener('click', ()=>{
+    const bar = $('#topBar');
+    if(!bar) return;
+    bar.classList.add('showGame');
+    clearTimeout(bar._t);
+    bar._t = setTimeout(()=>{
+      bar.classList.remove('showGame');
+    }, 2000);
   });
 }
 
@@ -1343,22 +2152,19 @@ function renderAll(){
   applyTheme(); updateScoreUI();
 }
 
-/* ============================================================
-   LOADER
-   ============================================================ */
 function runLoader(){
   const bar = $('#loadBar');
   const hint = $('#loadHint');
-  const hints = ['Загрузка Gold Edition…','Подготовка кнопок…','Разогрев тапов…','Синхронизация очков…','Почти готово…'];
-  const totalTime = 3000 + Math.random()*5000;
+  const hints = ['Загрузка Galaxy Edition…','Подготовка кнопок…','Разогрев тапов…','Синхронизация очков…','Почти готово…'];
+  const totalTime = 2000 + Math.random()*3000;
   const start = performance.now();
   let hintIdx = 0;
   function tick(now){
-    const t = Math.min(1, (now - start) / totalTime);
-    bar.style.width = (t*100)+'%';
-    const ni = Math.min(hints.length-1, Math.floor(t * hints.length));
+    const tt = Math.min(1, (now - start) / totalTime);
+    bar.style.width = (tt*100)+'%';
+    const ni = Math.min(hints.length-1, Math.floor(tt * hints.length));
     if(ni !== hintIdx){ hintIdx = ni; hint.textContent = hints[hintIdx]; }
-    if(t < 1) requestAnimationFrame(tick);
+    if(tt < 1) requestAnimationFrame(tick);
     else setTimeout(()=>{
       $('#loader').classList.add('hide');
       $('#app').classList.add('ready');
@@ -1368,18 +2174,45 @@ function runLoader(){
   requestAnimationFrame(tick);
 }
 
-/* INIT */
 function init(){
+  if(!S.lastVisitDay){
+    S.lastVisitDay = todayKey();
+    S.daysPlayed = 1;
+    save();
+  }
+  applyLang();
   applyTheme();
   bindNav();
   updateDailyHistory();
+  updateLotteryBadge();
+  checkAchievements();
+
   setInterval(()=>{
     updateDailyHistory();
+    updateLotteryBadge();
     save();
     if($('#screen-ach').classList.contains('active')){
       renderHistory($('.sort-tab.active')?.dataset.sort || 'day');
     }
   }, 30000);
+
+  setInterval(()=>{
+    if(S.score >= 300000 && !S.customWallpaperUnlocked){
+      S.customWallpaperUnlocked = true;
+      if(!S.specialAch.decorator){
+        S.specialAch.decorator = true;
+        unlockSpecialAch('decorator');
+      }
+      save();
+      toast('🎨 ' + t('wp_unlocked_toast'));
+      for(let i=0;i<30;i++){
+        setTimeout(()=>spawnConfetti(), i*80);
+      }
+      if($('#screen-shop').classList.contains('active')) renderWallpapers();
+      if($('#screen-settings').classList.contains('active')) renderSettingsWallpapers();
+    }
+  }, 2000);
+
   runLoader();
 }
 init();
