@@ -87,28 +87,27 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 #app{display:none;height:100dvh;grid-template-rows:auto 1fr auto;max-width:520px;margin:0 auto;background:var(--wallpaper);background-size:cover;background-position:center;position:relative;transition:background .5s ease;z-index:10;}
 #app.ready{display:grid;}
 
-#topBar{position:relative;display:flex;align-items:center;justify-content:center;padding:12px 16px 6px;min-height:48px;background:transparent;}
+#topBar{position:relative;display:flex;align-items:center;justify-content:center;padding:12px 16px 6px;min-height:56px;background:transparent;gap:8px;}
 #tabTitle,#gameName{position:absolute;left:50%;transform:translateX(-50%);font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;transition:opacity .28s ease, transform .28s ease;cursor:pointer;color:var(--on-surface);}
 #gameName{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(-6px);background:linear-gradient(135deg,var(--primary),#2196F3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 #topBar.showGame #tabTitle{opacity:0;transform:translateX(-50%) translateY(6px);}
 #topBar.showGame #gameName{opacity:1;transform:translateX(-50%) translateY(0);}
-#settingsTopBtn,#tutorialBtn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:var(--surface-2);border:1px solid var(--outline-var);color:var(--on-surface);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s, background .2s;}
-#settingsTopBtn{right:12px;}
-#tutorialBtn{left:12px;}
-#settingsTopBtn:active,#tutorialBtn:active{transform:translateY(-50%) scale(.92);}
 
-.top-tabs{display:flex;gap:6px;padding:0 12px 8px;background:transparent;position:sticky;top:0;z-index:20;justify-content:center;}
-.top-tab{width:44px;height:44px;border-radius:50%;background:var(--surface-2);color:var(--on-surface-var);font-weight:600;font-size:16px;cursor:pointer;border:1px solid var(--outline-var);transition:all .2s;display:flex;align-items:center;justify-content:center;}
-.top-tab.active{background:var(--primary-container);color:var(--on-primary-container);box-shadow:var(--shadow-1);}
-[data-ui="dark"] .top-tab.active{background:var(--surface-3);color:var(--on-surface);border:1px solid var(--primary);}
+.top-bar-btn{position:relative;width:40px;height:40px;border-radius:50%;background:var(--surface-2);border:1px solid var(--outline-var);color:var(--on-surface);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .2s, background .2s;flex-shrink:0;}
+.top-bar-btn:active{transform:scale(.92);}
+.top-bar-btn.active{background:var(--primary-container);color:var(--on-primary-container);}
+
+#topBar .left-group,#topBar .right-group{display:flex;gap:8px;align-items:center;position:absolute;top:50%;transform:translateY(-50%);}
+#topBar .left-group{left:12px;}
+#topBar .right-group{right:12px;}
 
 .screen{display:none;overflow-y:auto;overflow-x:hidden;padding:8px 16px 24px;-webkit-overflow-scrolling:touch;}
 .screen.active{display:block;animation:fadeUp .3s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 
 .bottom-nav{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface-2);border-top:1px solid var(--outline-var);padding:8px 6px calc(8px + env(safe-area-inset-bottom));position:relative;}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:16px;background:transparent;border:none;color:var(--on-surface-var);font-size:10px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;position:relative;}
-.nav-item i{font-size:18px;}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;border-radius:16px;background:transparent;border:none;color:var(--on-surface-var);font-size:10px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;position:relative;}
+.nav-item i{font-size:18px;line-height:1;}
 .nav-item.active{color:var(--on-primary-container);background:var(--primary-container);}
 [data-ui="dark"] .nav-item.active{background:var(--surface-3);color:var(--on-surface);border:1px solid var(--primary);}
 .nav-item .nav-badge{position:absolute;top:2px;right:calc(50% - 20px);min-width:16px;height:16px;border-radius:8px;background:var(--danger);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 0 0 2px var(--surface-2);}
@@ -253,6 +252,18 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .modal .big-emoji{font-size:56px;margin-bottom:8px;display:block;}
 .modal .btn{width:100%;justify-content:center;margin-top:8px;}
 
+#creditsOverlay{position:fixed;inset:0;z-index:5000;background:linear-gradient(135deg,#0A0A1F,#1B1730,#0A0A1F);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;}
+#creditsOverlay.show{display:flex;animation:fadeUp .5s ease;}
+#creditsOverlay .cr-title{font-size:52px;font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,#FFB300,#FF6F00,#7C4DFF,#2196F3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:32px;animation:pop 3s ease-in-out infinite;}
+#creditsOverlay .cr-line{font-size:18px;font-weight:600;margin-bottom:14px;opacity:0;animation:creditsFadeIn .8s ease forwards;}
+#creditsOverlay .cr-line:nth-child(2){animation-delay:.3s;}
+#creditsOverlay .cr-line:nth-child(3){animation-delay:.6s;}
+#creditsOverlay .cr-line:nth-child(4){animation-delay:.9s;}
+#creditsOverlay .cr-line:nth-child(5){animation-delay:1.2s;}
+#creditsOverlay .cr-line small{display:block;font-size:13px;font-weight:500;opacity:.7;margin-top:4px;}
+#creditsOverlay .cr-exit{margin-top:40px;padding:14px 32px;border-radius:16px;background:#fff;color:#6750A4;font-weight:800;font-size:15px;border:none;cursor:pointer;font-family:inherit;opacity:0;animation:creditsFadeIn .8s ease forwards;animation-delay:1.6s;}
+@keyframes creditsFadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
 .toast-ach{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-120px);background:linear-gradient(135deg,var(--primary),#2196F3);color:#fff;padding:14px 20px;border-radius:16px;font-weight:700;font-size:14px;box-shadow:var(--shadow-3);transition:transform .4s cubic-bezier(.2,1.4,.5,1);z-index:2500;display:flex;align-items:center;gap:10px;max-width:90vw;}
 .toast-ach.show{transform:translateX(-50%) translateY(0);}
 .toast-ach .ta-emoji{font-size:28px;}
@@ -275,21 +286,39 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 @keyframes cyberShift{0%{filter:hue-rotate(0deg);}100%{filter:hue-rotate(360deg);}}
 ::-webkit-scrollbar{width:0;height:0;}
 
-.lot-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
-.lot-tab{padding:14px 10px;border-radius:16px;border:1.5px solid var(--outline-var);background:var(--surface-2);color:var(--on-surface);font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;}
-.lot-tab .lt-title{font-size:15px;}
-.lot-tab .lt-sub{font-size:11px;color:var(--on-surface-var);font-weight:600;}
-.lot-tab.active{border-color:var(--primary);background:var(--primary-container);color:var(--on-primary-container);}
+.lot-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.lot-tab{padding:14px 6px;border-radius:16px;border:1.5px solid var(--outline-var);background:var(--surface-2);color:var(--on-surface);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;min-height:70px;}
+.lot-tab .lt-title{font-size:14px;}
+.lot-tab .lt-sub{font-size:10px;color:var(--on-surface-var);font-weight:600;}
+.lot-tab.active{border-color:var(--primary);background:var(--primary-container);color:var(--on-primary-container);transform:scale(1.03);}
 [data-ui="dark"] .lot-tab.active{background:var(--surface-3);color:var(--on-surface);border-width:2px;}
-.lot-tab:disabled{opacity:.4;cursor:not-allowed;}
-.lot-tab .lt-lock{position:absolute;top:6px;right:8px;font-size:12px;color:var(--on-surface-var);}
+.lot-tab:disabled{opacity:.45;cursor:not-allowed;}
+.lot-tab .lt-lock{position:absolute;top:6px;right:6px;font-size:10px;color:var(--on-surface-var);}
+.lot-tab .lt-upgrade{position:absolute;bottom:4px;left:0;right:0;font-size:9px;color:var(--gold);font-weight:800;}
 
 .reels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;}
-.reel{background:var(--surface-2);border-radius:16px;padding:24px 8px;font-size:44px;text-align:center;border:2px solid var(--outline-var);min-height:100px;display:flex;align-items:center;justify-content:center;transition:all .2s;overflow:hidden;}
+.reel{background:var(--surface-2);border-radius:16px;padding:24px 8px;font-size:44px;text-align:center;border:2px solid var(--outline-var);min-height:100px;display:flex;align-items:center;justify-content:center;transition:all .2s;overflow:hidden;position:relative;}
 .reel.spinning{animation:reelSpin .15s linear infinite;border-color:var(--primary);}
 @keyframes reelSpin{0%{transform:translateY(0);opacity:1;}50%{transform:translateY(-8px);opacity:.7;}100%{transform:translateY(0);opacity:1;}}
 .reel.win{border-color:var(--gold);box-shadow:0 0 20px rgba(255,179,0,.6);animation:winPulse .6s ease;}
+.reel.bust{border-color:var(--danger);box-shadow:0 0 20px rgba(179,38,30,.5);animation:bustPulse .6s ease;}
 @keyframes winPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+@keyframes bustPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+.reel .reel-label{position:absolute;bottom:4px;left:0;right:0;font-size:10px;font-weight:700;color:var(--on-surface-var);text-transform:uppercase;letter-spacing:1px;}
+
+.lot-combo{background:var(--surface-2);border:1px solid var(--outline-var);border-radius:16px;padding:16px;margin-bottom:14px;text-align:center;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:26px;font-weight:800;letter-spacing:6px;transition:all .3s;opacity:0;}
+.lot-combo.show{opacity:1;}
+.lot-combo.win{background:linear-gradient(135deg,rgba(255,179,0,.2),transparent);border-color:var(--gold);color:var(--gold);}
+.lot-combo.bust{background:linear-gradient(135deg,rgba(179,38,30,.2),transparent);border-color:var(--danger);color:var(--danger);}
+.lot-combo .lc-text{font-size:13px;font-weight:600;color:var(--on-surface-var);letter-spacing:0;display:block;margin-top:8px;}
+
+.lot-upgrade-card{background:linear-gradient(135deg,var(--surface-2),var(--surface-3));border:1px solid var(--outline-var);border-radius:var(--radius);padding:14px;margin-bottom:14px;}
+.lot-upgrade-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.lot-upgrade-title i{color:var(--gold);}
+.lot-upgrade-desc{font-size:12px;color:var(--on-surface-var);margin-bottom:10px;line-height:1.4;}
+.lot-upgrade-row{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.lot-upgrade-cost{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;}
+.lot-upgrade-cost i{color:var(--gold);}
 
 .lot-score{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--surface-2);border-radius:14px;padding:10px 14px;margin-bottom:14px;border:1px solid var(--outline-var);font-size:14px;font-weight:700;flex-wrap:wrap;}
 .lot-score i{color:var(--gold);}
@@ -313,10 +342,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .first-setup .fs-row label{font-size:13px;font-weight:600;color:var(--on-surface-var);}
 .first-setup .fs-row input{padding:12px 14px;border-radius:12px;border:1.5px solid var(--outline-var);background:var(--surface-2);color:var(--on-surface);font-size:15px;font-family:inherit;font-weight:600;outline:none;}
 .first-setup .fs-row input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-container);}
-.first-setup .fs-themes{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
-.first-setup .fs-theme{width:44px;height:44px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .15s, border-color .15s;}
-.first-setup .fs-theme:active{transform:scale(.92);}
-.first-setup .fs-theme.active{border-color:var(--primary);transform:scale(1.08);}
 .first-setup .fs-lang{display:flex;gap:8px;justify-content:center;}
 .first-setup .fs-theme-toggle{display:flex;gap:8px;justify-content:center;}
 .first-setup .fs-theme-toggle .theme-option{padding:10px 20px;border-radius:14px;border:1.5px solid var(--outline-var);background:var(--surface-2);color:var(--on-surface);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:all .2s;}
@@ -329,6 +354,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
   #tapBtn .tap-text{font-size:38px;}
   .reel{font-size:34px;padding:18px 4px;min-height:80px;}
   .music-btn{font-size:11px;padding:8px 6px;}
+  .top-bar-btn{width:36px;height:36px;font-size:16px;}
+  .lot-tab{padding:10px 4px;min-height:60px;}
+  .lot-tab .lt-title{font-size:12px;}
+  .lot-tab .lt-sub{font-size:9px;}
+  .lot-combo{font-size:20px;letter-spacing:3px;}
+  #creditsOverlay .cr-title{font-size:38px;}
 }
 </style>
 </head>
@@ -349,14 +380,16 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 
 <div id="app">
   <div id="topBar">
-    <button id="tutorialBtn" title="Обучение"><i class="fa-solid fa-circle-question"></i></button>
+    <div class="left-group">
+      <button class="top-bar-btn" data-screen="tasks" id="tasksBtn" title="Задания / Tasks"><i class="fa-solid fa-list-check"></i></button>
+      <button class="top-bar-btn" id="tutorialBtn" title="Обучение / Tutorial"><i class="fa-solid fa-circle-question"></i></button>
+    </div>
     <span id="tabTitle">КЛИКЕР</span>
     <span id="gameName">TAP&amp;TAP</span>
-    <button id="settingsTopBtn" title="Настройки"><i class="fa-solid fa-gear"></i></button>
-  </div>
-  <div class="top-tabs">
-    <button class="top-tab" data-screen="tasks"><i class="fa-solid fa-list-check"></i></button>
-    <button class="top-tab" data-screen="boosts"><i class="fa-solid fa-rocket"></i></button>
+    <div class="right-group">
+      <button class="top-bar-btn" id="settingsTopBtn" title="Настройки / Settings"><i class="fa-solid fa-gear"></i></button>
+      <button class="top-bar-btn" data-screen="boosts" id="boostsBtn" title="Бусты / Boosts"><i class="fa-solid fa-rocket"></i></button>
+    </div>
   </div>
 
   <div class="screen" id="screen-shop"></div>
@@ -380,6 +413,15 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 
 <div class="modal-bg" id="modalBg">
   <div class="modal" id="modalContent"></div>
+</div>
+
+<div id="creditsOverlay">
+  <div class="cr-title">TAP&amp;TAP</div>
+  <div class="cr-line" id="crLine1">Разработчик<small>Quantum ACD</small></div>
+  <div class="cr-line" id="crLine2">Год выпуска<small>2025</small></div>
+  <div class="cr-line" id="crLine3">Версия<small>Galaxy Edition v3.3</small></div>
+  <div class="cr-line" id="crLine4">Спасибо за игру!<small>❤️</small></div>
+  <button class="cr-exit" id="creditsExit">Выйти из титров</button>
 </div>
 
 <script>
@@ -443,6 +485,16 @@ const I18N = {
     wager:'Ставка',
     lot_prize:'Приз',
     lot_chance:'Шанс',
+    lot_next_level:'Следующий уровень',
+    lot_levelup:'УРОВЕНЬ ПОВЫШЕН!',
+    lot_unlocked_next:'Доступен уровень',
+    lot_no_match:'Не совпало',
+    lot_combo_win:'ВЫИГРЫШНАЯ КОМБИНАЦИЯ',
+    lot_combo_lose:'НЕ ВЫИГРЫШНАЯ КОМБИНАЦИЯ',
+    lot_upgrade_title:'Прокачка лотереи',
+    lot_upgrade_desc:'Улучшите уровень лотереи, чтобы получить доступ к более крупным призам!',
+    lot_upgrade_btn:'ПРОКАЧАТЬ',
+    lot_upgrade_locked:'Сначала выиграйте в текущей лотерее',
     animation_lbl:'Анимации на фоне',
     anim_none:'Выкл.',
     anim_leaves:'Осенние листья',
@@ -461,7 +513,34 @@ const I18N = {
     first_setup_theme_dark:'Тёмная',
     first_setup_lang:'Выберите язык',
     first_setup_start:'Начать игру!',
-    first_setup_name_placeholder:'Игрок'
+    first_setup_name_placeholder:'Игрок',
+    credits_btn:'Титры',
+    credits_developer:'Разработчик',
+    credits_year:'Год выпуска',
+    credits_version:'Версия',
+    credits_thanks:'Спасибо за игру!',
+    credits_exit:'Выйти из титров',
+    ach_novice_name:'Новичок', ach_novice_desc:'1 000',
+    ach_amateur_name:'Любитель', ach_amateur_desc:'10 000',
+    ach_tapper_name:'Таппер', ach_tapper_desc:'50 000',
+    ach_master_name:'Мастер', ach_master_desc:'100 000',
+    ach_gigatap_name:'ГигаТап', ach_gigatap_desc:'512 000',
+    ach_legend_name:'Легенда', ach_legend_desc:'500 000',
+    ach_immortal_name:'Бессмертный', ach_immortal_desc:'1 000 000',
+    ach_beast_name:'Мистер Бист ест рис', ach_beast_desc:'1 000 000',
+    ach_pivo_name:'Подержите моё пиво', ach_pivo_desc:'67 000 000',
+    ach_love_name:'Я люблю Tap&Tap', ach_love_desc:'1 000 000 000',
+    ach_musk_name:'Илон Маск завидует', ach_musk_desc:'1 000 000 000 000',
+    ach_time_name:'На что потрачено время...', ach_time_desc:'7 дней',
+    ach_home_name:'Как дома', ach_home_desc:'15 дней',
+    ach_gameMaster_name:'Мастер игры', ach_gameMaster_desc:'Все бусты 15 ур.',
+    ach_honest_name:'Честный игрок', ach_honest_desc:'4 369 честных кликов',
+    ach_rapid_name:'Скорострел', ach_rapid_desc:'Быстрые серии кликов',
+    ach_meloman_name:'Меломан', ach_meloman_desc:'Музыкальный стриминг',
+    ach_decorator_name:'Декоратор', ach_decorator_desc:'Кастомные обои',
+    ach_lucky_name:'Счастливчик', ach_lucky_desc:'Победа в лотерее',
+    ach_persistent_name:'Настойчивый', ach_persistent_desc:'Ежедневный вход',
+    ach_immortalAll_name:'Бессмертный (все)', ach_immortalAll_desc:'Все достижения'
   },
   en:{
     tab_clicker:'CLICKER', tab_shop:'SHOP', tab_tasks:'TASKS',
@@ -522,6 +601,16 @@ const I18N = {
     wager:'Wager',
     lot_prize:'Prize',
     lot_chance:'Chance',
+    lot_next_level:'Next level',
+    lot_levelup:'LEVEL UP!',
+    lot_unlocked_next:'Level unlocked',
+    lot_no_match:'No match',
+    lot_combo_win:'WINNING COMBINATION',
+    lot_combo_lose:'NO WIN COMBINATION',
+    lot_upgrade_title:'Lottery upgrade',
+    lot_upgrade_desc:'Upgrade the lottery level to access bigger prizes!',
+    lot_upgrade_btn:'UPGRADE',
+    lot_upgrade_locked:'Win the current lottery first',
     animation_lbl:'Background animations',
     anim_none:'Off',
     anim_leaves:'Autumn leaves',
@@ -540,7 +629,34 @@ const I18N = {
     first_setup_theme_dark:'Dark',
     first_setup_lang:'Choose language',
     first_setup_start:'Start game!',
-    first_setup_name_placeholder:'Player'
+    first_setup_name_placeholder:'Player',
+    credits_btn:'Credits',
+    credits_developer:'Developer',
+    credits_year:'Release year',
+    credits_version:'Version',
+    credits_thanks:'Thanks for playing!',
+    credits_exit:'Exit credits',
+    ach_novice_name:'Novice', ach_novice_desc:'1 000',
+    ach_amateur_name:'Amateur', ach_amateur_desc:'10 000',
+    ach_tapper_name:'Tapper', ach_tapper_desc:'50 000',
+    ach_master_name:'Master', ach_master_desc:'100 000',
+    ach_gigatap_name:'GigaTap', ach_gigatap_desc:'512 000',
+    ach_legend_name:'Legend', ach_legend_desc:'500 000',
+    ach_immortal_name:'Immortal', ach_immortal_desc:'1 000 000',
+    ach_beast_name:'MrBeast eats rice', ach_beast_desc:'1 000 000',
+    ach_pivo_name:'Hold my beer', ach_pivo_desc:'67 000 000',
+    ach_love_name:'I love Tap&Tap', ach_love_desc:'1 000 000 000',
+    ach_musk_name:'Elon Musk is jealous', ach_musk_desc:'1 000 000 000 000',
+    ach_time_name:'Time well spent...', ach_time_desc:'7 days',
+    ach_home_name:'Feels like home', ach_home_desc:'15 days',
+    ach_gameMaster_name:'Game Master', ach_gameMaster_desc:'All boosts lvl 15',
+    ach_honest_name:'Honest player', ach_honest_desc:'4 369 honest clicks',
+    ach_rapid_name:'Rapid fire', ach_rapid_desc:'Fast click streaks',
+    ach_meloman_name:'Melomaniac', ach_meloman_desc:'Music streaming',
+    ach_decorator_name:'Decorator', ach_decorator_desc:'Custom wallpapers',
+    ach_lucky_name:'Lucky', ach_lucky_desc:'Lottery win',
+    ach_persistent_name:'Persistent', ach_persistent_desc:'Daily login',
+    ach_immortalAll_name:'Immortal (all)', ach_immortalAll_desc:'All achievements'
   }
 };
 function t(k){ return (I18N[S.lang] && I18N[S.lang][k]) || I18N.ru[k] || k; }
@@ -605,34 +721,36 @@ const WALLPAPERS = [
 ];
 
 const ACHIEVEMENTS = [
-  {id:'novice', emoji:'🌑', name:'Новичок', desc:'1 000', type:'score', req:1000},
-  {id:'amateur', emoji:'🌒', name:'Любитель', desc:'10 000', type:'score', req:10000},
-  {id:'tapper', emoji:'🌓', name:'Таппер', desc:'50 000', type:'score', req:50000},
-  {id:'master', emoji:'🌔', name:'Мастер', desc:'100 000', type:'score', req:100000},
-  {id:'gigatap', emoji:'🎖', name:'ГигаТап', desc:'512 000', type:'score', req:512000},
-  {id:'legend', emoji:'🌕', name:'Легенда', desc:'500 000', type:'score', req:500000},
-  {id:'immortal', emoji:'🌟', name:'Бессмертный', desc:'1 000 000', type:'score', req:1000000},
-  {id:'beast', emoji:'🍚', name:'Мистер Бист ест рис', desc:'1 000 000', type:'score', req:1000000},
-  {id:'pivo', emoji:'🍺', name:'Подержите моё пиво', desc:'67 000 000', type:'score', req:67000000},
-  {id:'love', emoji:'💜', name:'Я люблю Tap&Tap', desc:'1 000 000 000', type:'score', req:1000000000},
-  {id:'musk', emoji:'🚀', name:'Илон Маск завидует', desc:'1 000 000 000 000', type:'score', req:1000000000000},
-  {id:'time', emoji:'⏳', name:'На что потрачено время...', desc:'7 дней', type:'days', req:7},
-  {id:'home', emoji:'🏠', name:'Как дома', desc:'15 дней', type:'days', req:15},
-  {id:'gameMaster', emoji:'🎮', name:'Мастер игры', desc:'Все бусты 15 ур.', type:'boostmax', req:15},
-  {id:'honest', emoji:'🎯', name:'Честный игрок', desc:'4 369 честных кликов', type:'clicks', req:4369},
-  {id:'rapid', emoji:'⚡', name:'Скорострел', desc:'Быстрые серии кликов', type:'special'},
-  {id:'meloman', emoji:'🎵', name:'Меломан', desc:'Музыкальный стриминг', type:'special'},
-  {id:'decorator', emoji:'🎨', name:'Декоратор', desc:'Кастомные обои', type:'special'},
-  {id:'lucky', emoji:'🍀', name:'Счастливчик', desc:'Победа в лотерее', type:'special'},
-  {id:'persistent', emoji:'🔥', name:'Настойчивый', desc:'Ежедневный вход', type:'special'},
-  {id:'immortalAll', emoji:'👑', name:'Бессмертный (все)', desc:'Все достижения', type:'special'}
+  {id:'novice', emoji:'🌑', type:'score', req:1000},
+  {id:'amateur', emoji:'🌒', type:'score', req:10000},
+  {id:'tapper', emoji:'🌓', type:'score', req:50000},
+  {id:'master', emoji:'🌔', type:'score', req:100000},
+  {id:'gigatap', emoji:'🎖', type:'score', req:512000},
+  {id:'legend', emoji:'🌕', type:'score', req:500000},
+  {id:'immortal', emoji:'🌟', type:'score', req:1000000},
+  {id:'beast', emoji:'🍚', type:'score', req:1000000},
+  {id:'pivo', emoji:'🍺', type:'score', req:67000000},
+  {id:'love', emoji:'💜', type:'score', req:1000000000},
+  {id:'musk', emoji:'🚀', type:'score', req:1000000000000},
+  {id:'time', emoji:'⏳', type:'days', req:7},
+  {id:'home', emoji:'🏠', type:'days', req:15},
+  {id:'gameMaster', emoji:'🎮', type:'boostmax', req:15},
+  {id:'honest', emoji:'🎯', type:'clicks', req:4369},
+  {id:'rapid', emoji:'⚡', type:'special'},
+  {id:'meloman', emoji:'🎵', type:'special'},
+  {id:'decorator', emoji:'🎨', type:'special'},
+  {id:'lucky', emoji:'🍀', type:'special'},
+  {id:'persistent', emoji:'🔥', type:'special'},
+  {id:'immortalAll', emoji:'👑', type:'special'}
 ];
+function achName(a){ return t('ach_'+a.id+'_name'); }
+function achDesc(a){ return t('ach_'+a.id+'_desc'); }
 
 const CASINO_LEVELS = {
-  1: {pool:['🍀','⭐','💎','🚫'], cost:1000, prize:5000},
-  2: {pool:['🍀','⭐','💎','👑','🔥','🚫'], cost:10000, prize:25000},
-  3: {pool:['🍀','⭐','💎','👑','🔥','🎁','💀','🎮','🚫'], cost:100000, prize:100000},
-  4: {pool:['🍀','⭐','💎','👑','🔥','🎁','💀','🎮','💪','😇','😱','🎅','❄️','🎄','🚫'], cost:1000000, prize:1000000}
+  1: {pool:['🍀','⭐','💎','🚫'], cost:1000, prize:5000, upgradeCost:10000},
+  2: {pool:['🍀','⭐','💎','👑','🔥','🚫'], cost:10000, prize:25000, upgradeCost:100000},
+  3: {pool:['🍀','⭐','💎','👑','🔥','🎁','💀','🎮','🚫'], cost:100000, prize:100000, upgradeCost:1000000},
+  4: {pool:['🍀','⭐','💎','👑','🔥','🎁','💀','🎮','💪','😇','😱','🎅','❄️','🎄','🚫'], cost:1000000, prize:1000000, upgradeCost:null}
 };
 
 const DEFAULT_STATE = {
@@ -662,6 +780,7 @@ const DEFAULT_STATE = {
 let S = load();
 const MAX_LVL = 15;
 let _currentScreen = 'clicker';
+let _lastCombo = null;
 
 function load(){
   try{
@@ -1348,7 +1467,7 @@ function renderAchList(){
     return `
       <div class="ach-card ${un?'unlocked':''}">
         <div class="ach-emoji">${a.emoji}</div>
-        <div class="ach-body"><div class="ach-name">${a.name}</div><div class="ach-req">${a.desc}</div></div>
+        <div class="ach-body"><div class="ach-name">${achName(a)}</div><div class="ach-req">${achDesc(a)}</div></div>
         <div class="ach-status"><i class="fa-solid ${un?'fa-circle-check':'fa-circle'}"></i></div>
       </div>`;
   }).join('');
@@ -1381,6 +1500,7 @@ function renderLottery(){
   const lvl = S.casinoLevel;
   const info = CASINO_LEVELS[lvl];
   const canSpin = S.score >= info.cost;
+  const canUpgrade = lvl < 4;
 
   s.innerHTML = `
     <div class="section-title"><i class="fa-solid fa-dice"></i>${t('casino')}</div>
@@ -1395,10 +1515,8 @@ function renderLottery(){
     <div class="lot-tabs" id="lotTabs">
       ${[1,2,3,4].map(n=>{
         const lv = CASINO_LEVELS[n];
-        const unlocked = n <= S.casinoLevel;
         return `
-          <button class="lot-tab ${n===lvl?'active':''}" data-lvl="${n}" ${!unlocked?'disabled':''}>
-            ${!unlocked?`<span class="lt-lock"><i class="fa-solid fa-lock"></i></span>`:''}
+          <button class="lot-tab ${n===lvl?'active':''}" data-lvl="${n}">
             <span class="lt-title">${t('level')} ${n}</span>
             <span class="lt-sub">${fmt(lv.cost)} ⭐</span>
           </button>
@@ -1407,10 +1525,12 @@ function renderLottery(){
     </div>
 
     <div class="reels" id="reels">
-      <div class="reel" id="reel0">❔</div>
-      <div class="reel" id="reel1">❔</div>
-      <div class="reel" id="reel2">❔</div>
+      <div class="reel" id="reel0">${_lastCombo ? _lastCombo[0] : '❔'}</div>
+      <div class="reel" id="reel1">${_lastCombo ? _lastCombo[1] : '❔'}</div>
+      <div class="reel" id="reel2">${_lastCombo ? _lastCombo[2] : '❔'}</div>
     </div>
+
+    <div class="lot-combo ${_lastCombo?'show':''}" id="lotCombo">${_lastCombo ? _lastCombo.join(' ') : ''}</div>
 
     <div class="lot-info">
       <div class="lot-info-item">${t('wager')}<b>${fmt(info.cost)}</b></div>
@@ -1420,18 +1540,42 @@ function renderLottery(){
     </div>
 
     <button class="btn" id="spinBtn" style="width:100%;justify-content:center;margin-bottom:8px;" ${!canSpin?'disabled':''}>🎲 ${t('spin')} (${fmt(info.cost)})</button>
+
+    ${canUpgrade ? `
+      <div class="lot-upgrade-card">
+        <div class="lot-upgrade-title"><i class="fa-solid fa-arrow-up"></i>${t('lot_upgrade_title')}</div>
+        <div class="lot-upgrade-desc">${t('lot_upgrade_desc')}</div>
+        <div class="lot-upgrade-row">
+          <div class="lot-upgrade-cost"><i class="fa-solid fa-star"></i>${fmt(info.upgradeCost)}</div>
+          <button class="btn" id="upgradeLotteryBtn" ${S.score < info.upgradeCost ? 'disabled' : ''}>${t('lot_upgrade_btn')}</button>
+        </div>
+      </div>
+    ` : ''}
   `;
 
   $('#lotTabs')?.querySelectorAll('[data-lvl]').forEach(b=>{
     b.addEventListener('click', ()=>{
       const n = parseInt(b.dataset.lvl,10);
-      if(n > S.casinoLevel) return;
       S.casinoLevel = n; save();
       renderLottery();
     });
   });
 
   $('#spinBtn')?.addEventListener('click', spinLottery);
+
+  $('#upgradeLotteryBtn')?.addEventListener('click', ()=>{
+    const currentLvl = S.casinoLevel;
+    if(currentLvl >= 4) return;
+    const currentInfo = CASINO_LEVELS[currentLvl];
+    if(S.score < currentInfo.upgradeCost){ toast(t('insufficient')); return; }
+    S.score -= currentInfo.upgradeCost;
+    S.casinoLevel = currentLvl + 1;
+    S.blockCount = 0;
+    save();
+    renderLottery();
+    updateScoreUI();
+    toast(`🎉 ${t('lot_levelup')} ${t('level')} ${S.casinoLevel}`);
+  });
 }
 
 function spinLottery(){
@@ -1441,10 +1585,18 @@ function spinLottery(){
   S.score -= info.cost;
   updateScoreUI();
 
+  _lastCombo = null;
   const reels = [$('#reel0'), $('#reel1'), $('#reel2')];
   const spinBtn = $('#spinBtn');
   if(spinBtn) spinBtn.disabled = true;
-  reels.forEach(r=>{ if(r){ r.classList.add('spinning'); r.classList.remove('win'); } });
+  const combo = $('#lotCombo');
+  if(combo){ combo.classList.remove('show','win','bust'); combo.textContent = ''; }
+  reels.forEach(r=>{
+    if(r){
+      r.classList.add('spinning');
+      r.classList.remove('win','bust');
+    }
+  });
 
   const spinInterval = setInterval(()=>{
     reels.forEach(r=>{ if(r) r.textContent = info.pool[Math.floor(Math.random()*info.pool.length)]; });
@@ -1460,16 +1612,19 @@ function spinLottery(){
       info.pool[Math.floor(Math.random()*info.pool.length)]
     ];
 
-    reels.forEach((r, i)=>{ if(r) r.textContent = result[i]; });
+    _lastCombo = result;
+
+    reels.forEach((r, i)=>{
+      if(!r) return;
+      r.textContent = result[i];
+    });
 
     const allSame = result[0] === result[1] && result[1] === result[2];
     const allBust = result.every(x=>x === '🚫');
+    const bustCount = result.filter(x=>x === '🚫').length;
+    const isWin = allSame && result[0] !== '🚫';
 
-    if(allBust){
-      reels.forEach(r=>r?.classList.add('win'));
-    }
-
-    if(allSame && result[0] !== '🚫'){
+    if(isWin){
       const icon = ICONS.find(i=>i.emoji === result[0]);
       const prize = icon ? icon.price : info.prize;
       S.score += prize;
@@ -1477,41 +1632,56 @@ function spinLottery(){
       updateScoreUI();
       reels.forEach(r=>r?.classList.add('win'));
       playSound('win');
-      toast(`🎉 ${t('win_prize')} +${fmt(prize)}`);
       if(!S.specialAch.lucky){ S.specialAch.lucky = true; unlockSpecialAch('lucky'); }
       S.blockCount = 0;
       save();
-      setTimeout(()=>{ checkAchievements(); }, 900);
+    } else {
+      if(allBust){
+        reels.forEach(r=>r?.classList.add('bust'));
+      }
+      if(bustCount >= 1){
+        S.blockCount++;
+        if(S.blockCount >= 3){ applyPenalty(); S.blockCount = 0; }
+      } else {
+        S.blockCount = 0;
+      }
+      save();
+      playSound('lose');
+    }
+
+    const comboEl = $('#lotCombo');
+    if(comboEl){
+      comboEl.textContent = result.join(' ');
+      comboEl.classList.add('show');
+      comboEl.classList.remove('win','bust');
+      if(isWin) comboEl.classList.add('win');
+      else if(bustCount > 0) comboEl.classList.add('bust');
+    }
+
+    setTimeout(()=>{
+      const comboEl2 = $('#lotCombo');
+      if(comboEl2) comboEl2.classList.remove('show');
+
+      const lotInfo = $('#screen-lottery .lot-info');
+      if(lotInfo){
+        const items = lotInfo.querySelectorAll('.lot-info-item');
+        if(items[3]) items[3].innerHTML = `${t('block_counter')} 🚫<b>${S.blockCount}/3</b>`;
+      }
+      const lsVal = document.querySelector('.lot-score .ls-value');
+      if(lsVal) lsVal.textContent = fmt(S.score);
       const sb = $('#spinBtn');
       if(sb) sb.disabled = S.score < info.cost;
-      return;
-    }
+      const ub = $('#upgradeLotteryBtn');
+      if(ub) ub.disabled = S.score < info.upgradeCost;
 
-    if(result.filter(x=>x === '🚫').length >= 1){
-      S.blockCount++;
-      if(S.blockCount >= 3){ applyPenalty(); S.blockCount = 0; }
-    } else {
-      S.blockCount = 0;
-    }
-    save();
-
-    const lotInfo = $('#screen-lottery .lot-info');
-    if(lotInfo){
-      const items = lotInfo.querySelectorAll('.lot-info-item');
-      if(items[3]) items[3].innerHTML = `${t('block_counter')} 🚫<b>${S.blockCount}/3</b>`;
-    }
-    const lsVal = document.querySelector('.lot-score .ls-value');
-    if(lsVal) lsVal.textContent = fmt(S.score);
-    const sb = $('#spinBtn');
-    if(sb) sb.disabled = S.score < info.cost;
-
-    if(!allSame) playSound('lose');
-    checkAchievements();
+      checkAchievements();
+    }, 1000);
   }, 1200);
 }
 
 function applyPenalty(){
-  const loss = Math.floor(S.score * 0.2);
+  const pct = 0.20 + Math.random() * 0.26;
+  const loss = Math.floor(S.score * pct);
   S.score = Math.max(0, S.score - loss);
   const sc = $('#scoreCard');
   if(sc){ sc.classList.add('penalty'); setTimeout(()=>sc.classList.remove('penalty'), 900); }
@@ -1519,7 +1689,7 @@ function applyPenalty(){
   if(wrap){
     const fp = document.createElement('div');
     fp.className = 'float-minus';
-    fp.textContent = `-20% (-${fmtShort(loss)})`;
+    fp.textContent = `-${Math.round(pct*100)}% (-${fmtShort(loss)})`;
     fp.style.left = '50%'; fp.style.top = '50%';
     fp.style.transform = 'translateX(-50%)';
     fp.style.setProperty('--dx', '0px');
@@ -1528,7 +1698,7 @@ function applyPenalty(){
   }
   if(navigator.vibrate){ try{ navigator.vibrate([100,50,100,50,200]); }catch(e){} }
   playSound('lose');
-  toast(`🚫 ${t('penalty')} -${fmt(loss)}`);
+  toast(`🚫 ${t('penalty')} -${Math.round(pct*100)}% (-${fmt(loss)})`);
   updateScoreUI(); save();
 }
 
@@ -1583,12 +1753,15 @@ function renderSettings(){
     <div class="hint" id="settingsWpHint"></div>
     <div class="grid-2" id="settingsWp"></div>
 
+    <div class="section-title"><i class="fa-solid fa-film"></i>${t('credits_btn')}</div>
+    <div class="row-btns"><button class="btn" id="creditsBtn"><i class="fa-solid fa-film"></i> ${t('credits_btn')}</button></div>
+
     <div class="section-title"><i class="fa-solid fa-triangle-exclamation"></i>${t('danger_zone')}</div>
     <div class="row-btns" style="flex-direction:column;">
       <button class="btn secondary" id="resetPointsBtn"><i class="fa-solid fa-eraser"></i> ${t('reset_points')}</button>
       <button class="btn danger" id="resetBtn"><i class="fa-solid fa-trash"></i> ${t('reset_progress')}</button>
     </div>
-    <div style="text-align:center;color:var(--on-surface-var);font-size:12px;margin:24px 0;">Tap&Tap Galaxy Edition · v2.9</div>
+    <div style="text-align:center;color:var(--on-surface-var);font-size:12px;margin:24px 0;">Tap&Tap Galaxy Edition · v3.3</div>
   `;
 
   renderAnimationSettings();
@@ -1649,6 +1822,8 @@ function renderSettings(){
       toast(b.textContent.trim());
     });
   });
+
+  $('#creditsBtn')?.addEventListener('click', openCredits);
 
   $('#resetPointsBtn')?.addEventListener('click', ()=>{
     if(confirm(t('reset_points_confirm'))){
@@ -1800,6 +1975,23 @@ function toggleMusic(){
   save();
 }
 
+function openCredits(){
+  const overlay = $('#creditsOverlay');
+  if(!overlay) return;
+  $('#crLine1').innerHTML = `${t('credits_developer')}<small>Quantum ACD</small>`;
+  $('#crLine2').innerHTML = `${t('credits_year')}<small>2025</small>`;
+  $('#crLine3').innerHTML = `${t('credits_version')}<small>Galaxy Edition v3.3</small>`;
+  $('#crLine4').innerHTML = `${t('credits_thanks')}<small>❤️</small>`;
+  $('#creditsExit').textContent = t('credits_exit');
+  overlay.classList.add('show');
+  playSound('ach');
+}
+function closeCredits(){
+  const overlay = $('#creditsOverlay');
+  if(!overlay) return;
+  overlay.classList.remove('show');
+}
+
 function doShare(){
   const ic = getIcon();
   const th = getTheme();
@@ -1821,7 +2013,7 @@ function doShare(){
   const lines = [
     `🔥 ${S.name || 'Player'} @ Tap&Tap — ${fmt(S.score)}!`, ``,
     `📊:`, `• 🖱 ${fmt(S.honestClicks)}`, `• 🏆 ${rank}`,
-    `• ✨ ${achCount}/${ACHIEVEMENTS.length}${topAch ? ` (${topAch.emoji} ${topAch.name})` : ''}`,
+    `• ✨ ${achCount}/${ACHIEVEMENTS.length}${topAch ? ` (${topAch.emoji} ${achName(topAch)})` : ''}`,
     `• 🎨 ${iconLabel} / ${th.name}`, ``,
     `https://q-acd.github.io/tap_tap`, `#TapTap`
   ];
@@ -1841,7 +2033,7 @@ function unlockSpecialAch(id){
   if(S.unlockedAch.includes(id)) return;
   S.unlockedAch.push(id);
   const a = ACHIEVEMENTS.find(x=>x.id===id);
-  if(a) toastAch(a.emoji, a.name);
+  if(a) toastAch(a.emoji, achName(a));
   save();
   if($('#screen-ach').classList.contains('active')) renderAchList();
 }
@@ -1853,7 +2045,7 @@ function checkAchievements(){
     if(isAchUnlocked(a) && !S.unlockedAch.includes(a.id)){
       S.unlockedAch.push(a.id);
       changed = true;
-      if(!S.achNotified.includes(a.id)){ S.achNotified.push(a.id); toastAch(a.emoji, a.name); }
+      if(!S.achNotified.includes(a.id)){ S.achNotified.push(a.id); toastAch(a.emoji, achName(a)); }
     }
   });
   const allSpecial = ACHIEVEMENTS.filter(x=>x.type!=='special').every(x=>isAchUnlocked(x))
@@ -1997,11 +2189,12 @@ function applyLang(){
 function switchScreen(name){
   _currentScreen = name;
   $$('.screen').forEach(s=>s.classList.remove('active'));
-  $$('.top-tab, .nav-item').forEach(b=>b.classList.remove('active'));
+  $$('.top-tab, .nav-item, .top-bar-btn').forEach(b=>b.classList.remove('active'));
   const scr = $('#screen-'+name);
   if(scr) scr.classList.add('active');
   $$('.top-tab').forEach(b=>{ if(b.dataset.screen===name) b.classList.add('active'); });
   $$('.nav-item').forEach(b=>{ if(b.dataset.screen===name) b.classList.add('active'); });
+  $$('.top-bar-btn').forEach(b=>{ if(b.dataset.screen===name) b.classList.add('active'); });
   updateTopBarTitle(name);
   if(name === 'shop')     renderShop();
   if(name === 'tasks')    renderTasks();
@@ -2027,8 +2220,8 @@ function openTutorial(){
      text: S.lang === 'en' ? 'Buy themes, icons and wallpapers with points. Custom wallpapers unlock at 300 000 points.'
                             : 'Покупай темы, иконки и обои за очки. Кастомные обои откроются на 300 000 очков.'},
     {emoji:'🎰', title: S.lang === 'en' ? 'Lottery' : 'Лотерея',
-     text: S.lang === 'en' ? 'From 1000 points and clicker level 3 open the Lottery. Four levels with growing wagers and prizes!'
-                            : 'С 1000 очков и 3-го уровня кликера открой Лотерею. Четыре уровня с растущими ставками и призами!'},
+     text: S.lang === 'en' ? 'Open the Lottery from 1000 points. Upgrade the lottery to access bigger prizes!'
+                            : 'Открой Лотерею с 1000 очков. Прокачивай лотерею, чтобы получить доступ к большим призам!'},
     {emoji:'✨', title: S.lang === 'en' ? 'Animations' : 'Анимации',
      text: S.lang === 'en' ? 'At 1 000 000 points unlock background animations — leaves, rain, snow!'
                             : 'На 1 000 000 очков откроются анимации на фоне — листья, дождь, снежинки!'},
@@ -2128,7 +2321,8 @@ function openFirstSetup(){
 }
 
 function bindNav(){
-  $$('.top-tab, .nav-item').forEach(b=>{
+  $$('.top-tab, .nav-item, .top-bar-btn').forEach(b=>{
+    if(!b.dataset.screen) return;
     b.addEventListener('click', ()=>{
       const scr = b.dataset.screen;
       switchScreen(scr);
@@ -2142,6 +2336,7 @@ function bindNav(){
     clearTimeout(bar._t);
     bar._t = setTimeout(()=>bar.classList.remove('showGame'), 2000);
   });
+  $('#creditsExit')?.addEventListener('click', closeCredits);
 }
 
 let _netWasOffline = false;
