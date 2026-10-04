@@ -54,7 +54,7 @@
 html,body{height:100%;margin:0;padding:0;}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:var(--on-surface);overflow:hidden;user-select:none;transition:background .35s ease,color .35s ease;}
 
-#bgLayer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+#bgLayer{position:fixed;inset:0;z-index:5;pointer-events:none;overflow:hidden;}
 .bg-particle{position:absolute;top:-40px;pointer-events:none;user-select:none;font-size:22px;opacity:.85;}
 .bg-particle.leaf{animation:leafFall linear infinite;font-size:26px;}
 .bg-particle.rain{animation:rainFall linear infinite;font-size:18px;}
@@ -84,7 +84,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .loader-bar>div{height:100%;width:0%;background:#fff;border-radius:99px;transition:width .25s ease;}
 .loader-hint{font-size:13px;opacity:.85;letter-spacing:.4px;}
 
-#app{display:none;height:100dvh;grid-template-rows:auto 1fr auto;max-width:520px;margin:0 auto;background:var(--wallpaper);background-size:cover;background-position:center;position:relative;transition:background .5s ease;z-index:1;}
+#app{display:none;height:100dvh;grid-template-rows:auto 1fr auto;max-width:520px;margin:0 auto;background:var(--wallpaper);background-size:cover;background-position:center;position:relative;transition:background .5s ease;z-index:10;}
 #app.ready{display:grid;}
 
 #topBar{position:relative;display:flex;align-items:center;justify-content:center;padding:12px 16px 6px;min-height:48px;background:transparent;}
@@ -307,6 +307,21 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .tut-dot{width:8px;height:8px;border-radius:50%;background:var(--outline-var);transition:background .2s, transform .2s;}
 .tut-dot.active{background:var(--primary);transform:scale(1.3);}
 
+.first-setup{display:flex;flex-direction:column;gap:14px;text-align:left;}
+.first-setup h2{text-align:center;}
+.first-setup .fs-row{display:flex;flex-direction:column;gap:6px;}
+.first-setup .fs-row label{font-size:13px;font-weight:600;color:var(--on-surface-var);}
+.first-setup .fs-row input{padding:12px 14px;border-radius:12px;border:1.5px solid var(--outline-var);background:var(--surface-2);color:var(--on-surface);font-size:15px;font-family:inherit;font-weight:600;outline:none;}
+.first-setup .fs-row input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-container);}
+.first-setup .fs-themes{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.first-setup .fs-theme{width:44px;height:44px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .15s, border-color .15s;}
+.first-setup .fs-theme:active{transform:scale(.92);}
+.first-setup .fs-theme.active{border-color:var(--primary);transform:scale(1.08);}
+.first-setup .fs-lang{display:flex;gap:8px;justify-content:center;}
+.first-setup .fs-theme-toggle{display:flex;gap:8px;justify-content:center;}
+.first-setup .fs-theme-toggle .theme-option{padding:10px 20px;border-radius:14px;border:1.5px solid var(--outline-var);background:var(--surface-2);color:var(--on-surface);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;transition:all .2s;}
+.first-setup .fs-theme-toggle .theme-option.active{background:var(--primary);color:var(--on-primary);border-color:var(--primary);}
+
 @media (max-width:400px){
   :root{--tap-size:170px;}
   .score-value{font-size:36px;}
@@ -434,7 +449,19 @@ const I18N = {
     anim_rain:'Дождь',
     anim_snow:'Снежинки',
     anim_locked:'Разблокируется на 1 000 000 очков',
-    anim_unlocked:'Разблокировано!'
+    anim_unlocked:'Разблокировано!',
+    task_channel:'Подписаться на канал «Tap&Tap»',
+    task_share:'Поделиться игрой с друзьями',
+    task_review:'Написать отзыв',
+    first_setup_title:'Настройка',
+    first_setup_welcome:'Добро пожаловать в Tap&Tap!',
+    first_setup_name:'Ваше имя',
+    first_setup_theme:'Тема оформления',
+    first_setup_theme_light:'Светлая',
+    first_setup_theme_dark:'Тёмная',
+    first_setup_lang:'Выберите язык',
+    first_setup_start:'Начать игру!',
+    first_setup_name_placeholder:'Игрок'
   },
   en:{
     tab_clicker:'CLICKER', tab_shop:'SHOP', tab_tasks:'TASKS',
@@ -501,7 +528,19 @@ const I18N = {
     anim_rain:'Rain',
     anim_snow:'Snowflakes',
     anim_locked:'Unlocks at 1 000 000 points',
-    anim_unlocked:'Unlocked!'
+    anim_unlocked:'Unlocked!',
+    task_channel:'Subscribe to «Tap&Tap» channel',
+    task_share:'Share the game with friends',
+    task_review:'Write a review',
+    first_setup_title:'Setup',
+    first_setup_welcome:'Welcome to Tap&Tap!',
+    first_setup_name:'Your name',
+    first_setup_theme:'Theme',
+    first_setup_theme_light:'Light',
+    first_setup_theme_dark:'Dark',
+    first_setup_lang:'Choose language',
+    first_setup_start:'Start game!',
+    first_setup_name_placeholder:'Player'
   }
 };
 function t(k){ return (I18N[S.lang] && I18N[S.lang][k]) || I18N.ru[k] || k; }
@@ -616,7 +655,8 @@ const DEFAULT_STATE = {
   lastLotterySpin:0,
   tutorialSeen:false,
   bgAnimation:'none',
-  animationsUnlocked:false
+  animationsUnlocked:false,
+  firstSetupDone:false
 };
 
 let S = load();
@@ -646,6 +686,7 @@ function load(){
     if(typeof merged.clickPowerLvl !== 'number') merged.clickPowerLvl = 0;
     if(typeof merged.casinoLevel !== 'number' || merged.casinoLevel < 1) merged.casinoLevel = 1;
     if(!merged.bgAnimation) merged.bgAnimation = 'none';
+    if(typeof merged.firstSetupDone !== 'boolean') merged.firstSetupDone = false;
     return merged;
   }catch(e){ return JSON.parse(JSON.stringify(DEFAULT_STATE)); }
 }
@@ -1188,9 +1229,9 @@ function renderTasks(){
       <button class="btn" id="claimDaily" ${!claimable?'disabled':''}><i class="fa-solid fa-gift"></i> ${claimable?t('daily_claim'):t('daily_claimed')}</button>
     </div>
     <div class="section-title"><i class="fa-solid fa-list-check"></i>${t('tasks_title')}</div>
-    ${taskHtml('channel','<i class="fa-solid fa-tower-broadcast"></i>','Подписаться на канал «Tap&Tap»',400,'https://max.ru/channel_TapTap')}
-    ${taskHtml('share','<i class="fa-solid fa-share-nodes"></i>','Поделиться игрой с друзьями',600,'https://q-acd.github.io/tap_tap')}
-    ${taskHtml('review','<i class="fa-solid fa-envelope"></i>','Написать отзыв',500,'mailto:q-acd@mail.ru')}
+    ${taskHtml('channel','<i class="fa-solid fa-tower-broadcast"></i>',t('task_channel'),400,'https://max.ru/channel_TapTap')}
+    ${taskHtml('share','<i class="fa-solid fa-share-nodes"></i>',t('task_share'),600,'https://q-acd.github.io/tap_tap')}
+    ${taskHtml('review','<i class="fa-solid fa-envelope"></i>',t('task_review'),500,'mailto:q-acd@mail.ru')}
   `;
 
   $('#claimDaily')?.addEventListener('click', ()=>{
@@ -1340,7 +1381,6 @@ function renderLottery(){
   const lvl = S.casinoLevel;
   const info = CASINO_LEVELS[lvl];
   const canSpin = S.score >= info.cost;
-  const blockIcon = '🚫';
 
   s.innerHTML = `
     <div class="section-title"><i class="fa-solid fa-dice"></i>${t('casino')}</div>
@@ -1376,7 +1416,7 @@ function renderLottery(){
       <div class="lot-info-item">${t('wager')}<b>${fmt(info.cost)}</b></div>
       <div class="lot-info-item">${t('lot_prize')}<b>${fmt(info.prize)}</b></div>
       <div class="lot-info-item">${t('lot_chance')}<b>1 / ${info.pool.length}</b></div>
-      <div class="lot-info-item">${t('block_counter')} ${blockIcon}<b>${S.blockCount}/3</b></div>
+      <div class="lot-info-item">${t('block_counter')} 🚫<b>${S.blockCount}/3</b></div>
     </div>
 
     <button class="btn" id="spinBtn" style="width:100%;justify-content:center;margin-bottom:8px;" ${!canSpin?'disabled':''}>🎲 ${t('spin')} (${fmt(info.cost)})</button>
@@ -1402,7 +1442,9 @@ function spinLottery(){
   updateScoreUI();
 
   const reels = [$('#reel0'), $('#reel1'), $('#reel2')];
-  reels.forEach(r=>{ if(r) r.classList.add('spinning'); r?.classList.remove('win'); });
+  const spinBtn = $('#spinBtn');
+  if(spinBtn) spinBtn.disabled = true;
+  reels.forEach(r=>{ if(r){ r.classList.add('spinning'); r.classList.remove('win'); } });
 
   const spinInterval = setInterval(()=>{
     reels.forEach(r=>{ if(r) r.textContent = info.pool[Math.floor(Math.random()*info.pool.length)]; });
@@ -1411,34 +1453,46 @@ function spinLottery(){
   setTimeout(()=>{
     clearInterval(spinInterval);
     reels.forEach(r=>r?.classList.remove('spinning'));
+
     const result = [
       info.pool[Math.floor(Math.random()*info.pool.length)],
       info.pool[Math.floor(Math.random()*info.pool.length)],
       info.pool[Math.floor(Math.random()*info.pool.length)]
     ];
+
     reels.forEach((r, i)=>{ if(r) r.textContent = result[i]; });
+
     const allSame = result[0] === result[1] && result[1] === result[2];
     const allBust = result.every(x=>x === '🚫');
-    if(allBust) reels.forEach(r=>r?.classList.add('win'));
+
+    if(allBust){
+      reels.forEach(r=>r?.classList.add('win'));
+    }
 
     if(allSame && result[0] !== '🚫'){
       const icon = ICONS.find(i=>i.emoji === result[0]);
       const prize = icon ? icon.price : info.prize;
-      S.score += prize; S.totalEarned += prize;
+      S.score += prize;
+      S.totalEarned += prize;
       updateScoreUI();
       reels.forEach(r=>r?.classList.add('win'));
       playSound('win');
       toast(`🎉 ${t('win_prize')} +${fmt(prize)}`);
       if(!S.specialAch.lucky){ S.specialAch.lucky = true; unlockSpecialAch('lucky'); }
-      S.blockCount = 0; save();
+      S.blockCount = 0;
+      save();
       setTimeout(()=>{ checkAchievements(); }, 900);
+      const sb = $('#spinBtn');
+      if(sb) sb.disabled = S.score < info.cost;
       return;
     }
 
     if(result.filter(x=>x === '🚫').length >= 1){
       S.blockCount++;
       if(S.blockCount >= 3){ applyPenalty(); S.blockCount = 0; }
-    } else { S.blockCount = 0; }
+    } else {
+      S.blockCount = 0;
+    }
     save();
 
     const lotInfo = $('#screen-lottery .lot-info');
@@ -1534,7 +1588,7 @@ function renderSettings(){
       <button class="btn secondary" id="resetPointsBtn"><i class="fa-solid fa-eraser"></i> ${t('reset_points')}</button>
       <button class="btn danger" id="resetBtn"><i class="fa-solid fa-trash"></i> ${t('reset_progress')}</button>
     </div>
-    <div style="text-align:center;color:var(--on-surface-var);font-size:12px;margin:24px 0;">Tap&Tap Galaxy Edition · v2.7</div>
+    <div style="text-align:center;color:var(--on-surface-var);font-size:12px;margin:24px 0;">Tap&Tap Galaxy Edition · v2.9</div>
   `;
 
   renderAnimationSettings();
@@ -2012,6 +2066,67 @@ function openTutorial(){
   $('#modalBg').classList.add('show');
 }
 
+function openFirstSetup(){
+  const modal = $('#modalContent');
+  let tempDark = S.darkUI;
+  let tempLang = S.lang || 'ru';
+  let tempName = S.name || '';
+
+  function render(){
+    modal.innerHTML = `
+      <div class="first-setup">
+        <span class="big-emoji" style="text-align:center;">🎉</span>
+        <h2>${I18N[tempLang].first_setup_welcome}</h2>
+        <div class="fs-row">
+          <label>${I18N[tempLang].first_setup_name}</label>
+          <input type="text" id="fsName" maxlength="20" placeholder="${I18N[tempLang].first_setup_name_placeholder}" value="${escapeHtml(tempName)}">
+        </div>
+        <div class="fs-row">
+          <label>${I18N[tempLang].first_setup_theme}</label>
+          <div class="fs-theme-toggle">
+            <button class="theme-option ${!tempDark?'active':''}" data-dark="false">☀️ ${I18N[tempLang].first_setup_theme_light}</button>
+            <button class="theme-option ${tempDark?'active':''}" data-dark="true">🌙 ${I18N[tempLang].first_setup_theme_dark}</button>
+          </div>
+        </div>
+        <div class="fs-row">
+          <label>${I18N[tempLang].first_setup_lang}</label>
+          <div class="fs-lang">
+            <button class="lang-btn ${tempLang==='ru'?'active':''}" data-lang="ru">RU</button>
+            <button class="lang-btn ${tempLang==='en'?'active':''}" data-lang="en">EN</button>
+          </div>
+        </div>
+        <button class="btn" id="fsStart" style="justify-content:center;">${I18N[tempLang].first_setup_start}</button>
+      </div>
+    `;
+    $$('.fs-theme-toggle .theme-option').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        tempDark = b.dataset.dark === 'true';
+        $$('.fs-theme-toggle .theme-option').forEach(x=>x.classList.toggle('active', (x.dataset.dark === 'true') === tempDark));
+      });
+    });
+    $$('.fs-lang .lang-btn').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        tempLang = b.dataset.lang;
+        render();
+      });
+    });
+    $('#fsStart')?.addEventListener('click', ()=>{
+      const nameVal = $('#fsName').value.trim();
+      S.name = nameVal || I18N[tempLang].first_setup_name_placeholder;
+      S.darkUI = tempDark;
+      S.lang = tempLang;
+      S.firstSetupDone = true;
+      save();
+      applyLang(); applyTheme();
+      $('#modalBg').classList.remove('show');
+      renderAll(); switchScreen('clicker');
+      if(!S.tutorialSeen) setTimeout(()=>openTutorial(), 500);
+    });
+  }
+  render();
+  $('#modalBg').classList.add('show');
+}
+
 function bindNav(){
   $$('.top-tab, .nav-item').forEach(b=>{
     b.addEventListener('click', ()=>{
@@ -2094,7 +2209,8 @@ function runLoader(){
       $('#loader').classList.add('hide');
       $('#app').classList.add('ready');
       switchScreen('clicker');
-      if(!S.tutorialSeen) setTimeout(()=>openTutorial(), 400);
+      if(!S.firstSetupDone) setTimeout(()=>openFirstSetup(), 300);
+      else if(!S.tutorialSeen) setTimeout(()=>openTutorial(), 400);
     }, 250);
   }
   requestAnimationFrame(tick);
