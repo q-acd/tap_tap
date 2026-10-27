@@ -40,13 +40,12 @@
 html,body{height:100%;margin:0;padding:0;}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:var(--on-surface);overflow:hidden;user-select:none;transition:background .35s ease,color .35s ease;}
 
-/* === ФОНОВЫЕ АНИМАЦИИ === */
 #bgLayer{position:fixed;inset:0;z-index:100000;pointer-events:none;overflow:hidden;}
 .bg-particle{position:absolute;top:-40px;pointer-events:none;user-select:none;font-size:22px;opacity:.85;}
 .bg-particle.leaf{animation:leafFall linear infinite;font-size:26px;}
 .bg-particle.rain{animation:rainFall linear infinite;font-size:18px;}
 .bg-particle.snow{animation:snowFall linear infinite;font-size:22px;}
-.bg-particle.star{animation:starTwinkle linear infinite;font-size:18px;top:auto;bottom:auto;}
+.bg-particle.star{animation:starTwinkle linear infinite;font-size:18px;}
 .bg-particle.confetti{animation:confettiFallBg linear infinite;font-size:20px;}
 .bg-particle.bubble{animation:bubbleRise linear infinite;font-size:28px;}
 @keyframes leafFall{0%{transform:translateY(-40px) rotate(0deg) translateX(0);opacity:0;}10%{opacity:.9;}100%{transform:translateY(110vh) rotate(720deg) translateX(80px);opacity:.7;}}
@@ -56,7 +55,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 @keyframes confettiFallBg{0%{transform:translateY(-40px) rotate(0deg);opacity:0;}10%{opacity:.9;}100%{transform:translateY(110vh) rotate(720deg);opacity:.6;}}
 @keyframes bubbleRise{0%{transform:translateY(110vh) scale(.6);opacity:0;}10%{opacity:.8;}100%{transform:translateY(-40px) scale(1.1);opacity:0;}}
 
-/* === ЗАГРУЗКА === */
 #loader{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,var(--primary) 0%,var(--btn-color,#2196F3) 55%,var(--primary) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:20px;transition:opacity .6s, visibility .6s;padding:20px;}
 #loader.hide{opacity:0;visibility:hidden;}
 .loader-logo{font-size:56px;font-weight:800;letter-spacing:-2px;text-shadow:0 8px 30px rgba(0,0,0,.3);animation:pop 2.4s ease-in-out infinite;}
@@ -66,7 +64,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .loader-bar>div{height:100%;width:0%;background:#fff;border-radius:99px;transition:width .25s ease;}
 .loader-hint{font-size:13px;opacity:.85;letter-spacing:.4px;}
 
-/* === РЕКЛАМНЫЕ БАННЕРЫ === */
 .ad-banner{position:fixed;left:0;right:0;z-index:8000;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;padding:8px 12px;font-size:12px;box-shadow:0 2px 12px rgba(0,0,0,.4);display:none;align-items:center;gap:10px;}
 .ad-banner.show{display:flex;}
 .ad-banner.top{top:0;border-bottom:2px solid var(--gold);}
@@ -76,7 +73,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .ad-banner .ad-desc{font-size:10px;opacity:.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .ad-banner .ad-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:24px;height:24px;border-radius:50%;font-size:11px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 
-/* === МОДАЛКА РЕКЛАМЫ === */
 .ad-modal-bg{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;}
 .ad-modal-bg.show{display:flex;animation:fadeUp .25s ease;}
 .ad-modal{background:var(--surface);border-radius:24px;padding:0;width:100%;max-width:400px;box-shadow:var(--shadow-3);overflow:hidden;animation:pop .35s cubic-bezier(.2,1.4,.5,1);}
@@ -92,13 +88,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .ad-modal-foot{padding:0 20px 20px;display:flex;gap:10px;}
 .ad-modal-foot .btn{flex:1;justify-content:center;}
 
-/* === ПОДАРКИ === */
 .gift-card{background:linear-gradient(135deg,#FF6F00,#E65100);color:#fff;border-radius:var(--radius-lg);padding:20px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow-2);}
 .gift-card .gc-title{font-size:14px;opacity:.9;font-weight:600;margin-bottom:6px;}
 .gift-card .gc-count{font-size:34px;font-weight:800;margin-bottom:4px;}
 .gift-card .gc-desc{font-size:13px;opacity:.9;margin-bottom:14px;}
 
-/* === ХВАТАЙКА === */
 .claw-wrap{position:relative;background:linear-gradient(180deg,#0a0e27,#1a1a3e);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;box-shadow:var(--shadow-2);overflow:hidden;}
 .claw-machine{position:relative;width:100%;height:360px;overflow:hidden;border-radius:16px;background:radial-gradient(ellipse at 50% 100%, #1e2a5e 0%, #0a0e27 70%);}
 .claw-rail{position:absolute;top:14px;left:10%;right:10%;height:4px;background:linear-gradient(90deg,#444,#888,#444);border-radius:2px;}
@@ -141,7 +135,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .promo-box .promo-code:active{transform:scale(.97);}
 .promo-box small{font-size:11px;opacity:.9;}
 
-/* === ОСНОВНОЕ === */
 #app{display:none;height:100dvh;grid-template-rows:auto 1fr auto;max-width:520px;margin:0 auto;background:var(--wallpaper);background-size:cover;background-position:center;position:relative;transition:background .5s ease;z-index:10;padding-top:var(--banner-top-h);padding-bottom:var(--banner-bottom-h);}
 #app.ready{display:grid;}
 #topBar{position:relative;display:flex;align-items:center;justify-content:center;padding:12px 16px 6px;min-height:56px;background:transparent;gap:8px;}
@@ -158,7 +151,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .screen.active{display:block;animation:fadeUp .3s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 
-/* Навбар — 5 колонок */
 .bottom-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:var(--surface-2);border-top:1px solid var(--outline-var);padding:6px 4px calc(6px + env(safe-area-inset-bottom));position:relative;}
 .nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 2px;border-radius:14px;background:transparent;border:none;color:var(--on-surface-var);font-size:9px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;position:relative;}
 .nav-item i{font-size:16px;line-height:1;}
@@ -281,7 +273,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 .lang-btn{padding:6px 12px;border-radius:99px;border:1px solid var(--outline-var);background:var(--surface-3);color:var(--on-surface-var);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s;}
 .lang-btn.active{background:var(--primary);color:var(--on-primary);border-color:var(--primary);}
 .music-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
-.music-row.radio-grid{grid-template-columns:repeat(3,1fr);}
 .music-btn{padding:10px;border-radius:14px;border:1px solid var(--outline-var);background:var(--surface-3);color:var(--on-surface);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px;}
 .music-btn.active{background:var(--primary);color:var(--on-primary);border-color:var(--primary);}
 .wallpaper-card{cursor:pointer;}
@@ -398,6 +389,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 
 <div id="bgLayer"></div>
 
+<!-- Баннеры рекламы -->
 <div class="ad-banner top" id="adBannerTop">
   <span class="ad-label">AD</span>
   <a class="ad-link" href="#" target="_blank" rel="noopener noreferrer" style="flex:1;min-width:0;display:flex;flex-direction:column;color:inherit;text-decoration:none;">
@@ -415,6 +407,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
   <button class="ad-close" id="adBottomClose" aria-label="Закрыть">✕</button>
 </div>
 
+<!-- Модалка рекламы -->
 <div class="ad-modal-bg" id="adModalBg">
   <div class="ad-modal">
     <div class="ad-modal-head">
@@ -437,6 +430,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
   </div>
 </div>
 
+<!-- Модалка выигрыша хватайки -->
 <div class="claw-result-overlay" id="clawResultOverlay">
   <div class="claw-result-box" id="clawResultBox"></div>
 </div>
@@ -450,7 +444,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
   <div class="loader-logo"><i class="fa-solid fa-hand-pointer"></i>Tap&amp;Tap</div>
   <div class="loader-bar"><div id="loadBar"></div></div>
   <div class="loader-hint" id="loadHint">Загрузка Galaxy Edition…</div>
-  <div class="hint" style="color:rgba(255,255,255,.7);margin-top:8px;font-size:11px;">Реклама помогает проекту развиваться</div>
+  <div class="hint" style="color:rgba(255,255,255,.7);margin-top:8px;font-size:11px;">Реклама помогает проекту развиваться и не монетизируется!</div>
 </div>
 
 <div id="app">
@@ -503,7 +497,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:va
 
 <script>
 /* ============================================================
-   РЕКЛАМНЫЙ ДВИЖОК
+   РЕКЛАМНЫЙ ДВИЖОК (исправлен: многократный показ, защита)
    ============================================================ */
 const ADS_DATA = [
   { title: 'Продуктор для бизнеса', desc: 'Контроль продаж, статистика, инструменты и многое другое совершенно бесплатно!', url: 'https://q-acd.github.io/prod/', type: 'any' },
@@ -561,6 +555,45 @@ const Ads = {
     if (pos === 'top') document.documentElement.style.setProperty('--banner-top-h', '0px');
     else document.documentElement.style.setProperty('--banner-bottom-h', '0px');
   },
+  refreshBanner(pos) {
+  if (this._bannerClosed[pos]) return;
+  const el = pos === 'top' ? document.getElementById('adBannerTop') : document.getElementById('adBannerBottom');
+  if (!el) return;
+  if (!el.classList.contains('show')) return;
+
+  // Берём новую рекламу, отличную от текущей
+  const currentTitle = el.querySelector('.ad-title')?.textContent || '';
+  let ad;
+  let attempts = 0;
+  do {
+    ad = this.pickAd(pos === 'top' ? 'bn_up' : 'bn_dw');
+    attempts++;
+  } while (ad.title === currentTitle && attempts < 5);
+
+  const titleEl = el.querySelector('.ad-title');
+  const descEl = el.querySelector('.ad-desc');
+  const linkEl = el.querySelector('.ad-link');
+
+  if (titleEl) titleEl.textContent = ad.title;
+  if (descEl) descEl.textContent = ad.desc;
+
+  if (linkEl) {
+    if (ad.url && ad.url !== '-') {
+      linkEl.href = ad.url;
+      linkEl.target = '_blank';
+      linkEl.rel = 'noopener noreferrer';
+      linkEl.style.cursor = 'pointer';
+    } else {
+      linkEl.removeAttribute('href');
+      linkEl.style.cursor = 'default';
+    }
+  }
+
+  // Анимация обновления
+  el.style.transition = 'opacity .3s ease';
+  el.style.opacity = '0.4';
+  setTimeout(() => { el.style.opacity = '1'; }, 300);
+},
 
   showBetweenPage(callback) {
     const now = Date.now();
@@ -571,76 +604,102 @@ const Ads = {
     this.showRewarded(3, callback, true);
   },
 
-  // === ГЛАВНОЕ ИСПРАВЛЕНИЕ: полный сброс перед каждым показом ===
-  showRewarded(seconds, onComplete, isBetween = false) {
-    // Всегда сначала полностью чистим прошлое состояние
-    this._hardReset();
+  // === ГЛАВНОЕ ИСПРАВЛЕНИЕ ===
+ showRewarded(seconds, onComplete, isBetween = false) {
+  this._hardReset();
 
-    const ad = this.pickAd(isBetween ? 'ht' : 'aw');
-    const modalBg = document.getElementById('adModalBg');
-    const timerEl = document.getElementById('adTimer');
-    const closeTimerEl = document.getElementById('adCloseTimer');
-    const closeBtn = document.getElementById('adCloseBtn');
-    const linkEl = document.getElementById('adVisitLink');
-    if (!modalBg || !closeBtn) { if (onComplete) onComplete(); return; }
+  const modalBg = document.getElementById('adModalBg');
+  const timerEl = document.getElementById('adTimer');
+  const closeBtn = document.getElementById('adCloseBtn');
+  const linkEl = document.getElementById('adVisitLink');
+  const titleEl = document.getElementById('adTitle');
+  const descEl = document.getElementById('adDesc');
+  const bigEmojiEl = document.getElementById('adBigEmoji');
+  const urlEl = document.getElementById('adUrl');
 
-    this._modalActive = true;
-    this._pendingCallback = onComplete || null;
+  const missing = [];
+  if (!modalBg) missing.push('adModalBg');
+  if (!timerEl) missing.push('adTimer');
+  if (!closeBtn) missing.push('adCloseBtn');
+  if (!titleEl) missing.push('adTitle');
+  if (!descEl) missing.push('adDesc');
+  if (!bigEmojiEl) missing.push('adBigEmoji');
+  if (!urlEl) missing.push('adUrl');
 
-    document.getElementById('adTitle').textContent = ad.title;
-    document.getElementById('adDesc').textContent = ad.desc;
-    document.getElementById('adBigEmoji').textContent = isBetween ? '📄' : '🎁';
-    document.getElementById('adUrl').textContent = (ad.url && ad.url !== '-') ? ad.url : '—';
+  if (missing.length) {
+    console.error('Ads: отсутствуют элементы:', missing.join(', '));
+    toast('⚠️ Ошибка рекламы: нет ' + missing.join(', '), 4000);
+    if (onComplete) { try { onComplete(); } catch(e){} }
+    return;
+  }
 
-    if (linkEl) {
-      if (ad.url && ad.url !== '-') {
-        linkEl.href = ad.url;
-        linkEl.target = '_blank';
-        linkEl.rel = 'noopener noreferrer';
-        linkEl.style.display = 'inline-flex';
-      } else {
-        linkEl.removeAttribute('href');
-        linkEl.style.display = 'none';
-      }
+  const ad = this.pickAd(isBetween ? 'ht' : 'aw');
+  this._modalActive = true;
+  this._pendingCallback = onComplete || null;
+
+  titleEl.textContent = ad.title;
+  descEl.textContent = ad.desc;
+  bigEmojiEl.textContent = isBetween ? '📄' : '🎁';
+  urlEl.textContent = (ad.url && ad.url !== '-') ? ad.url : '—';
+
+  if (linkEl) {
+    if (ad.url && ad.url !== '-') {
+      linkEl.href = ad.url;
+      linkEl.target = '_blank';
+      linkEl.rel = 'noopener noreferrer';
+      linkEl.style.display = 'inline-flex';
+    } else {
+      linkEl.removeAttribute('href');
+      linkEl.style.display = 'none';
     }
+  }
 
-    let remaining = seconds;
+  let remaining = Math.max(0, Number(seconds) || 0);
+  timerEl.textContent = remaining;
+  closeBtn.disabled = true;
+  closeBtn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> Подождите... (${remaining})`;
+
+  modalBg.classList.add('show');
+
+  const finish = () => {
+    if (!this._modalActive) return;
+    this._hardReset();
+    const cb = this._pendingCallback;
+    this._pendingCallback = null;
+    if (cb) { try { cb(); } catch(e) { console.error(e); } }
+  };
+
+  // Если 0 секунд — сразу разрешаем закрыть
+  if (remaining <= 0) {
+    closeBtn.disabled = false;
+    closeBtn.innerHTML = `<i class="fa-solid fa-xmark"></i> Закрыть`;
+    closeBtn.onclick = finish;
+    this._autoCloseTimer = setTimeout(finish, 10000);
+    return;
+  }
+
+  this._modalTimer = setInterval(() => {
+    // Защита: если модалку уже закрыли — тик больше не нужен
+    if (!this._modalActive) {
+      if (this._modalTimer) { clearInterval(this._modalTimer); this._modalTimer = null; }
+      return;
+    }
+    remaining--;
+    // КРИТИЧНО: не позволяем уйти в минус
+    if (remaining < 0) remaining = 0;
     timerEl.textContent = remaining;
-    closeTimerEl.textContent = remaining;
-    closeBtn.disabled = true;
     closeBtn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> Подождите... (${remaining})`;
+    if (remaining <= 0) {
+      // Сразу останавливаем интервал, чтобы не тикал дальше
+      if (this._modalTimer) { clearInterval(this._modalTimer); this._modalTimer = null; }
+      closeBtn.disabled = false;
+      closeBtn.innerHTML = `<i class="fa-solid fa-xmark"></i> Закрыть`;
+      closeBtn.onclick = finish;
+      this._autoCloseTimer = setTimeout(finish, 10000);
+    }
+  }, 1000);
+},
 
-    modalBg.classList.add('show');
-
-    // Единая функция завершения — вызывается ТОЛЬКО один раз
-    const finish = () => {
-      if (!this._modalActive) return;
-      this._hardReset();
-      // Вызываем колбэк после полной очистки
-      const cb = this._pendingCallback;
-      this._pendingCallback = null;
-      if (cb) {
-        try { cb(); } catch(e) { console.error(e); }
-      }
-    };
-
-    this._modalTimer = setInterval(() => {
-      if (!this._modalActive) { clearInterval(this._modalTimer); this._modalTimer = null; return; }
-      remaining--;
-      timerEl.textContent = remaining;
-      closeTimerEl.textContent = remaining;
-      closeBtn.innerHTML = `<i class="fa-solid fa-hourglass-half"></i> Подождите... (${remaining})`;
-      if (remaining <= 0) {
-        clearInterval(this._modalTimer); this._modalTimer = null;
-        closeBtn.disabled = false;
-        closeBtn.innerHTML = `<i class="fa-solid fa-xmark"></i> Закрыть`;
-        closeBtn.onclick = finish;
-        this._autoCloseTimer = setTimeout(finish, 10000);
-      }
-    }, 1000);
-  },
-
-  // Полная очистка всех таймеров, флагов, обработчиков
   _hardReset() {
     if (this._modalTimer) { clearInterval(this._modalTimer); this._modalTimer = null; }
     if (this._autoCloseTimer) { clearTimeout(this._autoCloseTimer); this._autoCloseTimer = null; }
@@ -654,7 +713,6 @@ const Ads = {
     }
     this._closeHandler = null;
     this._modalActive = false;
-    // _pendingCallback НЕ сбрасываем здесь — его забирает finish()
   },
 
   showJustAd(seconds = 3) {
@@ -752,8 +810,7 @@ const I18N = {
     account_title:'Аккаунт', save_account:'Сохранить аккаунт', restore_account:'Восстановить аккаунт',
     account_saved:'Файл account.json сохранён!', account_restored:'Аккаунт восстановлен!', account_invalid:'Неверный файл аккаунта',
     account_restore_confirm:'Загрузить аккаунт? Текущий прогресс будет заменён!',
-    stars3:'×3 звезды', jackpot:'ДЖЕКПОТ',
-    music_title_short:'Радио', music_streams:'Стримы', ad_visit:'Перейти'
+    stars3:'×3 звезды', jackpot:'ДЖЕКПОТ'
   },
   en:{
     tab_clicker:'CLICKER', tab_shop:'SHOP', tab_tasks:'TASKS', tab_boosts:'BOOSTS', tab_ach:'ACHIEVEMENTS', tab_settings:'SETTINGS', tab_lottery:'LOTTERY', tab_claw:'CLAW',
@@ -822,14 +879,13 @@ const I18N = {
     account_title:'Account', save_account:'Save account', restore_account:'Restore account',
     account_saved:'account.json saved!', account_restored:'Account restored!', account_invalid:'Invalid account file',
     account_restore_confirm:'Load account? Current progress will be replaced!',
-    stars3:'×3 stars', jackpot:'JACKPOT',
-    music_title_short:'Radio', music_streams:'Streams', ad_visit:'Visit'
+    stars3:'×3 stars', jackpot:'JACKPOT'
   }
 };
 function t(k){ return (I18N[S.lang] && I18N[S.lang][k]) || I18N.ru[k] || k; }
 
 /* ============================================================
-   ТЕМЫ (6 новых)
+   ТЕМЫ
    ============================================================ */
 const THEMES = [
   {id:'blue', name:'Голубой / Blue', price:0, grad:'linear-gradient(135deg,#2196F3,#2196F3)', primary:'#1565C0', primaryContainer:'#BBDEFB', onPrimary:'#FFFFFF', onPrimaryContainer:'#0D47A1'},
@@ -853,7 +909,7 @@ const THEMES = [
 ];
 
 /* ============================================================
-   ИКОНКИ (8 новых)
+   ИКОНКИ
    ============================================================ */
 const ICONS = [
   {id:'tap', name:'TAP', emoji:'👆', price:0, text:true},
@@ -2310,7 +2366,7 @@ function renderSettings(){
       <div class="tr-label" id="musicLabel"><i class="fa-solid ${S.musicOn?'fa-volume-high':'fa-volume-xmark'}"></i> ${t('music_lbl')}: ${S.musicOn?t('music_on'):t('music_off')}</div>
       <button class="switch ${S.musicOn?'on':''}" id="musicToggle"></button>
     </div>
-    <div class="music-row radio-grid">
+    <div class="music-row">
       <button class="music-btn ${S.musicStream==='jazz' && S.musicOn ? 'active':''}" data-stream="jazz"><i class="fa-solid fa-music"></i> Jazz</button>
       <button class="music-btn ${S.musicStream==='pop' && S.musicOn ? 'active':''}" data-stream="pop"><i class="fa-solid fa-microphone"></i> Pop</button>
       <button class="music-btn ${S.musicStream==='funk' && S.musicOn ? 'active':''}" data-stream="funk"><i class="fa-solid fa-drum"></i> Funk</button>
@@ -2743,7 +2799,7 @@ function doShare(){
 }
 
 /* ============================================================
-   АЧИВКИ
+   АЧИВКИ / ПАСХАЛКИ
    ============================================================ */
 function unlockSpecialAch(id){
   if(S.unlockedAch.includes(id)) return;
@@ -3084,8 +3140,9 @@ function init(){
 
   $('#adTopClose')?.addEventListener('click', (e)=>{ e.stopPropagation(); e.preventDefault(); Ads.closeBanner('top'); });
   $('#adBottomClose')?.addEventListener('click', (e)=>{ e.stopPropagation(); e.preventDefault(); Ads.closeBanner('bottom'); });
-// Сброс состояния рекламы при загрузке (на случай зависания)
-Ads._hardReset();
+
+  Ads._hardReset();
+
   setInterval(()=>{
     updateDailyHistory(); updateLotteryBadge(); save();
     if($('#screen-ach').classList.contains('active')) renderHistory($('.sort-tab.active')?.dataset.sort || 'day');
